@@ -7,32 +7,34 @@
                        <h3 class="pt-3 font-weight-bold">Login</h3>
                     </div>
                     <div class="panel-body p-3">
-                        <form>
+                        <nz-form [formGroup]="form" nzLayout="vertical">
                             <div class="form-group pt-3">
                                 <div class="input-field">
                                     <span class="fa fa-user p-2"></span>
-                                    <input type="text" placeholder="Username / Email" id="usernameOrEmailInput">
+                                    <input type="text" placeholder="Username / Email" formControlName="usernameOrEmail">
                                 </div>
                             </div>
                             <div class="form-group pt-3">
                                 <div class="input-field">
                                     <span class="fa fa-lock p-2"></span>
-                                    <input [type]="type" placeholder="Password" id="passwordInput">
+                                    <input [type]="type" placeholder="Password" formControlName="password">
                                     <span (click)="hideShowPassword()" class="fa {{eyeIcon}}"></span>
                                 </div>
                             </div>
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="rememberMe">
+                                <input type="checkbox" class="form-check-input" formControlName="rememberMe">
                                 <label class="form-check-label" for="rememberMe">Remember me</label>
                             </div>
                             <div class="form-inline fr mt-4">
                                 <a id="forget" class="font-weight-bold">Forgot Password?</a>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-block mt-4 w-100" (click)="onSubmit()">Login</button>
+                            <button nz-button nzType="primary" style="width: 100%; border-radius: 20px; margin-top: 5px;"
+                                    (click)="onSubmit()" 
+                                    [disabled]="isDisabled">Login</button>
                             <div class="text-center pt-4 text-muted">Don't have account? 
                                 <a id="forget" routerLink="/signup">Sign Up </a>
                             </div>
-                        </form>
+                        </nz-form>
                     </div>
                     <div class="mx-3 my-2 py-2 bordert">
                         <div class="text-center py-3">
