@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CustomValidators } from 'src/app/helpers/validators';
 
 @Component({
   selector: 'app-signup',
@@ -23,13 +24,26 @@ export class SignupComponent implements OnInit {
       lastName: ['', [Validators.required]],
       email: ['', [Validators.required]],
       username: ['', [Validators.required]],
-      password: ['', [Validators.required]],
+      password: ['', [CustomValidators.passwordValidator]],
       confirmPassword: ['', [Validators.required]],
+    },
+    {
+      validator: CustomValidators.confirmPasswordValidator
     });
 
     this.form.valueChanges.subscribe(() => {
       this.isDisabled = this.form.invalid;
     });
+  }
+
+  getErrorMessage(controlName: string): string {
+    const control = this.form.get(controlName);
+    if (control?.errors) {
+      if (control.errors['invalidPassword']) {
+        return control.errors['message'];
+      }
+    }
+    return '';
   }
 
   hideShowPassword() {

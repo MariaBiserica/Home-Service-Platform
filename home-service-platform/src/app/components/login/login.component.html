@@ -8,23 +8,26 @@
                     </div>
                     <div class="panel-body p-3">
                         <nz-form [formGroup]="form" nzLayout="vertical">
-                            <div class="form-group pt-3">
-                                <div class="input-field">
-                                    <span class="fa fa-user p-2"></span>
-                                    <input type="text" placeholder="Username / Email" formControlName="usernameOrEmail">
-                                </div>
-                            </div>
-                            <div class="form-group pt-3">
-                                <div class="input-field">
+                            <nz-form-item class="input-field">
+                                <span class="fa fa-user p-2"></span>
+                                <nz-form-control nzErrorTip="Please enter your Username / E-mail!">
+                                    <input type="text" placeholder="Username / E-mail" formControlName="usernameOrEmail">
+                                </nz-form-control>
+                            </nz-form-item>
+
+                            <nz-form-item class="input-field">
                                     <span class="fa fa-lock p-2"></span>
-                                    <input [type]="type" placeholder="Password" formControlName="password">
+                                    <nz-form-control nzErrorTip="Please enter your Password!">
+                                        <input [type]="type" placeholder="Password" formControlName="password">
+                                    </nz-form-control>
                                     <span (click)="hideShowPassword()" class="fa {{eyeIcon}}"></span>
-                                </div>
-                            </div>
-                            <div class="form-check">
+                            </nz-form-item>
+
+                            <nz-form-item>
                                 <input type="checkbox" class="form-check-input" formControlName="rememberMe">
                                 <label class="form-check-label" for="rememberMe">Remember me</label>
-                            </div>
+                            </nz-form-item>
+
                             <div class="form-inline fr mt-4">
                                 <a id="forget" class="font-weight-bold">Forgot Password?</a>
                             </div>
