@@ -8,18 +8,14 @@
       </button>
     </div>
   
-    <nz-table #basicTable [nzData]="moviesList" [nzPageSize]="8">
+    <nz-table #basicTable [nzData]="servicesList" [nzPageSize]="8">
       <thead>
         <tr>
-          <th nzLeft>Title</th>
-          <th>Year</th>
-          <th>Runtime</th>
-          <th>Genre</th>
-          <th>Actors</th>
-          <th>Plot</th>
-          <th>Awards</th>
-          <th>Poster</th>
-          <th>IMDB Rating</th>
+          <th nzLeft>Service Name</th>
+          <th>Provider</th>
+          <th>Description</th>
+          <th>Image</th>
+          <th>Rating</th>
           <th></th>
         </tr>
       </thead>
@@ -27,29 +23,25 @@
         <tr *ngFor="let data of basicTable.data">
           <!-- ! pipe -->
           <td nzLeft style="font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">
-            {{ data.title | uppercase }}
+            {{ data.name | uppercase }}
           </td>
-          <td>{{ data.year }}</td>
-          <td>{{ data.runtime }}</td>
-          <td>{{ data.genre }}</td>
-          <td>{{ data.actors }}</td>
-          <td style="color: rgb(0, 187, 255); text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">{{ data.plot }}</td>
-          <td>{{ data.awards }}</td>
-          <td><img [src]="data.poster" alt="poster picture here" class="image-card"></td>
-          <td>{{ data.imdbRating }}</td>
+          <td>{{ data.provider }}</td>
+          <td style="color: rgb(0, 187, 255); text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">{{ data.description }}</td>
+          <td><img [src]="data.image" alt="poster picture here" class="image-card"></td>
+          <td>{{ data.rating }}</td>
           <td>
             <div>
               <span
                 nz-icon
                 nzType="delete"
                 nzTheme="outline"
-                (click)="deleteMovie(data)"
+                (click)="deleteService(data)"
               ></span>
               <span
                 nz-icon
                 nzType="edit"
                 nzTheme="outline"
-                (click)="editMovie(data)"
+                (click)="editService(data)"
               ></span>
             </div>
           </td>
@@ -66,57 +58,33 @@
     <ng-container *nzModalContent>
       <nz-form [formGroup]="form" nzLayout="vertical">
         <nz-form-item>
-          <nz-form-label [nzSpan]="8">Title</nz-form-label>
-          <nz-form-control [nzSpan]="16" nzErrorTip="Please enter a title!">
-            <input nz-input formControlName="title" />
+          <nz-form-label [nzSpan]="8">Service Name</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="Please enter a name for your service!">
+            <input nz-input formControlName="name" />
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-          <nz-form-label [nzSpan]="8">Year</nz-form-label>
-          <nz-form-control [nzSpan]="16" nzErrorTip="Please enter a year!">
-            <input nz-input formControlName="year" />
+          <nz-form-label [nzSpan]="8">Provider</nz-form-label>
+          <nz-form-control [nzSpan]="16" nzErrorTip="Please enter the provider name!">
+            <input nz-input formControlName="provider" />
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-          <nz-form-label [nzSpan]="8">Runtime</nz-form-label>
-          <nz-form-control [nzSpan]="16" nzErrorTip="Please enter a runtime!">
-            <input nz-input formControlName="runtime" />
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-label [nzSpan]="8">Genre</nz-form-label>
-          <nz-form-control [nzSpan]="16" nzErrorTip="Please specify the movie genre/s!">
-            <input nz-input formControlName="genre" />
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-label [nzSpan]="8">Actors</nz-form-label>
-          <nz-form-control [nzSpan]="16" nzErrorTip="Please specify a few members of the cast!">
-            <input nz-input formControlName="actors" />
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-label [nzSpan]="8">Plot</nz-form-label>
+          <nz-form-label [nzSpan]="8">Description</nz-form-label>
           <nz-form-control [nzSpan]="16" nzErrorTip="Too short! Please describe the plot in at least 5 words!">
-            <textarea nz-input formControlName="plot"></textarea>
+            <textarea nz-input formControlName="description"></textarea>
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-          <nz-form-label [nzSpan]="8">Awards</nz-form-label>
-          <nz-form-control [nzSpan]="16">
-            <input nz-input formControlName="awards" />
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-label [nzSpan]="8">Poster</nz-form-label>
+          <nz-form-label [nzSpan]="8">Image</nz-form-label>
           <nz-form-control [nzSpan]="16" nzErrorTip="Please enter a valid URL for a JPG, JPEG, or PNG image!">
-            <input nz-input formControlName="poster" />
+            <input nz-input formControlName="image" />
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-          <nz-form-label [nzSpan]="8">IMDB Rating</nz-form-label>
+          <nz-form-label [nzSpan]="8">Rating</nz-form-label>
           <nz-form-control [nzSpan]="16" nzErrorTip="Rating must be between 0 and 10!">
-            <input nz-input formControlName="imdbRating" type="number" step="0.1" />
+            <input nz-input formControlName="rating" type="number" step="0.1" />
           </nz-form-control>
         </nz-form-item>
       </nz-form>    

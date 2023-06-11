@@ -12,15 +12,15 @@ import { ServicesService } from 'src/app/services/services.service';
 })
 export class TableComponent implements OnInit {
 
-  moviesList!: Service[];
-  initialMovie!: Service;
+  servicesList!: Service[];
+  initialService!: Service;
   form!: FormGroup;
   isVisible: boolean = false;
   isDisabled: boolean = true;
   isInEditMode: boolean = false;
 
   constructor(
-    private moviesService: ServicesService,
+    private servicesService: ServicesService,
     private route: ActivatedRoute, 
     private fb: FormBuilder
   ) {
@@ -28,23 +28,21 @@ export class TableComponent implements OnInit {
       console.log(res);
     });
 
-    // this.moviesService.moviesListSubject.subscribe((res: any) => {
-    //   this.moviesList = [...res];
-    //   console.log('in subscribe ');
-    // });
+    this.servicesService.servicesListSubject.subscribe((res: any) => {
+      this.servicesList = [...res];
+      console.log('in subscribe ');
+    });
   }
 
   ngOnInit(): void {
-    //this.moviesList = this.moviesService.movies;
-    console.log(this.moviesList);
+    this.servicesList = this.servicesService.services;
+    console.log(this.servicesList);
     this.form = this.fb.group({
-      title: ['', [Validators.required]],
-      year: ['', [Validators.required]],
-      runtime: ['', [Validators.required]],
-      genre: ['', [Validators.required]],
-      actors: ['', [Validators.required]],
-      plot: ['', [Validators.required, CustomValidators.descriptionWordsCount(5)]],
-      awards: ['']
+      name: ['', [Validators.required]],
+      provider: ['', [Validators.required]],
+      description: ['', [Validators.required, CustomValidators.descriptionWordsCount(5)]],
+      image: ['', [Validators.required, CustomValidators.imageUrl]],
+      rating: [null, [Validators.required, CustomValidators.ratingRange(0, 10)]]
     });
 
     this.form.valueChanges.subscribe(() => {
@@ -52,28 +50,24 @@ export class TableComponent implements OnInit {
     });
   }
 
-  deleteMovie(movie: Service) {
-    //this.moviesService.deleteMovie(movie);
+  deleteService(movie: Service) {
+    this.servicesService.deleteService(movie);
   }
 
   sortByRating() {
-    //this.moviesService.sortByRating();
+    this.servicesService.sortByRating();
   }
 
-  editMovie(movie: Service) {
-    this.initialMovie = movie;
+  editService(service: Service) {
+    this.initialService = service;
 
     this.isInEditMode = true;
     this.form.setValue({
-      title: movie.title,
-      year: movie.year,
-      runtime: movie.runtime,
-      genre: movie.genre,
-      actors: movie.actors,
-      plot: movie.plot,
-      awards: movie.awards,
-      poster: movie.poster,
-      imdbRating: movie.imdbRating
+      name: service.name,
+      provider: service.provider,
+      description: service.description,
+      image: service.image,
+      rating: service.rating
     });
 
     this.showModal();
@@ -83,17 +77,13 @@ export class TableComponent implements OnInit {
     this.isVisible = true;
   }
 
-  getMovieFromForm(): Service {
+  getServiceFromForm(): Service {
     return {
-      title: this.form.value.title,
-      year: this.form.value.year,
-      runtime: this.form.value.runtime,
-      genre: this.form.value.genre,
-      actors: this.form.value.actors,
-      plot: this.form.value.plot,
-      awards: this.form.value.awards,
-      poster: this.form.value.poster,
-      imdbRating: this.form.value.imdbRating
+      name: this.form.value.name,
+      provider: this.form.value.provider,
+      description: this.form.value.description,
+      image: this.form.value.image,
+      rating: this.form.value.rating
     };
   }
 
@@ -105,10 +95,10 @@ export class TableComponent implements OnInit {
   handleOk(): void {
     if(this.isInEditMode){
       this.isInEditMode = false;
-      //this.moviesService.updateMovie(this.initialMovie, this.getMovieFromForm());
+      this.servicesService.updateService(this.initialService, this.getServiceFromForm());
     }
     else{
-      //this.moviesService.addNewMovie(this.getMovieFromForm());
+      this.servicesService.addNewService(this.getServiceFromForm());
     }
 
     this.isVisible = false;
