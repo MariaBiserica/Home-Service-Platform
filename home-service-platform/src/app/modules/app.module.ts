@@ -17,7 +17,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { TableFeatureModule } from './table-feature.module';
+import { DashboardFeatureModule } from './dashboard-feature.module';
 
 
 registerLocaleData(en);
@@ -39,7 +39,7 @@ registerLocaleData(en);
     NzCheckboxModule,
     ReactiveFormsModule,
     NzButtonModule,
-    TableFeatureModule,
+    DashboardFeatureModule,
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US }

@@ -13,8 +13,8 @@ const routes: Routes = [
     component: SignupComponent
   },
   { 
-    path: 'table', 
-    loadChildren: () => import('./table-feature.module').then(m => m.TableFeatureModule) 
+    path: 'dashboard', 
+    loadChildren: () => import('./dashboard-feature.module').then(m => m.DashboardFeatureModule) 
   },
   {
     path:'**',
