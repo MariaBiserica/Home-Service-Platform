@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CustomValidators } from '../../helpers/validators';
 import { Service } from 'src/app/interfaces/service.interface';
 import { ServicesService } from 'src/app/services/services.service';
+import { debounceTime } from 'rxjs';
+
+import { NzIconService } from 'ng-zorro-antd/icon';
+import { SearchOutline } from '@ant-design/icons-angular/icons';
 
 @Component({
   selector: 'app-table',
@@ -14,15 +18,20 @@ export class TableComponent implements OnInit {
 
   servicesList!: Service[];
   initialService!: Service;
+  searchControl!: FormControl;
   form!: FormGroup;
   isVisible: boolean = false;
   isDisabled: boolean = true;
   isInEditMode: boolean = false;
 
+  searchTerm: string = '';
+  searchIcon = 'search';
+
   constructor(
     private servicesService: ServicesService,
     private route: ActivatedRoute, 
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private iconService: NzIconService
   ) {
     this.route.queryParams.subscribe((res: any) => {
       console.log(res);
@@ -32,6 +41,8 @@ export class TableComponent implements OnInit {
       this.servicesList = [...res];
       console.log('in subscribe ');
     });
+
+    this.iconService.addIcon(...[SearchOutline]);
   }
 
   ngOnInit(): void {
@@ -47,6 +58,11 @@ export class TableComponent implements OnInit {
 
     this.form.valueChanges.subscribe(() => {
       this.isDisabled = this.form.invalid;
+    });
+
+    this.searchControl = new FormControl('');
+    this.searchControl.valueChanges.pipe(debounceTime(300)).subscribe(() => {
+      this.search();
     });
   }
 
@@ -104,4 +120,29 @@ export class TableComponent implements OnInit {
     this.isVisible = false;
     this.form.reset();
   }
+
+  search() {
+    const searchText = this.searchControl.value.toLowerCase();
+  
+    // Perform the search filtering
+    const filteredData = this.servicesList.filter(item =>
+      item.name.toLowerCase().includes(searchText) ||
+      item.provider.toLowerCase().includes(searchText)
+    );
+  
+    // Update the table data
+    this.servicesList = filteredData;
+  }
+
+  onSearchTermChange(): void {
+    // Check if the search term is empty
+    if (!this.searchTerm) {
+      this.refreshData();
+    }
+  }
+  
+  refreshData(): void {
+    this.servicesList = this.servicesService.services;
+  }
+  
 }

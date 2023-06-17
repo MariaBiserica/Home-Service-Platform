@@ -6,8 +6,23 @@
       <button nz-button (click)="showModal()" nzType="primary">
         Add New Item
       </button>
+      <button nz-button routerLink="/login" nzType="primary">
+        Back to Login
+      </button> 
+    </div>    
+
+    <div class="my-search-bar">
+      <nz-input-group [nzAddOnBeforeIcon]="searchIcon">
+        <input
+          nz-input
+          placeholder="Search by Service Name / Provider"
+          [formControl]="searchControl"
+          [(ngModel)]="searchTerm" 
+          (ngModelChange)="onSearchTermChange()"
+        />
+      </nz-input-group>
     </div>
-  
+
     <nz-table #basicTable [nzData]="servicesList" [nzPageSize]="8">
       <thead>
         <tr>
