@@ -1,8 +1,5 @@
 <div class="table-container">
     <div class="table-operations">
-      <button nz-button (click)="sortByRating()" nzType="primary">
-        Sort By Rating
-      </button>
       <button nz-button (click)="showModal()" nzType="primary">
         Add New Item
       </button>
@@ -26,17 +23,33 @@
     <nz-table #basicTable [nzData]="servicesList" [nzPageSize]="8">
       <thead>
         <tr>
-          <th nzLeft>Service Name</th>
-          <th>Provider</th>
-          <th>Description</th>
+          <th nzLeft (click)="sortTable('name')">
+            Service Name
+            <i nz-icon [nzType]="getSortIcon('name')" nzTheme="outline"></i>
+          </th>
+
+          <th (click)="sortTable('provider')">
+            Provider
+            <i nz-icon [nzType]="getSortIcon('provider')" nzTheme="outline"></i>
+          </th>
+
+          <th (click)="sortTable('description')">
+            Description
+            <i nz-icon [nzType]="getSortIcon('description')" nzTheme="outline"></i>
+          </th>
+
           <th>Image</th>
-          <th>Rating</th>
+
+          <th (click)="sortTable('rating')" [width]="100">
+            Rating
+            <i nz-icon [nzType]="getSortIcon('rating')" nzTheme="outline"></i>
+          </th>
+
           <th></th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let data of basicTable.data">
-          <!-- ! pipe -->
           <td nzLeft style="font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">
             {{ data.name | uppercase }}
           </td>

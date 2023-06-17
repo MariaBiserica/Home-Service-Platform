@@ -6,6 +6,7 @@ import { Service } from 'src/app/interfaces/service.interface';
 import { ServicesService } from 'src/app/services/services.service';
 import { debounceTime } from 'rxjs';
 
+import { NzTableSortFn, NzTableSortOrder } from 'ng-zorro-antd/table';
 import { NzIconService } from 'ng-zorro-antd/icon';
 import { SearchOutline } from '@ant-design/icons-angular/icons';
 
@@ -26,6 +27,27 @@ export class TableComponent implements OnInit {
 
   searchTerm: string = '';
   searchIcon = 'search';
+
+  // Sorting variables
+  serviceNameSortFn: NzTableSortFn<Service> = (a: Service, b: Service) => {
+    return a.name.localeCompare(b.name);
+  };
+  serviceNameSortOrder: NzTableSortOrder | null = null;
+
+  providerSortFn: NzTableSortFn<Service> = (a: Service, b: Service) => {
+    return a.provider.localeCompare(b.provider);
+  };
+  providerSortOrder: NzTableSortOrder | null = null;
+
+  descriptionSortFn: NzTableSortFn<Service> = (a: Service, b: Service) => {
+    return a.description.localeCompare(b.description);
+  };
+  descriptionSortOrder: NzTableSortOrder | null = null;
+
+  ratingSortFn: NzTableSortFn<Service> = (a: Service, b: Service) => {
+    return a.rating - b.rating;
+  };  
+  ratingSortOrder: NzTableSortOrder | null = null;
 
   constructor(
     private servicesService: ServicesService,
@@ -70,9 +92,68 @@ export class TableComponent implements OnInit {
     this.servicesService.deleteService(movie);
   }
 
-  sortByRating() {
-    this.servicesService.sortByRating();
-  }
+  sortTable(column: string): void {
+    if (column === 'name') {
+      const sortedList = this.servicesList.sort((a, b) =>
+        this.serviceNameSortFn(a, b) * (this.serviceNameSortOrder === 'ascend' ? 1 : -1)
+      );
+      this.servicesList = [...sortedList]; // Assign the sorted data to a new array 
+      this.serviceNameSortOrder = this.serviceNameSortOrder === 'ascend' ? 'descend' : 'ascend';
+    }
+    else if (column === 'provider') {
+      const sortedList = this.servicesList.sort((a, b) =>
+        this.providerSortFn(a, b) * (this.providerSortOrder === 'ascend' ? 1 : -1)
+      );
+      this.servicesList = [...sortedList]; // Assign the sorted data to a new array
+      this.providerSortOrder = this.providerSortOrder === 'ascend' ? 'descend' : 'ascend';
+    }
+    else if (column === 'description') {
+      const sortedList = this.servicesList.sort((a, b) =>
+        this.descriptionSortFn(a, b) * (this.descriptionSortOrder === 'ascend' ? 1 : -1)
+      );
+      this.servicesList = [...sortedList]; // Assign the sorted data to a new array
+      this.descriptionSortOrder = this.descriptionSortOrder === 'ascend' ? 'descend' : 'ascend';
+    }
+    else if (column === 'rating') {
+      const sortedList = this.servicesList.sort((a, b) =>
+        this.ratingSortFn(a, b) * (this.ratingSortOrder === 'ascend' ? 1 : -1)
+      );
+      this.servicesList = [...sortedList]; // Assign the sorted data to a new array
+      this.ratingSortOrder = this.ratingSortOrder === 'ascend' ? 'descend' : 'ascend';
+    }
+  }  
+  
+  getSortIcon(column: string): string {
+    if (column === 'name') {
+      if (this.serviceNameSortOrder === 'ascend') {
+        return 'arrow-up';
+      } else if (this.serviceNameSortOrder === 'descend') {
+        return 'arrow-down';
+      }
+    }
+    else if (column === 'provider') {
+      if (this.providerSortOrder === 'ascend') {
+        return 'arrow-up';
+      } else if (this.providerSortOrder === 'descend') {
+        return 'arrow-down';
+      }
+    }
+    else if (column === 'description') {
+      if (this.descriptionSortOrder === 'ascend') {
+        return 'arrow-up';
+      } else if (this.descriptionSortOrder === 'descend') {
+        return 'arrow-down';
+      }
+    }
+    else if (column === 'rating') {
+      if (this.ratingSortOrder === 'ascend') {
+        return 'arrow-up';
+      } else if (this.ratingSortOrder === 'descend') {
+        return 'arrow-down';
+      }
+    }
+    return '';
+  }  
 
   editService(service: Service) {
     this.initialService = service;

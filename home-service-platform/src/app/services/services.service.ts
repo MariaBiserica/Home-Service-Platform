@@ -43,10 +43,4 @@ export class ServicesService {
     }
   }
 
-  sortByRating() {
-    this.servicesList.sort((a, b) => {
-      return a.rating < b.rating ? 1 : -1;
-    });
-    this.servicesListSubject.next(this.servicesList);
-  }
 }
