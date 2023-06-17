@@ -9,6 +9,9 @@ import { debounceTime } from 'rxjs';
 import { NzTableSortFn, NzTableSortOrder } from 'ng-zorro-antd/table';
 import { NzIconService } from 'ng-zorro-antd/icon';
 import { SearchOutline } from '@ant-design/icons-angular/icons';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { ReviewDialogComponent } from '../review-dialog/review-dialog.component';
+import { Review } from 'src/app/interfaces/review.interface';
 
 @Component({
   selector: 'app-table',
@@ -53,7 +56,8 @@ export class TableComponent implements OnInit {
     private servicesService: ServicesService,
     private route: ActivatedRoute, 
     private fb: FormBuilder,
-    private iconService: NzIconService
+    private iconService: NzIconService,
+    private modalService: NzModalService
   ) {
     this.route.queryParams.subscribe((res: any) => {
       console.log(res);
@@ -179,6 +183,7 @@ export class TableComponent implements OnInit {
       name: this.form.value.name,
       provider: this.form.value.provider,
       description: this.form.value.description,
+      review: this.form.value.review,
       image: this.form.value.image,
       rating: this.form.value.rating
     };
@@ -224,6 +229,40 @@ export class TableComponent implements OnInit {
   
   refreshData(): void {
     this.servicesList = this.servicesService.services;
+  }
+
+  // openReviewDialog(service: Service): void {
+  //   const dialogRef = this.modalService.create({
+  //     nzContent: ReviewDialogComponent,
+  //     nzComponentParams: {
+  //       service: service
+  //     },
+  //     nzFooter: null,
+  //     nzWidth: '600px'
+  //   });
+  
+  //   dialogRef.afterClose.subscribe(result => {
+  //     if (result === 'reviewAdded') {
+  //       // Recenzie adăugată cu succes, puteți efectua orice acțiune necesară
+  //     }
+  //   });
+  // }
+
+  openReviewDialog(service: Service, review: Review | undefined): void {
+    const modalRef = this.modalService.create({
+      nzTitle: 'Review',
+      nzContent: ReviewDialogComponent,
+      nzComponentParams: {
+        review: review
+      }
+    });
+
+    this.modalService.afterAllClose.subscribe(() => {
+      if (modalRef.getContentComponent().review) {
+        //this.servicesService.updateReview(service, modalRef.getContentComponent().review);
+        service.review = modalRef.getContentComponent().review;
+      }
+    });
   }
   
 }

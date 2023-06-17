@@ -3,6 +3,11 @@
     "name": "Cleaning Service",
     "provider": "ABC Cleaning Company",
     "description": "Professional cleaning service for homes and offices.",
+    "review": {
+      "title": "Review Title",
+      "description": "Review Description",
+      "author": "Review Author"
+    },
     "image": "https://i.pinimg.com/564x/84/08/9c/84089c03f2956cfbcf0dcd256f1aa9c3.jpg",
     "rating": 4.5
   },

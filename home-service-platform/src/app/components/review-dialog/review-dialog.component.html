@@ -1,0 +1,45 @@
+<div class="review-dialog-container">
+  <div *ngIf="review" class="review-dialog">
+    <h2 class="review-dialog-title">{{ review.title }}</h2>
+    <p class="review-dialog-description">{{ review.description }}</p>
+    <p>{{ review.author }}</p>
+    <div class="review-dialog-footer">
+      <button (click)="editReview()">Edit Review</button>
+    </div>
+  </div>
+
+  <div *ngIf="!review">
+    <p>No review exists.</p>
+  </div>
+</div>
+
+<nz-modal [nzVisible]="editing" nzTitle="Edit Review" [nzFooter]="modalFooter" (nzOnCancel)="handleCancel()">
+  <h2>Edit Review</h2>
+  <ng-template #modalFooter>
+    <button nz-button nzType="primary" (click)="handleOk()" [disabled]="isDisabled">OK</button>
+  </ng-template>
+  <ng-container *nzModalContent>
+    <nz-form [formGroup]="form" nzLayout="vertical">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8">Title</nz-form-label>
+        <nz-form-control [nzSpan]="16" nzErrorTip="Please enter a review title!">
+          <input nz-input formControlName="title" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8">Description</nz-form-label>
+        <nz-form-control [nzSpan]="16" nzErrorTip="Please enter a review!">
+          <textarea nz-input formControlName="description"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8">Author</nz-form-label>
+        <nz-form-control [nzSpan]="16" nzErrorTip="Please enter an author name!">
+          <input nz-input formControlName="author" />
+        </nz-form-control>
+      </nz-form-item>
+    </nz-form>    
+  </ng-container>
+</nz-modal>

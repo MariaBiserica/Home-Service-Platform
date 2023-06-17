@@ -13,12 +13,14 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { ReviewDialogComponent } from '../components/review-dialog/review-dialog.component';
 
 @NgModule({
   declarations: [
     DashboardComponent,
     HeaderComponent,
     TableComponent,
+    ReviewDialogComponent
   ],
   imports: [
     CommonModule,

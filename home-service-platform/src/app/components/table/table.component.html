@@ -38,18 +38,22 @@
             <i nz-icon [nzType]="getSortIcon('description')" nzTheme="outline"></i>
           </th>
 
-          <th>Image</th>
+          <th>
+            Image
+          </th>
 
           <th (click)="sortTable('rating')" [width]="100">
             Rating
             <i nz-icon [nzType]="getSortIcon('rating')" nzTheme="outline"></i>
           </th>
 
-          <th></th>
+          <th>
+            Actions            
+          </th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let data of basicTable.data">
+        <tr *ngFor="let data of servicesList">
           <td nzLeft style="font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">
             {{ data.name | uppercase }}
           </td>
@@ -58,14 +62,20 @@
           <td><img [src]="data.image" alt="poster picture here" class="image-card"></td>
           <td>{{ data.rating }}</td>
           <td>
-            <div>
-              <span
+            <div class="icon-container">
+              <span class="icon"
+                nz-icon 
+                nzType="message" 
+                nzTheme="outline"
+                (click)="openReviewDialog(data, data.review)"
+              ></span>
+              <span class="icon"
                 nz-icon
                 nzType="delete"
                 nzTheme="outline"
                 (click)="deleteService(data)"
               ></span>
-              <span
+              <span class="icon"
                 nz-icon
                 nzType="edit"
                 nzTheme="outline"
