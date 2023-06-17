@@ -22,13 +22,13 @@ export class SignupComponent implements OnInit {
     this.form = this.fb.group({
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
-      email: ['', [Validators.required]],
       username: ['', [Validators.required]],
-      password: ['', [CustomValidators.passwordValidator]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [CustomValidators.password]],
       confirmPassword: ['', [Validators.required]],
     },
     {
-      validator: CustomValidators.confirmPasswordValidator
+      validator: CustomValidators.confirmPassword
     });
 
     this.form.valueChanges.subscribe(() => {

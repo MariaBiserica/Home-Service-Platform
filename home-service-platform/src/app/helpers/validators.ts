@@ -1,7 +1,7 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export class CustomValidators {
-  static passwordValidator: ValidatorFn = (control: AbstractControl) => 
+  static password: ValidatorFn = (control: AbstractControl) => 
   {
       const password = control.value;
       
@@ -15,12 +15,12 @@ export class CustomValidators {
         return { invalidPassword: true, message: 'Password must be at least 6 characters long.' };
       }
       
-      if (!uppercaseRegex.test(password)) {
-        return { invalidPassword: true, message: 'Password must contain at least one uppercase letter.' };
-      }
-      
       if (!lowercaseRegex.test(password)) {
         return { invalidPassword: true, message: 'Password must contain at least one lowercase letter.' };
+      }
+
+      if (!uppercaseRegex.test(password)) {
+        return { invalidPassword: true, message: 'Password must contain at least one uppercase letter.' };
       }
       
       if (!digitRegex.test(password)) {
@@ -34,7 +34,7 @@ export class CustomValidators {
       return null; // Password is valid
   };
 
-  static confirmPasswordValidator: ValidatorFn = (control: AbstractControl) => 
+  static confirmPassword: ValidatorFn = (control: AbstractControl) => 
   {
       const passwordControl = control.get('password');
       const confirmPasswordControl = control.get('confirmPassword');
