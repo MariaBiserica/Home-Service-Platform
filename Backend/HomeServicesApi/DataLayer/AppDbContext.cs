@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataLayer
@@ -23,6 +24,17 @@ namespace DataLayer
 
             //modelBuilder.Entity<Class>().Property(e => e.Name).HasMaxLength(10);
         }
-        //dbSets
+        
+        public DbSet<Admin> Admins { get; set; }
+        public DbSet<ServiceType> ServiceTypes { get; set; }
+        public DbSet<Service> Services { get; set; }
+        public DbSet<Provider> Providers { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public  DbSet<Customer> Customers { get; set; }
+
+
     }
 }
