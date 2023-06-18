@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DataLayer.Entities;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace DataLayer
 {
@@ -22,7 +23,7 @@ namespace DataLayer
         {
             base.OnModelCreating(modelBuilder);
 
-            //modelBuilder.Entity<Class>().Property(e => e.Name).HasMaxLength(10);
+            
         }
         
         public DbSet<Admin> Admins { get; set; }
