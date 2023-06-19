@@ -16,5 +16,6 @@ namespace DataLayer.Entities
         public string LastName { get; set; }
         public string Gender { get; set; } // TODO: Change to enum
         public DateTime BirthDate { get; set; }
+        public List<Booking> Bookings { get; set; }
     }
 }
