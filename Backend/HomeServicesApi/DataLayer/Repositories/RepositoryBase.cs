@@ -33,21 +33,19 @@ namespace DataLayer.Repositories
         public async Task<T> AddAsync(T entity)
         {
             await dbSet.AddAsync(entity);
-            await context.SaveChangesAsync();
             return entity;
         }
 
         public async Task<T> UpdateAsync(T entity)
         {
             dbSet.Update(entity);
-            await context.SaveChangesAsync();
             return entity;
         }
 
-        public async Task DeleteAsync(T entity)
+        public void DeleteAsync(T entity)
         {
             dbSet.Remove(entity);
-            await context.SaveChangesAsync();
+
         }
 
         public IQueryable<T> Where(Func<T, bool> predicate)
