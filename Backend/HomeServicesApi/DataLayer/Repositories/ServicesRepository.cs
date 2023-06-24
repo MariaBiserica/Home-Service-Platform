@@ -15,12 +15,12 @@ namespace DataLayer.Repositories
         }
         public async Task<List<Service>> GetServicesByType(int typeId)
         {
-            return await Where(s => s.ServiceTypeId == typeId).ToListAsync();
+            return await DbSet.Where(s => s.ServiceTypeId == typeId).ToListAsync();
         }
 
         public async Task<List<Service>> GetServicesByProvider(int providerId)
         {
-            return await Where(s => s.ProviderId == providerId).ToListAsync();
+            return await DbSet.Where(s => s.ProviderId == providerId).ToListAsync();
         }
 
 

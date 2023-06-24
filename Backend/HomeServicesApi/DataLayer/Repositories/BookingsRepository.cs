@@ -15,11 +15,11 @@ namespace DataLayer.Repositories
         }
         public async Task<List<Booking>> GetBookingsByService(int serviceId)
         {
-            return await Where(b => b.ServiceId == serviceId).ToListAsync();
+            return await DbSet.Where(b => b.ServiceId == serviceId).ToListAsync();
         }
         public async Task<List<Booking>> GetBookingsByCustomer(int customerId)
         {
-            return await Where(b => b.CustomerId == customerId).ToListAsync();
+            return await DbSet.Where(b => b.CustomerId == customerId).ToListAsync();
         }
     }
 }

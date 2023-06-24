@@ -21,9 +21,11 @@ namespace DataLayer
       
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Customer>().Navigation(c => c.User).AutoInclude();
+            modelBuilder.Entity<Customer>().Navigation(c => c.Address).AutoInclude();
 
-            
+            modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique(true);
+            base.OnModelCreating(modelBuilder);
         }
         
         public DbSet<Admin> Admins { get; set; }

@@ -18,7 +18,7 @@ namespace DataLayer.Repositories
 
         public async Task<List<Service>> GetServices(int providerId)
         {
-            return await Where(p => p.Id == providerId).SelectMany(p=>p.Services).ToListAsync();
+            return await DbSet.Where(p => p.Id == providerId).SelectMany(p=>p.Services).ToListAsync();
         }
 
 
