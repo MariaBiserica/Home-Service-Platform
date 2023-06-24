@@ -22,11 +22,14 @@ namespace HomeServicesApi.Settings
         private static void AddServices(IServiceCollection services)
         {
             services.AddScoped<CustomersService>();
+            services.AddScoped<ProvidersService>();
+            services.AddScoped<AdminsService>();
+            services.AddScoped<AuthenticationService>();
+            services.AddScoped<AuthorizationService>();
         }
 
         private static void AddRepositories(IServiceCollection services)
         {
-            //services.AddScoped<CustomersRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 

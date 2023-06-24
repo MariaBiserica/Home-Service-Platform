@@ -10,32 +10,32 @@ using System.Threading.Tasks;
 
 namespace Core.Services
 {
-    public class CustomersService
+    public class ProvidersService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly AuthenticationService _authService;
         private readonly AuthorizationService _authorizationService;
 
-        public CustomersService(IUnitOfWork unitOfWork, AuthenticationService authService, AuthorizationService authorizationService)
+        public ProvidersService(IUnitOfWork unitOfWork, AuthenticationService authService, AuthorizationService authorizationService)
         {
             _unitOfWork = unitOfWork;
             _authService = authService;
             _authorizationService = authorizationService;
         }
 
-        public async Task<List<Customer>> GetAll()
+        public async Task<List<Provider>> GetAll()
         {
-            var customers = await _unitOfWork.GetRepository<CustomersRepository, Customer>().GetAllAsync();
-            return customers;
+            var providers = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetAllAsync();
+            return providers;
         }
 
-        public async Task<Customer> GetByEmail(string email)
+        public async Task<Provider> GetByEmail(string email)
         {
-            var customer = await _unitOfWork.GetRepository<CustomersRepository, Customer>().GetByEmailAsync(email);
-            return customer;
+            var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByEmailAsync(email);
+            return provider;
         }
 
-        public async void Register(CustomerRegisterDto registerData)
+        public async void Register(ProviderRegisterDto registerData)
         {
             if (registerData == null)
             {
@@ -45,25 +45,26 @@ namespace Core.Services
             var hashedPassword = _authService.HashPassword(registerData.UserData.Password);
             var newUser = new User
             {
+                Username = registerData.Username,
                 Email = registerData.UserData.Email,
                 PasswordHash = hashedPassword
             };
 
             var user = await _unitOfWork.GetRepository<UsersRepository, User>().AddAsync(newUser);
-            if (user == null) 
+            if (user == null)
             {
                 return;
             }
 
-            var newCustomer = new Customer
+            var newProvider = new Provider
             {
-                FirstName = registerData.FirstName,
-                LastName = registerData.LastName,
+                Rating = 0,
+                Bio = registerData.Bio,
                 User = user
             };
 
-            var customer = await _unitOfWork.GetRepository<CustomersRepository, Customer>().AddAsync(newCustomer);
-            if (customer == null)
+            var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().AddAsync(newProvider);
+            if (provider == null)
             {
                 return;
             }
@@ -73,12 +74,12 @@ namespace Core.Services
 
         public async Task<string> Validate(LoginDto payload)
         {
-            var customer = await _unitOfWork.GetRepository<CustomersRepository, Customer>().GetByEmailAsync(payload.Email) ?? throw new ApplicationException("User not found");
+            var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByEmailAsync(payload.Email) ?? throw new ApplicationException("User not found");
             
-            var passwordFine = _authService.VerifyHashedPassword(customer.User.PasswordHash, payload.Password);
+            var passwordFine = _authService.VerifyHashedPassword(provider.User.PasswordHash, payload.Password);
             if (passwordFine)
             {
-                return _authorizationService.GetToken(customer.User, "Customer");
+                return _authorizationService.GetToken(provider.User, "Provider");
             }
             else
             {

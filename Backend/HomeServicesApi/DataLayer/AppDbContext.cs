@@ -24,6 +24,11 @@ namespace DataLayer
             modelBuilder.Entity<Customer>().Navigation(c => c.User).AutoInclude();
             modelBuilder.Entity<Customer>().Navigation(c => c.Address).AutoInclude();
 
+            modelBuilder.Entity<Provider>().Navigation(p => p.User).AutoInclude();
+            modelBuilder.Entity<Provider>().Navigation(p => p.Address).AutoInclude();
+
+            modelBuilder.Entity<Admin>().Navigation(p => p.User).AutoInclude();
+
             modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique(true);
             base.OnModelCreating(modelBuilder);
         }

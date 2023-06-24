@@ -6,22 +6,22 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HomeServicesApi.Controllers
 {
-    [Route("api/customers")]
+    [Route("api/providers")]
     [ApiController]
-    public class CustomersController : ControllerBase
+    public class ProvidersController : ControllerBase
     {
-        private readonly CustomersService _customersService;
+        private readonly ProvidersService _providersService;
 
-        public CustomersController(CustomersService customersService)
+        public ProvidersController(ProvidersService providersService)
         {
-            _customersService = customersService;
+            _providersService = providersService;
         }
 
         [HttpGet("get-all")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll()
         {
-            var results = await _customersService.GetAll();
+            var results = await _providersService.GetAll();
 
             return Ok(results);
         }
@@ -30,16 +30,16 @@ namespace HomeServicesApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginDto payload)
         {
-            var jwtToken = await _customersService.Validate(payload);
+            var jwtToken = await _providersService.Validate(payload);
 
             return Ok(new { token = jwtToken });
         }
 
         [HttpGet("get-by-email")]
-        [Authorize(Roles = "Customer,Admin")]
+        [Authorize(Roles = "Provider")]
         public async Task<IActionResult> GetByEmail(string email)
         {
-            var customer = await _customersService.GetByEmail(email);
+            var customer = await _providersService.GetByEmail(email);
 
             return Ok(customer);
         }

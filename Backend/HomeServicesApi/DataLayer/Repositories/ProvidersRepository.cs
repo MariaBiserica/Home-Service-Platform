@@ -15,13 +15,15 @@ namespace DataLayer.Repositories
         }
 
         //get all services of a provider
-
         public async Task<List<Service>> GetServices(int providerId)
         {
             return await DbSet.Where(p => p.Id == providerId).SelectMany(p=>p.Services).ToListAsync();
         }
 
-
+        public async Task<Provider?> GetByEmailAsync(string email)
+        {
+            return await DbSet.Where(p => string.Equals(p.User.Email, email)).FirstOrDefaultAsync();
+        }
 
     }
     

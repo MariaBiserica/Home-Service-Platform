@@ -24,10 +24,7 @@ namespace DataLayer.Repositories
         }
         public async Task<Customer?> GetByEmailAsync(string email)
         {
-            //return await Include(c => c.User).Where(c => string.Equals(c.User.Email, email, StringComparison.OrdinalIgnoreCase)).FirstOrDefaultAsync();
             return await DbSet.Where(c => string.Equals(c.User.Email, email)).FirstOrDefaultAsync();
-            //return await Where(c => string.Equals(c.User.Email, email, StringComparison.OrdinalIgnoreCase)).FirstOrDefaultAsync();
-            //return Where(c => c.User.Email == email).FirstOrDefault();
         }
         public async Task<List<Booking>> GetBookingsAsync(int customerId)
         {
