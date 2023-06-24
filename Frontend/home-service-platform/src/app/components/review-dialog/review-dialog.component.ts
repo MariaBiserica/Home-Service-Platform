@@ -12,6 +12,7 @@ export class ReviewDialogComponent {
 
   @Input() review!: Review;
   editing: boolean = false;
+  isNewReview: boolean = false; // Track if it's a new review
 
   form!: FormGroup;
   isDisabled: boolean = true;
@@ -39,18 +40,37 @@ export class ReviewDialogComponent {
 
   editReview(): void {
     this.editing = true;
+    this.isNewReview = false;
     this.form.patchValue(this.review);
+  }
+
+  addReview(): void {
+    this.editing = true;
+    this.isNewReview = true;
+    this.form.reset();
   }
 
   handleCancel(): void {
     this.editing = false;
+    this.isNewReview = false;
     this.form.reset();
   }
 
   handleOk(): void {
-    this.review = this.form.value;
+    const newReview: Review = this.form.value;
+    
+    if (this.isNewReview) {
+      // Handle new review creation
+      this.review = newReview; // Set the newly created review
+      // You can add the logic to save the new review to your data source (e.g., JSON file)
+    } else {
+      // Handle existing review update
+      this.review = newReview;
+      // You can add the logic to update the existing review in your data source
+    }
 
     this.editing = false;
+    this.isNewReview = false;
     this.form.reset();
   }
 }

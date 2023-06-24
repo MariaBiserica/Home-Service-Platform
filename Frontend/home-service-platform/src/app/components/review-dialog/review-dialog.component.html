@@ -4,17 +4,18 @@
     <p class="review-dialog-description">{{ review.description }}</p>
     <p>{{ review.author }}</p>
     <div class="review-dialog-footer">
-      <button (click)="editReview()">Edit Review</button>
+      <button nz-button nzType="primary" nzShape="round" (click)="editReview()">Edit Review</button>
     </div>
   </div>
 
   <div *ngIf="!review">
     <p>No review exists.</p>
+    <button nz-button nzType="dashed" nzShape="round" nzDanger (click)="addReview()">Add Review</button>
   </div>
 </div>
 
-<nz-modal [nzVisible]="editing" nzTitle="Edit Review" [nzFooter]="modalFooter" (nzOnCancel)="handleCancel()">
-  <h2>Edit Review</h2>
+<nz-modal [nzVisible]="editing" nzTitle="{{ isNewReview ? 'Add Review' : 'Edit Review' }}" [nzFooter]="modalFooter" (nzOnCancel)="handleCancel()">
+  <h2>{{ isNewReview ? 'Add Review' : 'Edit Review' }}</h2>
   <ng-template #modalFooter>
     <button nz-button nzType="primary" (click)="handleOk()" [disabled]="isDisabled">OK</button>
   </ng-template>
