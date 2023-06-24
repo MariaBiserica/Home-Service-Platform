@@ -72,3 +72,29 @@
   }
 }
 
+.rating {
+  font-size: 0;
+}
+
+.star {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-image: url('https://th.bing.com/th/id/OIP.sl1d_pgEDvBbumu5QZRc3wHaHa?pid=ImgDet&rs=1');
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.star.filled {
+  background-image: url('https://th.bing.com/th/id/R.5aaf025b9db72e5070f74d9ef6b82a6a?rik=Dca9o%2fQvqpX1cw&riu=http%3a%2f%2fclipart-library.com%2fimage_gallery%2fn1769511.png&ehk=ls9UnSl3RDYaNKSWPDQ4%2fbwCnnLB1rynA5ZGsHCAXNI%3d&risl=&pid=ImgRaw&r=0');
+}
+
+.star.empty {
+  background-image: url('https://s3-eu-west-1.amazonaws.com/uploads.playbaamboozle.com/uploads/images/50301/1599754069_22064');
+}
+
+.star.half-star {
+  background-image: url('https://th.bing.com/th/id/OIP.AfuM183SZvpY3Uty0u3NsgHaHa?pid=ImgDet&rs=1');
+}
+
+

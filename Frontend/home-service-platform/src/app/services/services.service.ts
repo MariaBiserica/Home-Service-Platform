@@ -43,10 +43,11 @@ export class ServicesService {
     if(index != -1){
       this.servicesList[index] = updatedService;
       this.servicesListSubject.next(this.servicesList);
-      this.updateServicesInJsonFile();
+      //this.updateServicesInJsonFile();
     }
   }
 
+  //! This is a workaround to update the JSON file with the new services list - Needs work, server doesn't allow PUT requests
   updateServicesInJsonFile() {
     const jsonFileUrl = 'assets/data.json';
   

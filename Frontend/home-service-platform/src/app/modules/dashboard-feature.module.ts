@@ -14,13 +14,15 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { ReviewDialogComponent } from '../components/review-dialog/review-dialog.component';
+import { ToArrayPipe } from '../pipes/to-array.pipe';
 
 @NgModule({
   declarations: [
     DashboardComponent,
     HeaderComponent,
     TableComponent,
-    ReviewDialogComponent
+    ReviewDialogComponent,
+    ToArrayPipe
   ],
   imports: [
     CommonModule,
@@ -39,6 +41,7 @@ import { ReviewDialogComponent } from '../components/review-dialog/review-dialog
     NzModalModule,
     NzFormModule,
     NzInputModule,
-  ]
+  ],
+  exports: [ToArrayPipe]
 })
 export class DashboardFeatureModule { }

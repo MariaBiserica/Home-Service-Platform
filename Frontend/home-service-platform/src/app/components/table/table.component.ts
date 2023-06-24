@@ -157,7 +157,7 @@ export class TableComponent implements OnInit {
       }
     }
     return '';
-  }  
+  } 
 
   editService(service: Service) {
     this.initialService = service;
