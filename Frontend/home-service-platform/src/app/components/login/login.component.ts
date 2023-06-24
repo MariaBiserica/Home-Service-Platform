@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CustomValidators } from '../../helpers/validators';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -9,7 +10,9 @@ import { CustomValidators } from '../../helpers/validators';
 })
 export class LoginComponent implements OnInit {
 
-  usernameOrEmail: string = "";
+  usernameOrEmail:string = "";
+  username: string = "";
+  email: string = "";
   password: string = "";
   rememberMe: boolean = false;
 
@@ -20,7 +23,7 @@ export class LoginComponent implements OnInit {
   form!: FormGroup;
   isDisabled: boolean = true;
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private userService: UserService) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -52,12 +55,13 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.usernameOrEmail = this.form.value.usernameOrEmail;
+
+    this.username = this.form.value.username;
+    this.email = this.form.value.email;
     this.password = this.form.value.password;
     this.rememberMe = this.form.value.rememberMe;
-
-    console.log(this.usernameOrEmail, this.password, this.rememberMe);
-
+    console.log(this.username,this.email, this.password, this.rememberMe);
+    this.userService.loginUser({firstName:"",lastName:"", email: this.email, username:this.username,imageUrl:"", password:this.password});
     // Construct the request payload
     var payload = {
         usernameOrEmail: this.usernameOrEmail,
