@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { Review } from 'src/app/interfaces/review.interface';
@@ -20,7 +20,8 @@ export class ReviewDialogComponent {
   constructor(
     private modalRef: NzModalRef,
     private fb: FormBuilder,
-  ) {}
+  ) { }
+  
 
   ngOnInit() {
     this.form = this.fb.group({
@@ -57,20 +58,11 @@ export class ReviewDialogComponent {
   }
 
   handleOk(): void {
-    const newReview: Review = this.form.value;
-    
-    if (this.isNewReview) {
-      // Handle new review creation
-      this.review = newReview; // Set the newly created review
-      // You can add the logic to save the new review to your data source (e.g., JSON file)
-    } else {
-      // Handle existing review update
-      this.review = newReview;
-      // You can add the logic to update the existing review in your data source
-    }
-
+    this.review = this.form.value;
+  
     this.editing = false;
     this.isNewReview = false;
     this.form.reset();
   }
+  
 }

@@ -79,7 +79,7 @@ export class TableComponent implements OnInit {
       provider: ['', [Validators.required]],
       description: ['', [Validators.required, CustomValidators.descriptionWordsCount(5)]],
       image: ['', [Validators.required, CustomValidators.imageUrl]],
-      rating: [null, [Validators.required, CustomValidators.ratingRange(0, 10)]]
+      rating: [null, [Validators.required, CustomValidators.ratingRange(0, 5)]]
     });
 
     this.form.valueChanges.subscribe(() => {
@@ -231,24 +231,8 @@ export class TableComponent implements OnInit {
     this.servicesList = this.servicesService.services;
   }
 
-  // openReviewDialog(service: Service): void {
-  //   const dialogRef = this.modalService.create({
-  //     nzContent: ReviewDialogComponent,
-  //     nzComponentParams: {
-  //       service: service
-  //     },
-  //     nzFooter: null,
-  //     nzWidth: '600px'
-  //   });
-  
-  //   dialogRef.afterClose.subscribe(result => {
-  //     if (result === 'reviewAdded') {
-  //       // Recenzie adăugată cu succes, puteți efectua orice acțiune necesară
-  //     }
-  //   });
-  // }
-
   openReviewDialog(service: Service, review: Review | undefined): void {
+    this.initialService = service;
     const modalRef = this.modalService.create({
       nzTitle: 'Review',
       nzContent: ReviewDialogComponent,
@@ -256,13 +240,14 @@ export class TableComponent implements OnInit {
         review: review
       }
     });
-
+  
     this.modalService.afterAllClose.subscribe(() => {
       if (modalRef.getContentComponent().review) {
-        //this.servicesService.updateReview(service, modalRef.getContentComponent().review);
+        // Handle the updated review if needed
         service.review = modalRef.getContentComponent().review;
+        this.servicesService.updateService(this.initialService, service);
       }
     });
-  }
+  }  
   
 }
