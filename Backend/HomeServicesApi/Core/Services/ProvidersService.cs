@@ -249,5 +249,10 @@ namespace Core.Services
         {
             return await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByUserIdAsync(userId);
         }
+
+        public async Task<List<ServiceType>> GetServiceTypes()
+        {
+            return await _unitOfWork.GetRepository<ServiceTypesRepository, ServiceType>().GetAllAsync();
+        }
     }
 }

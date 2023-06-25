@@ -33,7 +33,7 @@ namespace DataLayer.Mapping
                 Rating = provider.Rating,
                 AddressId = provider.AddressId,
                 Address = provider.Address,
-                Services = provider.Services.ToServiceDisplayDtos()
+                Services = provider.Services.ToServiceForProviderDisplayDtos()
             };
         }
     }

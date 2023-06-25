@@ -78,6 +78,14 @@ namespace HomeServicesApi.Controllers
             return Ok(provider);
         }
 
+        [HttpGet("get-all-service-types")]
+        [Authorize(Roles = "Admin,Provider,Customer")]
+        public async Task<IActionResult> GetAllServiceTypes()
+        {
+            var serviceTypes = await _providersService.GetServiceTypes();
+            return Ok(serviceTypes);
+        }
+
         [HttpPost("add-service")]
         [Authorize(Roles = "Provider")]
         public async Task<IActionResult> AddService(ServiceDto payload)
@@ -98,6 +106,14 @@ namespace HomeServicesApi.Controllers
             int userId = _authorizationService.GetUserIdFromToken(token);
             int providerId = (await _providersService.GetByUserId(userId)).Id;
 
+            var updatedProvider = (await _providersService.UpdateProvider(providerId, payload)).ToProviderDisplayDto();
+            return Ok(updatedProvider);
+        }
+
+        [HttpPut("{providerId:int}/update-provider")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateProvider([FromRoute] int providerId, UpdateProviderDto payload)
+        {
             var updatedProvider = (await _providersService.UpdateProvider(providerId, payload)).ToProviderDisplayDto();
             return Ok(updatedProvider);
         }
@@ -123,6 +139,25 @@ namespace HomeServicesApi.Controllers
             if (service.ProviderId != providerId)
             {
                 return Unauthorized();
+            }
+
+            var updatedService = (await _providersService.UpdateService(payload)).ToServiceDisplayDto();
+            return Ok(updatedService);
+        }
+
+        [HttpPut("admin-update-service")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AdminUpdateService(UpdateServiceDto payload)
+        {
+            payload.ServiceId = payload.ServiceId;
+            Service service;
+            try
+            {
+                service = await _providersService.GetServiceById(payload.ServiceId);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
             }
 
             var updatedService = (await _providersService.UpdateService(payload)).ToServiceDisplayDto();

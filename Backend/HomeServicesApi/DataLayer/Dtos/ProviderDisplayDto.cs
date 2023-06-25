@@ -15,6 +15,6 @@ namespace DataLayer.Dtos
         public byte Rating { get; set; }
         public int? AddressId { get; set; }
         public Address? Address { get; set; }
-        public List<ServiceDisplayDto>? Services { get; set; }
+        public List<ServiceForProviderDisplayDto>? Services { get; set; }
     }
 }
