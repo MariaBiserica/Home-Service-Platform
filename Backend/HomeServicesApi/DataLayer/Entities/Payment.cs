@@ -8,8 +8,8 @@ namespace DataLayer.Entities
 {
     public class Payment : BaseEntity
     {
-        public float Amount { get; set; }
-        public DateTime DateProcessed { get; set; }
+        public float? Amount { get; set; }
+        public DateTime? DateProcessed { get; set; }
         public bool IsProcessed { get; set; }
     }
 }

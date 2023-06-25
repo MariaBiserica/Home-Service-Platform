@@ -75,7 +75,7 @@ namespace Core.Services
         public async Task<string> Validate(LoginDto payload)
         {
             var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByEmailAsync(payload.Email) ?? throw new ApplicationException("User not found");
-            
+
             var passwordFine = _authService.VerifyHashedPassword(provider.User.PasswordHash, payload.Password);
             if (passwordFine)
             {
@@ -86,6 +86,26 @@ namespace Core.Services
                 throw new ApplicationException("Incorrect password");
             }
 
+        }
+
+        public async Task AddService(ServiceDto payload)
+        {
+
+            var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByIdAsync(payload.ProviderId) ?? throw new ApplicationException("Provider not found");
+            var type = await _unitOfWork.GetRepository<ServiceTypesRepository, ServiceType>().GetByIdAsync(payload.TypeId) ?? throw new ApplicationException("Service type not found");
+
+            var service = new Service()
+            {
+                Title = payload.Title,
+                Type = type,
+                Description = payload.Description,
+                Prices = payload.Prices,
+                Provider = provider,
+            };
+
+            await _unitOfWork.GetRepository<ServicesRepository, Service>().AddAsync(service);
+            //await _unitOfWork.GetRepository<ProvidersRepository, Provider>().AddServiceAsync(provider.Id, service);
+            _unitOfWork.Commit();
         }
     }
 }

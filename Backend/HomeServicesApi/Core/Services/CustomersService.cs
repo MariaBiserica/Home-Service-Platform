@@ -50,7 +50,7 @@ namespace Core.Services
             };
 
             var user = await _unitOfWork.GetRepository<UsersRepository, User>().AddAsync(newUser);
-            if (user == null) 
+            if (user == null)
             {
                 return;
             }
@@ -74,7 +74,7 @@ namespace Core.Services
         public async Task<string> Validate(LoginDto payload)
         {
             var customer = await _unitOfWork.GetRepository<CustomersRepository, Customer>().GetByEmailAsync(payload.Email) ?? throw new ApplicationException("User not found");
-            
+
             var passwordFine = _authService.VerifyHashedPassword(customer.User.PasswordHash, payload.Password);
             if (passwordFine)
             {
@@ -86,5 +86,64 @@ namespace Core.Services
             }
 
         }
+
+        public async Task AddBooking(BookingDto payload)
+        {
+            var customer = await _unitOfWork.GetRepository<CustomersRepository, Customer>().GetByIdAsync(payload.CustomerId) ?? throw new ApplicationException("Customer not found");
+            var service = await _unitOfWork.GetRepository<ServicesRepository, Service>().GetByIdAsync(payload.ServiceId) ?? throw new ApplicationException("Service not found");
+
+            var payment = new Payment();
+
+            if (payload.PaymentId == null)
+            {
+                payment.IsProcessed = false;
+                var addedPayment = await _unitOfWork.GetRepository<PaymentRepository, Payment>().AddAsync(payment);
+
+                if (addedPayment == null)
+                {
+                    return;
+                }
+                _unitOfWork.Commit();
+            }
+
+            payment = await _unitOfWork.GetRepository<PaymentRepository, Payment>().GetByIdAsync((int)payload.PaymentId) ?? throw new ApplicationException("Payment not found");
+            
+           
+            var booking = new Booking()
+            {
+                Customer = customer,
+                Service = service,
+                Payment = payment,
+                Date = DateTime.Now,
+                Status = DataLayer.Enums.BookingStatus.Pending
+            };
+
+            var addedBooking = await _unitOfWork.GetRepository<BookingsRepository, Booking>().AddAsync(booking);
+            if (addedBooking == null)
+            {
+                return;
+            }
+
+            _unitOfWork.Commit();
+        }
+
+        public async Task<List<Booking>> GetAllBookings(int customerId)
+        {
+            var bookings = await _unitOfWork.GetRepository<CustomersRepository, Customer>().GetBookingsAsync(customerId);
+            return bookings;
+        }
+
+        public async Task<List<Booking>> GetBookingsByStatus(int customerId, DataLayer.Enums.BookingStatus status)
+        {
+            var bookings = await _unitOfWork.GetRepository<CustomersRepository, Customer>().GetBookingsByStatusAsync(customerId, status);
+            return bookings;
+        }
+
+        public async Task<List<Booking>> GetBookingsByDate(int customerId, DateTime date)
+        {
+            var bookings = await _unitOfWork.GetRepository<CustomersRepository, Customer>().GetBookingsByDateAsync(customerId, date);
+            return bookings;
+        }
+
     }
 }

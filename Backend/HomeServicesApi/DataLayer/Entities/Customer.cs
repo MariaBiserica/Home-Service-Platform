@@ -17,5 +17,7 @@ namespace DataLayer.Entities
         public string? Gender { get; set; }
         public DateTime? BirthDate { get; set; }
         public List<Booking>? Bookings { get; set; }
+
+        
     }
 }

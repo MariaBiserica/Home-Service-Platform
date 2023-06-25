@@ -26,6 +26,7 @@ namespace HomeServicesApi.Settings
             services.AddScoped<AdminsService>();
             services.AddScoped<AuthenticationService>();
             services.AddScoped<AuthorizationService>();
+            services.AddScoped<AccountsService>();
         }
 
         private static void AddRepositories(IServiceCollection services)

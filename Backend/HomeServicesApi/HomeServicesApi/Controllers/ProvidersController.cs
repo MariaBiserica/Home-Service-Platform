@@ -43,5 +43,13 @@ namespace HomeServicesApi.Controllers
 
             return Ok(customer);
         }
+
+        [HttpPost("add-service")]
+        [Authorize(Roles = "Provider")]
+        public async Task<IActionResult> AddService(ServiceDto payload)
+        {
+            await _providersService.AddService(payload);
+            return Ok();
+        }
     }
 }

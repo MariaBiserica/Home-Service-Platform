@@ -1,5 +1,7 @@
 ﻿using Core.Dtos;
 using Core.Services;
+using DataLayer.Entities;
+using DataLayer.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -43,5 +45,42 @@ namespace HomeServicesApi.Controllers
 
             return Ok(customer);
         }
+
+        [HttpPost("add-booking")]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> AddBooking(BookingDto payload)
+        {
+
+            await _customersService.AddBooking(payload);
+            return Ok();
+
+        }
+
+
+        [HttpGet("{customerId:int}/get-all-bookings")]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> GetAllBookings([FromRoute] int customerId)
+        {
+            var bookings = await _customersService.GetAllBookings(customerId);
+            return Ok(bookings);
+        }
+
+        [HttpGet("{customerId:int}/get-bookings-by-status")]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> GetBookingsByStatus([FromRoute] int customerId, BookingStatus status)
+        {
+            var bookings = await _customersService.GetBookingsByStatus(customerId, status);
+            return Ok(bookings);
+        }
+
+        [HttpGet("{customerId:int}/get-bookings-by-date")]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> GetBookingsByDate([FromRoute] int customerId, DateTime date)
+        {
+            var bookings = await _customersService.GetBookingsByDate(customerId, date);
+            return Ok(bookings);
+        }
+
+
     }
 }

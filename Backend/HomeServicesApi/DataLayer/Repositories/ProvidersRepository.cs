@@ -14,7 +14,6 @@ namespace DataLayer.Repositories
         {
         }
 
-        //get all services of a provider
         public async Task<List<Service>> GetServices(int providerId)
         {
             return await DbSet.Where(p => p.Id == providerId).SelectMany(p=>p.Services).ToListAsync();
@@ -23,6 +22,13 @@ namespace DataLayer.Repositories
         public async Task<Provider?> GetByEmailAsync(string email)
         {
             return await DbSet.Where(p => string.Equals(p.User.Email, email)).FirstOrDefaultAsync();
+        }
+
+        public async Task AddServiceAsync(int providerId, Service service)
+        {
+            var provider = await GetByIdAsync(providerId);
+            provider.Services?.Add(service);
+            await UpdateAsync(provider);
         }
 
     }

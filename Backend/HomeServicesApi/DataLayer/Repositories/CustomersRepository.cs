@@ -57,6 +57,12 @@ namespace DataLayer.Repositories
 
         }
 
+        public async Task AddBookingAsync(int customerId, Booking booking)
+        {
+            var customer = await GetByIdAsync(customerId);
+            customer.Bookings.Add(booking);
+            await UpdateAsync(customer);
+        }
         
     }
 }
