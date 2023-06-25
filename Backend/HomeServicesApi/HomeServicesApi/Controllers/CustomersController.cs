@@ -82,6 +82,7 @@ namespace HomeServicesApi.Controllers
         }
 
         [HttpPut("update-customer-info")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> UpdateCustomerInfo(UpdateCustomerDto payload)
         {
            var updatedCustomer =  await _customersService.UpdateCustomer(payload);

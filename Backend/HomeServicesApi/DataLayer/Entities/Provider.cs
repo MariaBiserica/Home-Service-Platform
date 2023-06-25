@@ -16,6 +16,8 @@ namespace DataLayer.Entities
         public Address? Address { get; set; }
         public List<Service>? Services { get; set; }
 
-        
+
+
+
     }
 }

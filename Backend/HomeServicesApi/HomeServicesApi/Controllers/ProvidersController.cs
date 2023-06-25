@@ -67,5 +67,22 @@ namespace HomeServicesApi.Controllers
             await _providersService.AddService(payload);
             return Ok();
         }
+
+        [HttpPut("update-provider")]
+        [Authorize(Roles = "Provider")]
+        public async Task<IActionResult> UpdateProvider(UpdateProviderDto payload)
+        {
+            var updatedProvider = await _providersService.UpdateProvider(payload);
+            return Ok(updatedProvider);
+        }
+
+        [HttpPut("update-service")]
+        [Authorize(Roles = "Provider")]
+        public async Task<IActionResult> UpdateService(UpdateServiceDto payload)
+        {
+            var updatedService = await _providersService.UpdateService(payload);
+            return Ok(updatedService);
+        }
+
     }
 }

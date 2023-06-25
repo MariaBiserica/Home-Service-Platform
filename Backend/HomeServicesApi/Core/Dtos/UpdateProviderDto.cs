@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataLayer.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace Core.Dtos
 {
-    internal class UpdateProviderDto
+    public class UpdateProviderDto
     {
+        public int ProviderId { get; set; }
+        public string? Bio { get; set; }
+        public Address? Address { get; set; }
     }
 }

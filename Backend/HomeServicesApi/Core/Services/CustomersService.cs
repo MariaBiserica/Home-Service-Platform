@@ -100,6 +100,7 @@ namespace Core.Services
                 payment.IsProcessed = false;
                 var addedPayment = await _unitOfWork.GetRepository<PaymentRepository, Payment>().AddAsync(payment);
 
+
                 if (addedPayment == null)
                 {
                     return;

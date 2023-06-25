@@ -2,11 +2,13 @@
 using DataLayer.Entities;
 using DataLayer.Repositories;
 using DataLayer.UnitOfWork;
+using DataLayer.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Core.Services
 {
@@ -119,6 +121,117 @@ namespace Core.Services
             await _unitOfWork.GetRepository<ServicesRepository, Service>().AddAsync(service);
             //await _unitOfWork.GetRepository<ProvidersRepository, Provider>().AddServiceAsync(provider.Id, service);
             _unitOfWork.Commit();
+        }
+
+        public async Task<Provider> UpdateProvider(UpdateProviderDto payload)
+        {
+            var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByIdAsync(payload.ProviderId) ?? throw new ApplicationException("Provider not found");
+            if (payload.Address != null)
+            {
+                if (provider.Address == null)
+                {
+                    var address = new Address()
+                    {
+                        State = payload.Address.State,
+                        City = payload.Address.City,
+                        Street = payload.Address.Street,
+                        StreetNumber = payload.Address.StreetNumber,
+                        PostalCode = payload.Address.PostalCode
+                    };
+
+                    var addedAddress = await _unitOfWork.GetRepository<AddressRepository, Address>().AddAsync(address);
+                    if (addedAddress == null)
+                    {
+                        return null;
+                    }
+                    provider.Address = addedAddress;
+                    _unitOfWork.Commit();
+                }
+                else
+                {
+                    var address = provider.Address;
+
+                    address.State = payload.Address.State;
+                    address.City = payload.Address.City;
+                    address.Street = payload.Address.Street;
+                    address.StreetNumber = payload.Address.StreetNumber;
+                    address.PostalCode = payload.Address.PostalCode;
+
+                    var updatedAddress = await _unitOfWork.GetRepository<AddressRepository, Address>().UpdateAsync(address);
+
+                    if (updatedAddress == null)
+                    {
+                        return null;
+                    }
+
+                    provider.Address = updatedAddress;
+                    _unitOfWork.Commit();
+                }
+            }
+            var commonProperties = provider.GetType().GetProperties().Where(x => payload.GetType().GetProperty(x.Name) != null && x.Name != "Address");
+            foreach (var property in commonProperties)
+            {
+                var value = payload.GetType().GetProperty(property.Name).GetValue(payload);
+                if (value != null)
+                {
+                    property.SetValue(provider, value);
+                }
+            }
+
+            var updatedProvider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().UpdateAsync(provider);
+            if (updatedProvider == null)
+            {
+                return null;
+            }
+            _unitOfWork.Commit();
+            return updatedProvider;
+        }
+
+        public async Task<Service> UpdateService(UpdateServiceDto payload)
+        {
+            var service = await _unitOfWork.GetRepository<ServicesRepository, Service>().GetByIdAsync(payload.ServiceId) ?? throw new ApplicationException("Service not found");
+
+            try
+            {
+                var type = await _unitOfWork.GetRepository<ServiceTypesRepository, ServiceType>()
+                    .GetByIdAsync((int)payload.TypeId);
+                service.Type = type;
+
+            }
+            catch
+            {
+            }
+
+
+            var commonProperties = service.GetType().GetProperties().Where(x => payload.GetType().GetProperty(x.Name) != null && x.Name != "TypeId");
+            foreach (var property in commonProperties)
+            {
+                var value = payload.GetType().GetProperty(property.Name).GetValue(payload);
+                if (value != null)
+                {
+                    property.SetValue(service, value);
+                }
+            }
+            var updatedService = await _unitOfWork.GetRepository<ServicesRepository, Service>().UpdateAsync(service);
+            if (updatedService == null)
+            {
+                return null;
+            }
+            _unitOfWork.Commit();
+            return updatedService;
+        }
+
+        public async Task<Booking> UpdateBookingStatus(UpdateBookingDto payload)
+        {
+            var booking = await _unitOfWork.GetRepository<BookingsRepository, Booking>().GetByIdAsync(payload.BookingId) ?? throw new ApplicationException("Booking not found");
+            booking.Status = payload.Status;
+            var updatedBooking = await _unitOfWork.GetRepository<BookingsRepository, Booking>().UpdateAsync(booking);
+            if (updatedBooking == null)
+            {
+                return null;
+            }
+            _unitOfWork.Commit();
+            return updatedBooking;
         }
     }
 }
