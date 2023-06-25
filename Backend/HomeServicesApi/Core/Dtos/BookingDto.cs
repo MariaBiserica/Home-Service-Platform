@@ -9,7 +9,6 @@ namespace Core.Dtos
 {
     public class BookingDto
     {
-        public int CustomerId { get; set; }
         public int ServiceId { get; set; }
         public int? PaymentId { get; set; }
 

@@ -81,7 +81,11 @@ namespace HomeServicesApi.Controllers
         {
             try
             {
-                await _customersService.AddBooking(payload);
+                string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                int userId = _authorizationService.GetUserIdFromToken(token);
+                int customerId = (await _customersService.GetByUserId(userId)).Id;
+
+                await _customersService.AddBooking(customerId, payload);
                 return Ok();
             }
             catch (KeyNotFoundException e)

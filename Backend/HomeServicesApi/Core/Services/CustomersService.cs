@@ -89,9 +89,9 @@ namespace Core.Services
 
         }
 
-        public async Task AddBooking(BookingDto payload)
+        public async Task AddBooking(int customerId, BookingDto payload)
         {
-            var customer = await _unitOfWork.GetRepository<CustomersRepository, Customer>().GetByIdAsync(payload.CustomerId) ?? throw new KeyNotFoundException("Customer not found");
+            var customer = await _unitOfWork.GetRepository<CustomersRepository, Customer>().GetByIdAsync(customerId) ?? throw new KeyNotFoundException("Customer not found");
             var service = await _unitOfWork.GetRepository<ServicesRepository, Service>().GetByIdAsync(payload.ServiceId) ?? throw new KeyNotFoundException("Service not found");
 
             var payment = new Payment();
