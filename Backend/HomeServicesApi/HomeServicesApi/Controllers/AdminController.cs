@@ -29,8 +29,24 @@ namespace HomeServicesApi.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddServiceType(string serviceTypeName)
         {
-           var serviceType = await _adminsService.AddServiceType(serviceTypeName);
-           return Ok(serviceType);
+            var serviceType = await _adminsService.AddServiceType(serviceTypeName);
+            return Ok(serviceType);
+        }
+
+        [HttpDelete("{adminId:int}/delete-admin")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteAdmin([FromRoute]int adminId)
+        {
+            await _adminsService.DeleteAdmin(adminId);
+            return Ok();
+        }
+
+        [HttpDelete("{serviceTypeId:int}/delete-service-type")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteServiceType([FromRoute] int serviceTypeId)
+        {
+            await _adminsService.DeleteServiceType(serviceTypeId);
+            return Ok();
         }
     }
 }

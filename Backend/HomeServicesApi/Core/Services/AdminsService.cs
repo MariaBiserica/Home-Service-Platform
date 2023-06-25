@@ -89,5 +89,31 @@ namespace Core.Services
             return newServiceType;
         }
 
+        public async Task DeleteAdmin(int adminId)
+        {
+            var admin = await _unitOfWork.GetRepository<AdminsRepository, Admin>().GetByIdAsync(adminId);
+            if (admin == null)
+            {
+                return;
+            }
+            _unitOfWork.GetRepository<AdminsRepository, Admin>().DeleteAsync(admin);
+            _unitOfWork.Commit();
+        }
+
+        public async Task DeleteServiceType(int serviceTypeId)
+        {
+            var serviceType = await _unitOfWork.GetRepository<ServiceTypesRepository, ServiceType>().GetByIdAsync(serviceTypeId);
+            var services = await _unitOfWork.GetRepository<ServicesRepository, Service>().GetAllAsync();
+            foreach (var service in services)
+            {
+                if (service.ServiceTypeId == serviceTypeId)
+                {
+                    service.ServiceTypeId = null;
+                }
+            }
+            _unitOfWork.GetRepository<ServiceTypesRepository, ServiceType>().DeleteAsync(serviceType);
+            _unitOfWork.Commit();
+        }
+
     }
 }

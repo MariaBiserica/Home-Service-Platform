@@ -46,7 +46,6 @@ namespace DataLayer.Repositories
         public void DeleteAsync(T entity)
         {
             DbSet.Remove(entity);
-
         }
     }
 }
