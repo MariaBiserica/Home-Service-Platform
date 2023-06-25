@@ -41,7 +41,7 @@ namespace Core.Services
             var customer = await _unitOfWork.GetRepository<CustomersRepository, Customer>().GetByUserIdAsync(userId);
             return customer;
         }
-
+        
         public async void Register(CustomerRegisterDto registerData)
         {
             if (registerData == null)
@@ -80,7 +80,13 @@ namespace Core.Services
 
         public async Task<string> Validate(LoginDto payload)
         {
-            var customer = await _unitOfWork.GetRepository<CustomersRepository, Customer>().GetByEmailAsync(payload.Email) ?? throw new ApplicationException("User not found");
+            var customer = await _unitOfWork.GetRepository<CustomersRepository, Customer>().GetByEmailAsync(payload.Email) ?? throw new KeyNotFoundException("User not found");
+
+            //verify if account is disabled
+            if (customer.User.IsDisabled)
+            {
+                throw new UnauthorizedAccessException("Account is disabled");
+            }
 
             var passwordFine = _authService.VerifyHashedPassword(customer.User.PasswordHash, payload.Password);
             if (passwordFine)
@@ -89,7 +95,7 @@ namespace Core.Services
             }
             else
             {
-                throw new ApplicationException("Incorrect password");
+                throw new UnauthorizedAccessException("Incorrect password");
             }
 
         }

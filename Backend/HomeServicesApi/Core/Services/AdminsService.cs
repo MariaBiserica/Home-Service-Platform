@@ -59,7 +59,12 @@ namespace Core.Services
 
         public async Task<string> Validate(LoginDto payload)
         {
-            var provider = await _unitOfWork.GetRepository<AdminsRepository, Admin>().GetByEmailAsync(payload.Email) ?? throw new ApplicationException("User not found");
+            var provider = await _unitOfWork.GetRepository<AdminsRepository, Admin>().GetByEmailAsync(payload.Email) ?? throw new KeyNotFoundException("User not found");
+
+            if (provider.User.IsDisabled)
+            {
+                throw new UnauthorizedAccessException("User is disabled");
+            }
 
             var passwordFine = _authService.VerifyHashedPassword(provider.User.PasswordHash, payload.Password);
             if (passwordFine)
@@ -68,7 +73,7 @@ namespace Core.Services
             }
             else
             {
-                throw new ApplicationException("Incorrect password");
+                throw new UnauthorizedAccessException("Incorrect password");
             }
 
         }

@@ -20,9 +20,23 @@ namespace HomeServicesApi.Controllers
         [HttpPost("admin-login")]
         public async Task<IActionResult> Login(LoginDto payload)
         {
-            var jwtToken = await _adminsService.Validate(payload);
-
-            return Ok(new { token = jwtToken });
+            try
+            {
+                var jwtToken = await _adminsService.Validate(payload);
+                return Ok(new { token = jwtToken });
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost("add-service-type")]
