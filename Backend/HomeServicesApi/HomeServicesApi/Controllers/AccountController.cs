@@ -113,7 +113,29 @@ namespace HomeServicesApi.Controllers
             return Ok();
         }
 
+        [HttpPut("disable/provider")]
+        [Authorize(Roles = "Provider")]
+        public async Task<IActionResult> DisableProviderAccount(string password)
+        {
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            int userId = _authorizationService.GetUserIdFromToken(token);
+            await _accountsService.DisableProviderAccount(userId, password);
+            int providerId = (await _providersService.GetByUserId(userId)).Id;
+            await _providersService.DisableProviderServices(providerId);
+            return Ok();
+        }
 
+
+        [HttpPut("admin-disable/provider")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AdminDisableProviderAccount(int userId)
+        {
+            await _accountsService.AdminDisableProviderAccount(userId);
+            int providerId = (await _providersService.GetByUserId(userId)).Id;
+            await _providersService.DisableProviderServices(providerId);
+            return Ok();
+        }
+        
         [HttpPut("change-phone-number")]
         [Authorize(Roles = "Customer,Provider")]
         public async Task<IActionResult> ChangePhoneNumber(ChangePhoneNumberDto payload)

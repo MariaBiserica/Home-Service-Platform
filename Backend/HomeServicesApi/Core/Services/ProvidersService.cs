@@ -282,5 +282,17 @@ namespace Core.Services
             _unitOfWork.Commit();
             return updatedService;
         }
+
+        public async Task DisableProviderServices(int providerId)
+        {
+            var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByIdAsync(providerId) ?? throw new ApplicationException("Provider not found");
+            var services = provider.Services;
+            foreach (var service in services)
+            {
+                service.IsDisabled = true;
+                await _unitOfWork.GetRepository<ServicesRepository, Service>().UpdateAsync(service);
+            }
+            _unitOfWork.Commit();
+        }
     }
 }
