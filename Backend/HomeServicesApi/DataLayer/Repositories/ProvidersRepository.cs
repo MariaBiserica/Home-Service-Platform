@@ -19,6 +19,10 @@ namespace DataLayer.Repositories
             return await DbSet.Where(p => p.Id == providerId).SelectMany(p=>p.Services).ToListAsync();
         }
 
+        public async Task<List<Service>> GetServicesByType(int providerId, ServiceType type)
+        {
+            return await DbSet.Where(p => p.Id == providerId).SelectMany(p => p.Services).Where(s=>s.Type.Name == type.Name).ToListAsync();
+        }
         public async Task<Provider?> GetByEmailAsync(string email)
         {
             return await DbSet.Where(p => string.Equals(p.User.Email, email)).FirstOrDefaultAsync();

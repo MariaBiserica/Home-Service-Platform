@@ -26,6 +26,22 @@ namespace HomeServicesApi.Controllers
             return Ok(results);
         }
 
+        [HttpGet("get-all-services")]
+        [Authorize(Roles = "Provider,Admin")]
+        public async Task<IActionResult> GetAllServices(int providerId)
+        {
+            var results = await _providersService.GetAllServices(providerId);
+            return Ok(results);
+        }
+
+        [HttpGet("get-services-by-type")]
+        [Authorize(Roles = "Provider,Admin")]
+        public async Task<IActionResult> GetServicesByType(int providerId, int serviceTypeId)
+        {
+            var results = await _providersService.GetServicesByType(providerId, serviceTypeId);
+            return Ok(results);
+        }
+
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginDto payload)

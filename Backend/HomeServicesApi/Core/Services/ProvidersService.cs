@@ -29,6 +29,19 @@ namespace Core.Services
             return providers;
         }
 
+        public async Task<List<Service>> GetAllServices(int providerId)
+        {
+
+            var services = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetServices(providerId);
+            return services;
+        }
+
+        public async Task<List<Service>> GetServicesByType(int providerId, int typeId)
+        {
+            var serviceType = await _unitOfWork.GetRepository<ServiceTypesRepository, ServiceType>().GetByIdAsync(typeId) ?? throw new ApplicationException("Service type not found");
+            var services = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetServicesByType(providerId, serviceType);
+            return services;
+        }
         public async Task<Provider> GetByEmail(string email)
         {
             var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByEmailAsync(email);

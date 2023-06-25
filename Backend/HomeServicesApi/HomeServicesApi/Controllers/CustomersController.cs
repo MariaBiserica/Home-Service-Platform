@@ -81,6 +81,11 @@ namespace HomeServicesApi.Controllers
             return Ok(bookings);
         }
 
-
+        [HttpPut("update-customer-info")]
+        public async Task<IActionResult> UpdateCustomerInfo(UpdateCustomerDto payload)
+        {
+           var updatedCustomer =  await _customersService.UpdateCustomer(payload);
+            return Ok(updatedCustomer);
+        }
     }
 }

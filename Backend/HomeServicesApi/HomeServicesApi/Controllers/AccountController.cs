@@ -83,7 +83,7 @@ namespace HomeServicesApi.Controllers
             return Ok(modifiedUser);
         }
 
-        [HttpPut("change-phone number")]
+        [HttpPut("change-phone-number")]
         [Authorize(Roles = "Customer,Provider")]
         public async Task<IActionResult> ChangePhoneNumber(ChangePhoneNumberDto payload)
         {

@@ -72,5 +72,22 @@ namespace Core.Services
             }
 
         }
+
+        public async Task<ServiceType> AddServiceType(string name)
+        {
+            var serviceType = new ServiceType
+            {
+                Name = name
+            };
+
+            var newServiceType = await _unitOfWork.GetRepository<ServiceTypesRepository, ServiceType>().AddAsync(serviceType);
+            if (newServiceType == null)
+            {
+                return null;
+            }
+            _unitOfWork.Commit();
+            return newServiceType;
+        }
+
     }
 }

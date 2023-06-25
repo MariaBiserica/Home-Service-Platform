@@ -1,5 +1,6 @@
 ﻿using Core.Dtos;
 using Core.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,6 +23,14 @@ namespace HomeServicesApi.Controllers
             var jwtToken = await _adminsService.Validate(payload);
 
             return Ok(new { token = jwtToken });
+        }
+
+        [HttpPost("add-service-type")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AddServiceType(string serviceTypeName)
+        {
+           var serviceType = await _adminsService.AddServiceType(serviceTypeName);
+           return Ok(serviceType);
         }
     }
 }

@@ -5,6 +5,7 @@ using DataLayer.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -107,8 +108,8 @@ namespace Core.Services
             }
 
             payment = await _unitOfWork.GetRepository<PaymentRepository, Payment>().GetByIdAsync((int)payload.PaymentId) ?? throw new ApplicationException("Payment not found");
-            
-           
+
+
             var booking = new Booking()
             {
                 Customer = customer,
@@ -143,6 +144,73 @@ namespace Core.Services
         {
             var bookings = await _unitOfWork.GetRepository<CustomersRepository, Customer>().GetBookingsByDateAsync(customerId, date);
             return bookings;
+        }
+
+        public async Task<Customer> UpdateCustomer(UpdateCustomerDto payload)
+        {
+            var customer = await _unitOfWork.GetRepository<CustomersRepository, Customer>().GetByIdAsync(payload.CustomerId) ?? throw new ApplicationException("Customer not found");
+
+            if (payload.Address != null)
+            {
+                if (customer.Address == null)
+                {
+                    var address = new Address()
+                    {
+                        State = payload.Address.State,
+                        City = payload.Address.City,
+                        Street = payload.Address.Street,
+                        StreetNumber = payload.Address.StreetNumber,
+                        PostalCode = payload.Address.PostalCode
+                    };
+
+                    var addedAddress = await _unitOfWork.GetRepository<AddressRepository, Address>().AddAsync(address);
+                    if (addedAddress == null)
+                    {
+                        return null;
+                    }
+                    customer.Address = addedAddress;
+                    _unitOfWork.Commit();
+                }
+                else
+                {
+                    var address = customer.Address;
+
+                    address.State = payload.Address.State;
+                    address.City = payload.Address.City;
+                    address.Street = payload.Address.Street;
+                    address.StreetNumber = payload.Address.StreetNumber;
+                    address.PostalCode = payload.Address.PostalCode;
+
+                    var updatedAddress = await _unitOfWork.GetRepository<AddressRepository, Address>().UpdateAsync(address);
+
+                    if (updatedAddress == null)
+                    {
+                        return null;
+                    }
+
+                    customer.Address = updatedAddress;
+                    _unitOfWork.Commit();
+
+                }
+            }
+
+            var commonProperties = customer.GetType().GetProperties().Where(x => payload.GetType().GetProperty(x.Name) != null && x.Name != "Address");
+            foreach (var property in commonProperties)
+            {
+                var value = payload.GetType().GetProperty(property.Name).GetValue(payload);
+                if (value != null)
+                {
+                    property.SetValue(customer, value);
+                }
+            }
+
+            var updatedCustomer = await _unitOfWork.GetRepository<CustomersRepository, Customer>().UpdateAsync(customer);
+            if (updatedCustomer == null)
+            {
+                return null;
+            }
+            _unitOfWork.Commit();
+            return updatedCustomer;
         }
 
     }
