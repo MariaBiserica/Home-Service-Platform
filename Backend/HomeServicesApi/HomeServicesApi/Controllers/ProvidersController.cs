@@ -163,5 +163,96 @@ namespace HomeServicesApi.Controllers
             var updatedService = (await _providersService.UpdateService(payload)).ToServiceDisplayDto();
             return Ok(updatedService);
         }
+        [HttpPut("update-price")]
+        [Authorize(Roles = "Provider")]
+        public async Task<IActionResult> UpdatePrice(UpdatePriceDto payload)
+        {
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            int userId = _authorizationService.GetUserIdFromToken(token);
+            int providerId = (await _providersService.GetByUserId(userId)).Id;
+
+            Service service;
+            try
+            {
+                service = await _providersService.GetServiceById(payload.ServiceId);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+
+            if (service.ProviderId != providerId)
+            {
+                return Unauthorized();
+            }
+
+            var updatedService = (await _providersService.UpdatePrice(payload)).ToServiceDisplayDto();
+            return Ok(updatedService);
+        }
+
+        [HttpPut("disable/service")]
+        [Authorize(Roles = "Provider")]
+        public async Task<IActionResult> DisableService(int serviceId)
+        {
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            int userId = _authorizationService.GetUserIdFromToken(token);
+            int providerId = (await _providersService.GetByUserId(userId)).Id;
+            Service service;
+            try
+            {
+                service = await _providersService.GetServiceById(serviceId);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+
+            if (service.ProviderId != providerId)
+            {
+                return Unauthorized();
+            }
+            var updatedService = (await _providersService.DisableService(serviceId)).ToServiceDisplayDto();
+            return Ok(updatedService);
+        }
+        [HttpPut("admin-disable/service")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AdminDisableService(int serviceId)
+        {
+          
+            Service service;
+            try
+            {
+                service = await _providersService.GetServiceById(serviceId);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+
+            var updatedService = (await _providersService.DisableService(serviceId)).ToServiceDisplayDto();
+            return Ok(updatedService);
+        }
+
+
+        [HttpPut("admin-update-price")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AdminUpdatePrice(UpdatePriceDto payload)
+        {
+           
+
+            Service service;
+            try
+            {
+                service = await _providersService.GetServiceById(payload.ServiceId);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+
+
+            var updatedService = (await _providersService.UpdatePrice(payload)).ToServiceDisplayDto();
+            return Ok(updatedService);
+        }
     }
 }

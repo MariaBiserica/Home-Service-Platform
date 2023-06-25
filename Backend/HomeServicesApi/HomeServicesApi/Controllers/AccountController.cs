@@ -95,6 +95,25 @@ namespace HomeServicesApi.Controllers
             return Ok(modifiedUser.ToUserDisplayDto());
         }
 
+        [HttpPut("disable/user")]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> DisableCustomerAccount(string password)
+        {
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            int userId = _authorizationService.GetUserIdFromToken(token);
+            await _accountsService.DisableCustomerAccount(userId, password);
+            return Ok();
+        }
+
+        [HttpPut("admin-disable/user")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AdminDisableCustomerAccount(int userId)
+        {
+            await _accountsService.AdminDisableCustomerAccount(userId);
+            return Ok();
+        }
+
+
         [HttpPut("change-phone-number")]
         [Authorize(Roles = "Customer,Provider")]
         public async Task<IActionResult> ChangePhoneNumber(ChangePhoneNumberDto payload)

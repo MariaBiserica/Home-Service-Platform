@@ -198,6 +198,21 @@ namespace Core.Services
             return updatedProvider;
         }
 
+        public async Task<Service> UpdatePrice(UpdatePriceDto payload)
+        {
+            var service = await _unitOfWork.GetRepository<ServicesRepository, Service>().GetByIdAsync(payload.ServiceId) ?? throw new ApplicationException("Service not found");
+            var prices = service.Prices;
+            prices[payload.PriceKey] = payload.PriceValue;
+            service.Prices = prices;
+            var updatedService = await _unitOfWork.GetRepository<ServicesRepository, Service>().UpdateAsync(service);
+            if (updatedService == null)
+            {
+                return null;
+            }
+            _unitOfWork.Commit();
+            return updatedService;
+        }
+
         public async Task<Service> UpdateService(UpdateServiceDto payload)
         {
             var service = await _unitOfWork.GetRepository<ServicesRepository, Service>().GetByIdAsync(payload.ServiceId) ?? throw new ApplicationException("Service not found");
@@ -253,6 +268,19 @@ namespace Core.Services
         public async Task<List<ServiceType>> GetServiceTypes()
         {
             return await _unitOfWork.GetRepository<ServiceTypesRepository, ServiceType>().GetAllAsync();
+        }
+
+        public async Task<Service> DisableService(int serviceId)
+        {
+            var service = await _unitOfWork.GetRepository<ServicesRepository, Service>().GetByIdAsync(serviceId) ?? throw new ApplicationException("Service not found");
+            service.IsDisabled = true;
+            var updatedService = await _unitOfWork.GetRepository<ServicesRepository, Service>().UpdateAsync(service);
+            if (updatedService == null)
+            {
+                return null;
+            }
+            _unitOfWork.Commit();
+            return updatedService;
         }
     }
 }
