@@ -9,7 +9,6 @@ namespace Core.Dtos
 {
     public class UpdateProviderDto
     {
-        public int ProviderId { get; set; }
         public string? Bio { get; set; }
         public Address? Address { get; set; }
     }

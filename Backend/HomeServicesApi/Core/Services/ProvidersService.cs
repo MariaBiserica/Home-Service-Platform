@@ -44,6 +44,13 @@ namespace Core.Services
             var services = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetServicesByType(providerId, serviceType);
             return services;
         }
+
+        public async Task<Service> GetServiceById(int serviceId)
+        {
+            var service = await _unitOfWork.GetRepository<ServicesRepository, Service>().GetByIdAsync(serviceId) ?? throw new ApplicationException("Service not found");
+            return service;
+        }
+
         public async Task<Provider> GetByEmail(string email)
         {
             var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByEmailAsync(email);
@@ -103,10 +110,10 @@ namespace Core.Services
 
         }
 
-        public async Task AddService(ServiceDto payload)
+        public async Task AddService(int providerId, ServiceDto payload)
         {
 
-            var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByIdAsync(payload.ProviderId) ?? throw new ApplicationException("Provider not found");
+            var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByIdAsync(providerId) ?? throw new ApplicationException("Provider not found");
             var type = await _unitOfWork.GetRepository<ServiceTypesRepository, ServiceType>().GetByIdAsync(payload.TypeId) ?? throw new ApplicationException("Service type not found");
 
             var service = new Service()
@@ -123,9 +130,9 @@ namespace Core.Services
             _unitOfWork.Commit();
         }
 
-        public async Task<Provider> UpdateProvider(UpdateProviderDto payload)
+        public async Task<Provider> UpdateProvider(int providerId, UpdateProviderDto payload)
         {
-            var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByIdAsync(payload.ProviderId) ?? throw new ApplicationException("Provider not found");
+            var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByIdAsync(providerId) ?? throw new ApplicationException("Provider not found");
             if (payload.Address != null)
             {
                 if (provider.Address == null)
@@ -232,6 +239,11 @@ namespace Core.Services
             }
             _unitOfWork.Commit();
             return updatedBooking;
+        }
+
+        public async Task<Provider> GetByUserId(int userId)
+        {
+            return await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByUserIdAsync(userId);
         }
     }
 }

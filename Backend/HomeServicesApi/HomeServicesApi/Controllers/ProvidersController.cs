@@ -1,5 +1,6 @@
 ﻿using Core.Dtos;
 using Core.Services;
+using DataLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace HomeServicesApi.Controllers
     public class ProvidersController : ControllerBase
     {
         private readonly ProvidersService _providersService;
+        private readonly AuthorizationService _authorizationService;
 
-        public ProvidersController(ProvidersService providersService)
+        public ProvidersController(ProvidersService providersService, AuthorizationService authorizationService)
         {
             _providersService = providersService;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet("get-all")]
@@ -27,7 +30,7 @@ namespace HomeServicesApi.Controllers
         }
 
         [HttpGet("get-all-services")]
-        [Authorize(Roles = "Provider,Admin")]
+        [Authorize(Roles = "Customer,Provider,Admin")]
         public async Task<IActionResult> GetAllServices(int providerId)
         {
             var results = await _providersService.GetAllServices(providerId);
@@ -35,7 +38,7 @@ namespace HomeServicesApi.Controllers
         }
 
         [HttpGet("get-services-by-type")]
-        [Authorize(Roles = "Provider,Admin")]
+        [Authorize(Roles = "Customer,Provider,Admin")]
         public async Task<IActionResult> GetServicesByType(int providerId, int serviceTypeId)
         {
             var results = await _providersService.GetServicesByType(providerId, serviceTypeId);
@@ -52,7 +55,7 @@ namespace HomeServicesApi.Controllers
         }
 
         [HttpGet("get-by-email")]
-        [Authorize(Roles = "Provider")]
+        [Authorize(Roles = "Provider,Admin")]
         public async Task<IActionResult> GetByEmail(string email)
         {
             var customer = await _providersService.GetByEmail(email);
@@ -64,7 +67,11 @@ namespace HomeServicesApi.Controllers
         [Authorize(Roles = "Provider")]
         public async Task<IActionResult> AddService(ServiceDto payload)
         {
-            await _providersService.AddService(payload);
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            int userId = _authorizationService.GetUserIdFromToken(token);
+            int providerId = (await _providersService.GetByUserId(userId)).Id;
+
+            await _providersService.AddService(providerId, payload);
             return Ok();
         }
 
@@ -72,7 +79,11 @@ namespace HomeServicesApi.Controllers
         [Authorize(Roles = "Provider")]
         public async Task<IActionResult> UpdateProvider(UpdateProviderDto payload)
         {
-            var updatedProvider = await _providersService.UpdateProvider(payload);
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            int userId = _authorizationService.GetUserIdFromToken(token);
+            int providerId = (await _providersService.GetByUserId(userId)).Id;
+
+            var updatedProvider = await _providersService.UpdateProvider(providerId, payload);
             return Ok(updatedProvider);
         }
 
@@ -80,9 +91,27 @@ namespace HomeServicesApi.Controllers
         [Authorize(Roles = "Provider")]
         public async Task<IActionResult> UpdateService(UpdateServiceDto payload)
         {
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            int userId = _authorizationService.GetUserIdFromToken(token);
+            int providerId = (await _providersService.GetByUserId(userId)).Id;
+
+            Service service;
+            try
+            {
+                service = await _providersService.GetServiceById(payload.ServiceId);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+
+            if (service.ProviderId != providerId)
+            {
+                return Unauthorized();
+            }
+
             var updatedService = await _providersService.UpdateService(payload);
             return Ok(updatedService);
         }
-
     }
 }

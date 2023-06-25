@@ -14,13 +14,15 @@ namespace HomeServicesApi.Controllers
         private readonly ProvidersService _providersService;
         private readonly AdminsService _adminsService;
         private readonly AccountsService _accountsService;
+        private readonly AuthorizationService _authorizationService;
 
-        public AccountController(CustomersService customersService, ProvidersService providersService, AdminsService adminsService, AccountsService accountsService)
+        public AccountController(CustomersService customersService, ProvidersService providersService, AdminsService adminsService, AccountsService accountsService, AuthorizationService authorizationService)
         {
             _customersService = customersService;
             _providersService = providersService;
             _adminsService = adminsService;
             _accountsService = accountsService;
+            _authorizationService = authorizationService;
         }
 
         [HttpPost("register/customer")]
@@ -51,7 +53,10 @@ namespace HomeServicesApi.Controllers
         [Authorize(Roles = "Customer,Provider")]
         public async Task<IActionResult> ChangePassword(ChangePasswordDto payload)
         {
-            var modifiedUser = await _accountsService.UpdatePassword(payload);
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            int userId = _authorizationService.GetUserIdFromToken(token);
+
+            var modifiedUser = await _accountsService.UpdatePassword(userId, payload);
             if (modifiedUser == null)
             {
                 return BadRequest("Invalid password"!);
@@ -63,7 +68,10 @@ namespace HomeServicesApi.Controllers
         [Authorize(Roles = "Customer,Provider")]
         public async Task<IActionResult> ChangeUsername(ChangeUsernameDto payload)
         {
-            var modifiedUser = await _accountsService.UpdateUsername(payload);
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            int userId = _authorizationService.GetUserIdFromToken(token);
+
+            var modifiedUser = await _accountsService.UpdateUsername(userId, payload);
             if (modifiedUser == null)
             {
                 return BadRequest("Invalid password!");
@@ -75,7 +83,10 @@ namespace HomeServicesApi.Controllers
         [Authorize(Roles = "Customer,Provider")]
         public async Task<IActionResult> ChangeEmail(ChangeEmailDto payload)
         {
-            var modifiedUser = await _accountsService.UpdateEmail(payload);
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            int userId = _authorizationService.GetUserIdFromToken(token);
+
+            var modifiedUser = await _accountsService.UpdateEmail(userId, payload);
             if (modifiedUser == null)
             {
                 return BadRequest("Invalid password!");
@@ -87,14 +98,15 @@ namespace HomeServicesApi.Controllers
         [Authorize(Roles = "Customer,Provider")]
         public async Task<IActionResult> ChangePhoneNumber(ChangePhoneNumberDto payload)
         {
-            var modifiedUser = await _accountsService.UpdatePhoneNumber(payload);
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            int userId = _authorizationService.GetUserIdFromToken(token);
+
+            var modifiedUser = await _accountsService.UpdatePhoneNumber(userId, payload);
             if (modifiedUser == null)
             {
                 return BadRequest("Invalid password!");
             }
             return Ok(modifiedUser);
         }
-
-
     }
 }

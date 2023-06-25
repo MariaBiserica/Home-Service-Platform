@@ -8,7 +8,6 @@ namespace Core.Dtos
 {
     public class ChangePhoneNumberDto
     {
-        public int UserId { get; set; }
         public string NewPhoneNumber { get; set; }
         public string CurrentPassword { get; set; }
 

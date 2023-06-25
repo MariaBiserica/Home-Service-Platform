@@ -12,8 +12,8 @@ namespace DataLayer.Entities
     public class Service : BaseEntity
     {
         public string Title { get; set; }
-        public int ServiceTypeId { get; set; }
-        public ServiceType Type { get; set; }
+        public int? ServiceTypeId { get; set; }
+        public ServiceType? Type { get; set; }
         public string? Description { get; set; }
         [Column(TypeName = "nvarchar(max)")] 
         public string PricesData { get; set; }

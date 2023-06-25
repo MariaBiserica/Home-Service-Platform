@@ -63,6 +63,10 @@ namespace DataLayer.Repositories
             customer.Bookings.Add(booking);
             await UpdateAsync(customer);
         }
-        
+
+        public Task<Customer?> GetByUserIdAsync(int userId)
+        {
+            return DbSet.Where(c => c.UserId == userId).FirstOrDefaultAsync();
+        }
     }
 }

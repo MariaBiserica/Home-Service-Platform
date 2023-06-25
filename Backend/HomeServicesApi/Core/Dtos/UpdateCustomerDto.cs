@@ -9,7 +9,6 @@ namespace Core.Dtos
 {
     public class UpdateCustomerDto
     {
-        public int CustomerId { get; set; }
         public Address? Address { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }

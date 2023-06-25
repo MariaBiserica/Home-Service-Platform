@@ -35,6 +35,10 @@ namespace DataLayer.Repositories
             await UpdateAsync(provider);
         }
 
+        public async Task<Provider?> GetByUserIdAsync(int userId)
+        {
+            return await DbSet.Where(p => p.UserId == userId).FirstOrDefaultAsync();
+        }
     }
     
 }

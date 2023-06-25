@@ -20,10 +20,9 @@ namespace Core.Services
             _authService = new AuthenticationService();
         }
 
-        public async Task<User?> UpdatePassword(ChangePasswordDto payload)
+        public async Task<User?> UpdatePassword(int userId, ChangePasswordDto payload)
         {
-            var user = await _unitOfWork.GetRepository<UsersRepository, User>().GetByIdAsync(payload.UserId);
-
+            var user = await _unitOfWork.GetRepository<UsersRepository, User>().GetByIdAsync(userId);
 
             var passwordFine = _authService.VerifyHashedPassword(user.PasswordHash, payload.CurrentPassword);
             if (passwordFine)
@@ -39,9 +38,9 @@ namespace Core.Services
 
         }
 
-        public async Task<User?> UpdateEmail(ChangeEmailDto payload)
+        public async Task<User?> UpdateEmail(int userId, ChangeEmailDto payload)
         {
-            var user = await _unitOfWork.GetRepository<UsersRepository, User>().GetByIdAsync(payload.UserId) ?? throw new ApplicationException("User not found");
+            var user = await _unitOfWork.GetRepository<UsersRepository, User>().GetByIdAsync(userId) ?? throw new ApplicationException("User not found");
 
             var passwordFine = _authService.VerifyHashedPassword(user.PasswordHash, payload.CurrentPassword);
             if (passwordFine)
@@ -54,9 +53,9 @@ namespace Core.Services
             return null;
         }
 
-        public async Task<User?> UpdateUsername(ChangeUsernameDto payload)
+        public async Task<User?> UpdateUsername(int userId, ChangeUsernameDto payload)
         {
-            var user = await _unitOfWork.GetRepository<UsersRepository, User>().GetByIdAsync(payload.UserId) ?? throw new ApplicationException("User not found");
+            var user = await _unitOfWork.GetRepository<UsersRepository, User>().GetByIdAsync(userId) ?? throw new ApplicationException("User not found");
             var passwordFine = _authService.VerifyHashedPassword(user.PasswordHash, payload.CurrentPassword);
             if (passwordFine)
             {
@@ -68,9 +67,9 @@ namespace Core.Services
             return null;
         }
 
-        public async Task<User?> UpdatePhoneNumber(ChangePhoneNumberDto payload)
+        public async Task<User?> UpdatePhoneNumber(int userId, ChangePhoneNumberDto payload)
         {
-            var user = await _unitOfWork.GetRepository<UsersRepository, User>().GetByIdAsync(payload.UserId) ?? throw new ApplicationException("User not found");
+            var user = await _unitOfWork.GetRepository<UsersRepository, User>().GetByIdAsync(userId) ?? throw new ApplicationException("User not found");
             var passwordFine = _authService.VerifyHashedPassword(user.PasswordHash, payload.CurrentPassword);
             if (passwordFine)
             {

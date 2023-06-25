@@ -13,10 +13,12 @@ namespace HomeServicesApi.Controllers
     public class CustomersController : ControllerBase
     {
         private readonly CustomersService _customersService;
+        private readonly AuthorizationService _authorizationService;
 
-        public CustomersController(CustomersService customersService)
+        public CustomersController(CustomersService customersService, AuthorizationService authorizationService)
         {
             _customersService = customersService;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet("get-all")]
@@ -58,34 +60,82 @@ namespace HomeServicesApi.Controllers
 
 
         [HttpGet("{customerId:int}/get-all-bookings")]
-        [Authorize(Roles = "Customer")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllBookings([FromRoute] int customerId)
         {
             var bookings = await _customersService.GetAllBookings(customerId);
             return Ok(bookings);
         }
 
-        [HttpGet("{customerId:int}/get-bookings-by-status")]
+        [HttpGet("get-all-bookings")]
         [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> GetAllBookings()
+        {
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            int userId = _authorizationService.GetUserIdFromToken(token);
+            int customerId = (await _customersService.GetByUserId(userId)).Id;
+
+            var bookings = await _customersService.GetAllBookings(customerId);
+            return Ok(bookings);
+        }
+
+        [HttpGet("{customerId:int}/get-bookings-by-status")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetBookingsByStatus([FromRoute] int customerId, BookingStatus status)
         {
             var bookings = await _customersService.GetBookingsByStatus(customerId, status);
             return Ok(bookings);
         }
 
-        [HttpGet("{customerId:int}/get-bookings-by-date")]
+        [HttpGet("get-bookings-by-status")]
         [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> GetBookingsByStatus(BookingStatus status)
+        {
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            int userId = _authorizationService.GetUserIdFromToken(token);
+            int customerId = (await _customersService.GetByUserId(userId)).Id;
+
+            var bookings = await _customersService.GetBookingsByStatus(customerId, status);
+            return Ok(bookings);
+        }
+
+        [HttpGet("{customerId:int}/get-bookings-by-date")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetBookingsByDate([FromRoute] int customerId, DateTime date)
         {
             var bookings = await _customersService.GetBookingsByDate(customerId, date);
             return Ok(bookings);
         }
 
+        [HttpGet("get-bookings-by-date")]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> GetBookingsByDate(DateTime date)
+        {
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            int userId = _authorizationService.GetUserIdFromToken(token);
+            int customerId = (await _customersService.GetByUserId(userId)).Id;
+
+            var bookings = await _customersService.GetBookingsByDate(customerId, date);
+            return Ok(bookings);
+        }
+
+        [HttpPut("{customerId:int}/update-customer-info")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateCustomerInfo([FromRoute] int customerId, UpdateCustomerDto payload)
+        {
+            var updatedCustomer = await _customersService.UpdateCustomer(customerId, payload);
+            return Ok(updatedCustomer);
+        }
+
         [HttpPut("update-customer-info")]
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> UpdateCustomerInfo(UpdateCustomerDto payload)
         {
-           var updatedCustomer =  await _customersService.UpdateCustomer(payload);
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            int userId = _authorizationService.GetUserIdFromToken(token);
+            int customerId = (await _customersService.GetByUserId(userId)).Id;
+
+            var updatedCustomer = await _customersService.UpdateCustomer(customerId, payload);
             return Ok(updatedCustomer);
         }
     }

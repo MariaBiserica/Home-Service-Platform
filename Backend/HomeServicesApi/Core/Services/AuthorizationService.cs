@@ -75,5 +75,30 @@ namespace Core.Services
             jwtTokenHandler.ValidateToken(tokenString, tokenValidationParameters, out var validatedToken);
             return validatedToken != null;
         }
+
+        public int GetUserIdFromToken(string tokenString)
+        {
+            if (!ValidateToken(tokenString))
+            {
+                throw new ArgumentException("Invalid Token");
+            }
+
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = jwtTokenHandler.ReadJwtToken(tokenString);
+            var claims = jwtSecurityToken.Claims;
+
+            if (claims == null)
+            {
+                throw new ArgumentException("Invalid token. No claims found.");
+            }
+
+            var userID = claims.FirstOrDefault(c => c.Type == "userId");
+            if (userID == null)
+            {
+                throw new ArgumentException("Invalid token. UserID claim not found.");
+            }
+
+            return int.Parse(userID.Value);
+        }
     }
 }

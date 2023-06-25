@@ -36,6 +36,12 @@ namespace Core.Services
             return customer;
         }
 
+        public async Task<Customer> GetByUserId(int userId)
+        {
+            var customer = await _unitOfWork.GetRepository<CustomersRepository, Customer>().GetByUserIdAsync(userId);
+            return customer;
+        }
+
         public async void Register(CustomerRegisterDto registerData)
         {
             if (registerData == null)
@@ -147,9 +153,9 @@ namespace Core.Services
             return bookings;
         }
 
-        public async Task<Customer> UpdateCustomer(UpdateCustomerDto payload)
+        public async Task<Customer> UpdateCustomer(int customerId, UpdateCustomerDto payload)
         {
-            var customer = await _unitOfWork.GetRepository<CustomersRepository, Customer>().GetByIdAsync(payload.CustomerId) ?? throw new ApplicationException("Customer not found");
+            var customer = await _unitOfWork.GetRepository<CustomersRepository, Customer>().GetByIdAsync(customerId) ?? throw new ApplicationException("Customer not found");
 
             if (payload.Address != null)
             {

@@ -10,7 +10,6 @@ namespace Core.Dtos
 {
     public class ServiceDto
     {
-        public int ProviderId { get; set; }
         public string Title { get; set; }
         public int TypeId { get; set; }
         public string? Description { get; set; }
