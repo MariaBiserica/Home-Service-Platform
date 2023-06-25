@@ -25,11 +25,6 @@ namespace Core.Services
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
 
-            /* Generate keys online
-             * 128-bit  
-             * https://www.allkeysgenerator.com/Random/Security-Encryption-Key-Generator.aspx
-            */
-
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_securityKey));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -68,7 +63,6 @@ namespace Core.Services
 
             if (!jwtTokenHandler.CanReadToken(tokenString.Replace("Bearer ", string.Empty)))
             {
-                Console.WriteLine("Invalid Token");
                 return false;
             }
 
@@ -85,19 +79,9 @@ namespace Core.Services
 
             var jwtTokenHandler = new JwtSecurityTokenHandler();
             var jwtSecurityToken = jwtTokenHandler.ReadJwtToken(tokenString);
-            var claims = jwtSecurityToken.Claims;
-
-            if (claims == null)
-            {
-                throw new ArgumentException("Invalid token. No claims found.");
-            }
-
-            var userID = claims.FirstOrDefault(c => c.Type == "userId");
-            if (userID == null)
-            {
-                throw new ArgumentException("Invalid token. UserID claim not found.");
-            }
-
+            var claims = jwtSecurityToken.Claims ?? throw new ArgumentException("Invalid token. No claims found.");
+            var userID = claims.FirstOrDefault(c => c.Type == "userId") ?? throw new ArgumentException("Invalid token. UserID claim not found.");
+            
             return int.Parse(userID.Value);
         }
     }

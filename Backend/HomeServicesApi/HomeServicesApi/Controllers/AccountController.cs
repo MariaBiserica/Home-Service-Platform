@@ -4,6 +4,7 @@ using DataLayer.Mapping;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HomeServicesApi.Controllers
 {
@@ -30,125 +31,287 @@ namespace HomeServicesApi.Controllers
         [AllowAnonymous]
         public IActionResult RegisterCustomer(CustomerRegisterDto payload)
         {
-            _customersService.Register(payload);
-            return Ok();
+            try
+            {
+                _customersService.Register(payload);
+                return Ok();
+            }
+            catch (InvalidOperationException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost("register/provider")]
         [AllowAnonymous]
         public IActionResult RegisterProvider(ProviderRegisterDto payload)
         {
-            _providersService.Register(payload);
-            return Ok();
+            try
+            {
+                _providersService.Register(payload);
+                return Ok();
+            }
+            catch (InvalidOperationException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost("register/admin")]
         [Authorize(Roles = "Admin")]
         public IActionResult RegisterAdmin(UserRegisterDto payload)
         {
-            _adminsService.Register(payload);
-            return Ok();
+            try
+            {
+                _adminsService.Register(payload);
+                return Ok();
+            }
+            catch (InvalidOperationException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPut("change-password")]
         [Authorize(Roles = "Customer,Provider")]
         public async Task<IActionResult> ChangePassword(ChangePasswordDto payload)
         {
-            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            int userId = _authorizationService.GetUserIdFromToken(token);
-
-            var modifiedUser = await _accountsService.UpdatePassword(userId, payload);
-            if (modifiedUser == null)
+            try
             {
-                return BadRequest("Invalid password"!);
+                string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                int userId = _authorizationService.GetUserIdFromToken(token);
+
+                var modifiedUser = await _accountsService.UpdatePassword(userId, payload);
+                return Ok(modifiedUser.ToUserDisplayDto());
             }
-            return Ok(modifiedUser.ToUserDisplayDto());
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (UnauthorizedAccessException e )
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPut("change-Username")]
         [Authorize(Roles = "Customer,Provider")]
         public async Task<IActionResult> ChangeUsername(ChangeUsernameDto payload)
         {
-            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            int userId = _authorizationService.GetUserIdFromToken(token);
-
-            var modifiedUser = await _accountsService.UpdateUsername(userId, payload);
-            if (modifiedUser == null)
+            try
             {
-                return BadRequest("Invalid password!");
+                string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                int userId = _authorizationService.GetUserIdFromToken(token);
+
+                var modifiedUser = await _accountsService.UpdateUsername(userId, payload);
+                return Ok(modifiedUser.ToUserDisplayDto());
             }
-            return Ok(modifiedUser.ToUserDisplayDto());
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPut("change-email")]
         [Authorize(Roles = "Customer,Provider")]
         public async Task<IActionResult> ChangeEmail(ChangeEmailDto payload)
         {
-            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            int userId = _authorizationService.GetUserIdFromToken(token);
-
-            var modifiedUser = await _accountsService.UpdateEmail(userId, payload);
-            if (modifiedUser == null)
+            try
             {
-                return BadRequest("Invalid password!");
+                string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                int userId = _authorizationService.GetUserIdFromToken(token);
+
+                var modifiedUser = await _accountsService.UpdateEmail(userId, payload);
+                return Ok(modifiedUser.ToUserDisplayDto());
             }
-            return Ok(modifiedUser.ToUserDisplayDto());
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPut("disable/user")]
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> DisableCustomerAccount(string password)
         {
-            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            int userId = _authorizationService.GetUserIdFromToken(token);
-            await _accountsService.DisableCustomerAccount(userId, password);
-            return Ok();
+            try
+            {
+                string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                int userId = _authorizationService.GetUserIdFromToken(token);
+                await _accountsService.DisableCustomerAccount(userId, password);
+                return Ok();
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPut("admin-disable/user")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AdminDisableCustomerAccount(int userId)
         {
-            await _accountsService.AdminDisableCustomerAccount(userId);
-            return Ok();
+            try
+            {
+                await _accountsService.AdminDisableCustomerAccount(userId);
+                return Ok();
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPut("disable/provider")]
         [Authorize(Roles = "Provider")]
         public async Task<IActionResult> DisableProviderAccount(string password)
         {
-            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            int userId = _authorizationService.GetUserIdFromToken(token);
-            await _accountsService.DisableProviderAccount(userId, password);
-            int providerId = (await _providersService.GetByUserId(userId)).Id;
-            await _providersService.DisableProviderServices(providerId);
-            return Ok();
-        }
+            try
+            {
+                string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                int userId = _authorizationService.GetUserIdFromToken(token);
 
+                await _accountsService.DisableProviderAccount(userId, password);
+                int providerId = (await _providersService.GetByUserId(userId)).Id;
+                await _providersService.DisableProviderServices(providerId);
+                return Ok();
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
         [HttpPut("admin-disable/provider")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AdminDisableProviderAccount(int userId)
         {
-            await _accountsService.AdminDisableProviderAccount(userId);
-            int providerId = (await _providersService.GetByUserId(userId)).Id;
-            await _providersService.DisableProviderServices(providerId);
-            return Ok();
+            try
+            {
+                await _accountsService.AdminDisableProviderAccount(userId);
+                int providerId = (await _providersService.GetByUserId(userId)).Id;
+
+                await _providersService.DisableProviderServices(providerId);
+                return Ok();
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
-        
+
         [HttpPut("change-phone-number")]
         [Authorize(Roles = "Customer,Provider")]
         public async Task<IActionResult> ChangePhoneNumber(ChangePhoneNumberDto payload)
         {
-            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            int userId = _authorizationService.GetUserIdFromToken(token);
-
-            var modifiedUser = await _accountsService.UpdatePhoneNumber(userId, payload);
-            if (modifiedUser == null)
+            try
             {
-                return BadRequest("Invalid password!");
+                string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                int userId = _authorizationService.GetUserIdFromToken(token);
+
+                var modifiedUser = await _accountsService.UpdatePhoneNumber(userId, payload);
+                return Ok(modifiedUser.ToUserDisplayDto());
             }
-            return Ok(modifiedUser.ToUserDisplayDto());
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ using DataLayer.Mapping;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HomeServicesApi.Controllers
 {
@@ -26,7 +27,6 @@ namespace HomeServicesApi.Controllers
         public async Task<IActionResult> GetAll()
         {
             var results = (await _providersService.GetAll()).ToProviderDisplayDtos();
-
             return Ok(results);
         }
 
@@ -42,8 +42,19 @@ namespace HomeServicesApi.Controllers
         [Authorize(Roles = "Customer,Provider,Admin")]
         public async Task<IActionResult> GetServicesByType(int providerId, int serviceTypeId)
         {
-            var results = (await _providersService.GetServicesByType(providerId, serviceTypeId)).ToServiceDisplayDtos();
-            return Ok(results);
+            try
+            {
+                var results = (await _providersService.GetServicesByType(providerId, serviceTypeId)).ToServiceDisplayDtos();
+                return Ok(results);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost("login")]
@@ -73,9 +84,19 @@ namespace HomeServicesApi.Controllers
         [Authorize(Roles = "Provider,Admin")]
         public async Task<IActionResult> GetByEmail(string email)
         {
-            var provider = (await _providersService.GetByEmail(email)).ToProviderDisplayDto();
-
-            return Ok(provider);
+            try
+            {
+                var provider = (await _providersService.GetByEmail(email)).ToProviderDisplayDto();
+                return Ok(provider);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet("get-all-service-types")]
@@ -90,169 +111,245 @@ namespace HomeServicesApi.Controllers
         [Authorize(Roles = "Provider")]
         public async Task<IActionResult> AddService(ServiceDto payload)
         {
-            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            int userId = _authorizationService.GetUserIdFromToken(token);
-            int providerId = (await _providersService.GetByUserId(userId)).Id;
-
-            await _providersService.AddService(providerId, payload);
-            return Ok();
+            try
+            {
+                string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                int userId = _authorizationService.GetUserIdFromToken(token);
+                int providerId = (await _providersService.GetByUserId(userId)).Id;
+                await _providersService.AddService(providerId, payload);
+                return Ok();
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPut("update-provider")]
         [Authorize(Roles = "Provider")]
         public async Task<IActionResult> UpdateProvider(UpdateProviderDto payload)
         {
-            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            int userId = _authorizationService.GetUserIdFromToken(token);
-            int providerId = (await _providersService.GetByUserId(userId)).Id;
+            try
+            {
+                string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                int userId = _authorizationService.GetUserIdFromToken(token);
+                int providerId = (await _providersService.GetByUserId(userId)).Id;
 
-            var updatedProvider = (await _providersService.UpdateProvider(providerId, payload)).ToProviderDisplayDto();
-            return Ok(updatedProvider);
+                var updatedProvider = (await _providersService.UpdateProvider(providerId, payload)).ToProviderDisplayDto();
+                return Ok(updatedProvider);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPut("{providerId:int}/update-provider")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateProvider([FromRoute] int providerId, UpdateProviderDto payload)
         {
-            var updatedProvider = (await _providersService.UpdateProvider(providerId, payload)).ToProviderDisplayDto();
-            return Ok(updatedProvider);
+            try
+            {
+                var updatedProvider = (await _providersService.UpdateProvider(providerId, payload)).ToProviderDisplayDto();
+                return Ok(updatedProvider);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPut("update-service")]
         [Authorize(Roles = "Provider")]
         public async Task<IActionResult> UpdateService(UpdateServiceDto payload)
         {
-            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            int userId = _authorizationService.GetUserIdFromToken(token);
-            int providerId = (await _providersService.GetByUserId(userId)).Id;
-
-            Service service;
             try
             {
-                service = await _providersService.GetServiceById(payload.ServiceId);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+                string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                int userId = _authorizationService.GetUserIdFromToken(token);
+                int providerId = (await _providersService.GetByUserId(userId)).Id;
 
-            if (service.ProviderId != providerId)
-            {
-                return Unauthorized();
+                var service = await _providersService.GetServiceById(payload.ServiceId);
+                if (service.ProviderId != providerId)
+                {
+                    return Unauthorized();
+                }
+                var updatedService = (await _providersService.UpdateService(payload)).ToServiceDisplayDto();
+                return Ok(updatedService);
             }
-
-            var updatedService = (await _providersService.UpdateService(payload)).ToServiceDisplayDto();
-            return Ok(updatedService);
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPut("admin-update-service")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AdminUpdateService(UpdateServiceDto payload)
         {
-            payload.ServiceId = payload.ServiceId;
-            Service service;
             try
             {
-                service = await _providersService.GetServiceById(payload.ServiceId);
+                payload.ServiceId = payload.ServiceId;
+                var service = await _providersService.GetServiceById(payload.ServiceId);
+                var updatedService = (await _providersService.UpdateService(payload)).ToServiceDisplayDto();
+                return Ok(updatedService);
             }
-            catch (Exception ex)
+            catch (KeyNotFoundException e)
             {
-                return NotFound(ex.Message);
+                return NotFound(e.Message);
+            }
+            catch (DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
 
-            var updatedService = (await _providersService.UpdateService(payload)).ToServiceDisplayDto();
-            return Ok(updatedService);
         }
+
         [HttpPut("update-price")]
         [Authorize(Roles = "Provider")]
         public async Task<IActionResult> UpdatePrice(UpdatePriceDto payload)
         {
-            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            int userId = _authorizationService.GetUserIdFromToken(token);
-            int providerId = (await _providersService.GetByUserId(userId)).Id;
-
-            Service service;
             try
             {
-                service = await _providersService.GetServiceById(payload.ServiceId);
+                string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                int userId = _authorizationService.GetUserIdFromToken(token);
+                int providerId = (await _providersService.GetByUserId(userId)).Id;
+
+                var service = await _providersService.GetServiceById(payload.ServiceId);
+                if (service.ProviderId != providerId)
+                {
+                    return Unauthorized();
+                }
+                var updatedService = (await _providersService.UpdatePrice(payload)).ToServiceDisplayDto();
+                return Ok(updatedService);
             }
-            catch (Exception ex)
+            catch (KeyNotFoundException e)
             {
-                return NotFound(ex.Message);
+                return NotFound(e.Message);
+            }
+            catch (DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
 
-            if (service.ProviderId != providerId)
-            {
-                return Unauthorized();
-            }
-
-            var updatedService = (await _providersService.UpdatePrice(payload)).ToServiceDisplayDto();
-            return Ok(updatedService);
         }
 
         [HttpPut("disable/service")]
         [Authorize(Roles = "Provider")]
         public async Task<IActionResult> DisableService(int serviceId)
         {
-            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            int userId = _authorizationService.GetUserIdFromToken(token);
-            int providerId = (await _providersService.GetByUserId(userId)).Id;
-            Service service;
             try
             {
-                service = await _providersService.GetServiceById(serviceId);
+                string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                int userId = _authorizationService.GetUserIdFromToken(token);
+                int providerId = (await _providersService.GetByUserId(userId)).Id;
+
+                var service = await _providersService.GetServiceById(serviceId);
+                if (service.ProviderId != providerId)
+                {
+                    return Unauthorized();
+                }
+                var updatedService = (await _providersService.DisableService(serviceId)).ToServiceDisplayDto();
+                return Ok(updatedService);
             }
-            catch (Exception ex)
+            catch (KeyNotFoundException e)
             {
-                return NotFound(ex.Message);
+                return NotFound(e.Message);
+            }
+            catch (DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
 
-            if (service.ProviderId != providerId)
-            {
-                return Unauthorized();
-            }
-            var updatedService = (await _providersService.DisableService(serviceId)).ToServiceDisplayDto();
-            return Ok(updatedService);
         }
+
         [HttpPut("admin-disable/service")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AdminDisableService(int serviceId)
         {
-          
-            Service service;
             try
             {
-                service = await _providersService.GetServiceById(serviceId);
+                var service = await _providersService.GetServiceById(serviceId);
+                var updatedService = (await _providersService.DisableService(serviceId)).ToServiceDisplayDto();
+                return Ok(updatedService);
             }
-            catch (Exception ex)
+            catch (KeyNotFoundException e)
             {
-                return NotFound(ex.Message);
+                return NotFound(e.Message);
             }
-
-            var updatedService = (await _providersService.DisableService(serviceId)).ToServiceDisplayDto();
-            return Ok(updatedService);
+            catch (DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
-
 
         [HttpPut("admin-update-price")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AdminUpdatePrice(UpdatePriceDto payload)
         {
-           
-
-            Service service;
             try
             {
-                service = await _providersService.GetServiceById(payload.ServiceId);
+                var service = await _providersService.GetServiceById(payload.ServiceId);
+                var updatedService = (await _providersService.UpdatePrice(payload)).ToServiceDisplayDto();
+                return Ok(updatedService);
             }
-            catch (Exception ex)
+            catch (KeyNotFoundException e)
             {
-                return NotFound(ex.Message);
+                return NotFound(e.Message);
+            }
+            catch (DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
 
-
-            var updatedService = (await _providersService.UpdatePrice(payload)).ToServiceDisplayDto();
-            return Ok(updatedService);
         }
     }
 }

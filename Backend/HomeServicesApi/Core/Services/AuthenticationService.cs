@@ -17,7 +17,7 @@ namespace Core.Services
         {
             if (password == null)
             {
-                throw new ArgumentNullException("PASSWORD_CANNOT_BE_NULL");
+                throw new ArgumentNullException(nameof(password));
             }
 
             byte[] salt;
@@ -38,7 +38,7 @@ namespace Core.Services
         {
             if (hashedPassword == null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(hashedPassword));
             }
             if (password == null)
             {

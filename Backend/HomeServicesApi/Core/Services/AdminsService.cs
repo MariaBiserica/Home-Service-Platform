@@ -25,10 +25,7 @@ namespace Core.Services
 
         public async void Register(UserRegisterDto registerData)
         {
-            if (registerData == null)
-            {
-                return;
-            }
+            if (registerData == null) throw new ArgumentException("Invalid data");
 
             var hashedPassword = _authService.HashPassword(registerData.Password);
             var newUser = new User
@@ -37,23 +34,14 @@ namespace Core.Services
                 PasswordHash = hashedPassword
             };
 
-            var user = await _unitOfWork.GetRepository<UsersRepository, User>().AddAsync(newUser);
-            if (user == null)
-            {
-                return;
-            }
+            var user = await _unitOfWork.GetRepository<UsersRepository, User>().AddAsync(newUser) ?? throw new InvalidOperationException("User not created");
 
             var newAdmin = new Admin
             {
                 User = user,
             };
 
-            var provider = await _unitOfWork.GetRepository<AdminsRepository, Admin>().AddAsync(newAdmin);
-            if (provider == null)
-            {
-                return;
-            }
-
+            var provider = await _unitOfWork.GetRepository<AdminsRepository, Admin>().AddAsync(newAdmin) ?? throw new InvalidOperationException("Admin not created");
             _unitOfWork.Commit();
         }
 
@@ -85,29 +73,21 @@ namespace Core.Services
                 Name = name
             };
 
-            var newServiceType = await _unitOfWork.GetRepository<ServiceTypesRepository, ServiceType>().AddAsync(serviceType);
-            if (newServiceType == null)
-            {
-                return null;
-            }
+            var newServiceType = await _unitOfWork.GetRepository<ServiceTypesRepository, ServiceType>().AddAsync(serviceType) ?? throw new InvalidOperationException("Service type not created");
             _unitOfWork.Commit();
             return newServiceType;
         }
 
         public async Task DeleteAdmin(int adminId)
         {
-            var admin = await _unitOfWork.GetRepository<AdminsRepository, Admin>().GetByIdAsync(adminId);
-            if (admin == null)
-            {
-                return;
-            }
+            var admin = await _unitOfWork.GetRepository<AdminsRepository, Admin>().GetByIdAsync(adminId) ?? throw new KeyNotFoundException("Admin not found");
             _unitOfWork.GetRepository<AdminsRepository, Admin>().DeleteAsync(admin);
             _unitOfWork.Commit();
         }
 
         public async Task DeleteServiceType(int serviceTypeId)
         {
-            var serviceType = await _unitOfWork.GetRepository<ServiceTypesRepository, ServiceType>().GetByIdAsync(serviceTypeId);
+            var serviceType = await _unitOfWork.GetRepository<ServiceTypesRepository, ServiceType>().GetByIdAsync(serviceTypeId) ?? throw new KeyNotFoundException("Service type not found");
             var services = await _unitOfWork.GetRepository<ServicesRepository, Service>().GetAllAsync();
             foreach (var service in services)
             {
@@ -119,6 +99,5 @@ namespace Core.Services
             _unitOfWork.GetRepository<ServiceTypesRepository, ServiceType>().DeleteAsync(serviceType);
             _unitOfWork.Commit();
         }
-
     }
 }

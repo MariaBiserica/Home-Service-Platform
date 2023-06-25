@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System.Data.Common;
+using Microsoft.EntityFrameworkCore;
 
 namespace Core.Services
 {
@@ -40,29 +42,26 @@ namespace Core.Services
 
         public async Task<List<Service>> GetServicesByType(int providerId, int typeId)
         {
-            var serviceType = await _unitOfWork.GetRepository<ServiceTypesRepository, ServiceType>().GetByIdAsync(typeId) ?? throw new ApplicationException("Service type not found");
+            var serviceType = await _unitOfWork.GetRepository<ServiceTypesRepository, ServiceType>().GetByIdAsync(typeId) ?? throw new KeyNotFoundException("Service type not found");
             var services = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetServicesByType(providerId, serviceType);
             return services;
         }
 
         public async Task<Service> GetServiceById(int serviceId)
         {
-            var service = await _unitOfWork.GetRepository<ServicesRepository, Service>().GetByIdAsync(serviceId) ?? throw new ApplicationException("Service not found");
+            var service = await _unitOfWork.GetRepository<ServicesRepository, Service>().GetByIdAsync(serviceId) ?? throw new KeyNotFoundException("Service not found");
             return service;
         }
 
         public async Task<Provider> GetByEmail(string email)
         {
-            var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByEmailAsync(email);
+            var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByEmailAsync(email) ?? throw new KeyNotFoundException("User not found");
             return provider;
         }
 
         public async void Register(ProviderRegisterDto registerData)
         {
-            if (registerData == null)
-            {
-                return;
-            }
+            if (registerData == null) throw new ArgumentException("Invalid data");
 
             var hashedPassword = _authService.HashPassword(registerData.UserData.Password);
             var newUser = new User
@@ -72,11 +71,7 @@ namespace Core.Services
                 PasswordHash = hashedPassword
             };
 
-            var user = await _unitOfWork.GetRepository<UsersRepository, User>().AddAsync(newUser);
-            if (user == null)
-            {
-                return;
-            }
+            var user = await _unitOfWork.GetRepository<UsersRepository, User>().AddAsync(newUser) ?? throw new InvalidOperationException("User not created");
 
             var newProvider = new Provider
             {
@@ -84,12 +79,7 @@ namespace Core.Services
                 User = user
             };
 
-            var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().AddAsync(newProvider);
-            if (provider == null)
-            {
-                return;
-            }
-
+            _ = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().AddAsync(newProvider) ?? throw new InvalidOperationException("Provider not created");
             _unitOfWork.Commit();
         }
 
@@ -116,9 +106,8 @@ namespace Core.Services
 
         public async Task AddService(int providerId, ServiceDto payload)
         {
-
-            var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByIdAsync(providerId) ?? throw new ApplicationException("Provider not found");
-            var type = await _unitOfWork.GetRepository<ServiceTypesRepository, ServiceType>().GetByIdAsync(payload.TypeId) ?? throw new ApplicationException("Service type not found");
+            var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByIdAsync(providerId) ?? throw new KeyNotFoundException("Provider not found");
+            var type = await _unitOfWork.GetRepository<ServiceTypesRepository, ServiceType>().GetByIdAsync(payload.TypeId) ?? throw new KeyNotFoundException("Service type not found");
 
             var service = new Service()
             {
@@ -130,13 +119,12 @@ namespace Core.Services
             };
 
             await _unitOfWork.GetRepository<ServicesRepository, Service>().AddAsync(service);
-            //await _unitOfWork.GetRepository<ProvidersRepository, Provider>().AddServiceAsync(provider.Id, service);
             _unitOfWork.Commit();
         }
 
         public async Task<Provider> UpdateProvider(int providerId, UpdateProviderDto payload)
         {
-            var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByIdAsync(providerId) ?? throw new ApplicationException("Provider not found");
+            var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByIdAsync(providerId) ?? throw new KeyNotFoundException("Provider not found");
             if (payload.Address != null)
             {
                 if (provider.Address == null)
@@ -189,45 +177,34 @@ namespace Core.Services
                 }
             }
 
-            var updatedProvider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().UpdateAsync(provider);
-            if (updatedProvider == null)
-            {
-                return null;
-            }
+            var updatedProvider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().UpdateAsync(provider) ?? throw new DbUpdateException("Provider update failed");
+
             _unitOfWork.Commit();
             return updatedProvider;
         }
 
         public async Task<Service> UpdatePrice(UpdatePriceDto payload)
         {
-            var service = await _unitOfWork.GetRepository<ServicesRepository, Service>().GetByIdAsync(payload.ServiceId) ?? throw new ApplicationException("Service not found");
+            var service = await _unitOfWork.GetRepository<ServicesRepository, Service>().GetByIdAsync(payload.ServiceId) ?? throw new KeyNotFoundException("Service not found");
             var prices = service.Prices;
             prices[payload.PriceKey] = payload.PriceValue;
             service.Prices = prices;
-            var updatedService = await _unitOfWork.GetRepository<ServicesRepository, Service>().UpdateAsync(service);
-            if (updatedService == null)
-            {
-                return null;
-            }
+            var updatedService = await _unitOfWork.GetRepository<ServicesRepository, Service>().UpdateAsync(service) ?? throw new DbUpdateException("Service update failed");
             _unitOfWork.Commit();
             return updatedService;
         }
 
         public async Task<Service> UpdateService(UpdateServiceDto payload)
         {
-            var service = await _unitOfWork.GetRepository<ServicesRepository, Service>().GetByIdAsync(payload.ServiceId) ?? throw new ApplicationException("Service not found");
+            var service = await _unitOfWork.GetRepository<ServicesRepository, Service>().GetByIdAsync(payload.ServiceId) ?? throw new KeyNotFoundException("Service not found");
 
             try
             {
                 var type = await _unitOfWork.GetRepository<ServiceTypesRepository, ServiceType>()
                     .GetByIdAsync((int)payload.TypeId);
                 service.Type = type;
-
             }
-            catch
-            {
-            }
-
+            catch {}
 
             var commonProperties = service.GetType().GetProperties().Where(x => payload.GetType().GetProperty(x.Name) != null && x.Name != "TypeId");
             foreach (var property in commonProperties)
@@ -238,31 +215,26 @@ namespace Core.Services
                     property.SetValue(service, value);
                 }
             }
-            var updatedService = await _unitOfWork.GetRepository<ServicesRepository, Service>().UpdateAsync(service);
-            if (updatedService == null)
-            {
-                return null;
-            }
+            var updatedService = await _unitOfWork.GetRepository<ServicesRepository, Service>().UpdateAsync(service) ?? throw new DbUpdateException("Service update failed");
+
             _unitOfWork.Commit();
             return updatedService;
         }
 
         public async Task<Booking> UpdateBookingStatus(UpdateBookingDto payload)
         {
-            var booking = await _unitOfWork.GetRepository<BookingsRepository, Booking>().GetByIdAsync(payload.BookingId) ?? throw new ApplicationException("Booking not found");
+            var booking = await _unitOfWork.GetRepository<BookingsRepository, Booking>().GetByIdAsync(payload.BookingId) ?? throw new KeyNotFoundException("Booking not found");
             booking.Status = payload.Status;
-            var updatedBooking = await _unitOfWork.GetRepository<BookingsRepository, Booking>().UpdateAsync(booking);
-            if (updatedBooking == null)
-            {
-                return null;
-            }
+            var updatedBooking = await _unitOfWork.GetRepository<BookingsRepository, Booking>().UpdateAsync(booking) ?? throw new DbUpdateException("Booking update failed");
+
             _unitOfWork.Commit();
             return updatedBooking;
         }
 
         public async Task<Provider> GetByUserId(int userId)
         {
-            return await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByUserIdAsync(userId);
+            var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByUserIdAsync(userId) ?? throw new KeyNotFoundException("Provider not found");
+            return provider;
         }
 
         public async Task<List<ServiceType>> GetServiceTypes()
@@ -272,25 +244,22 @@ namespace Core.Services
 
         public async Task<Service> DisableService(int serviceId)
         {
-            var service = await _unitOfWork.GetRepository<ServicesRepository, Service>().GetByIdAsync(serviceId) ?? throw new ApplicationException("Service not found");
+            var service = await _unitOfWork.GetRepository<ServicesRepository, Service>().GetByIdAsync(serviceId) ?? throw new KeyNotFoundException("Service not found");
             service.IsDisabled = true;
-            var updatedService = await _unitOfWork.GetRepository<ServicesRepository, Service>().UpdateAsync(service);
-            if (updatedService == null)
-            {
-                return null;
-            }
+            var updatedService = await _unitOfWork.GetRepository<ServicesRepository, Service>().UpdateAsync(service) ?? throw new DbUpdateException("Service update failed");
+
             _unitOfWork.Commit();
             return updatedService;
         }
 
         public async Task DisableProviderServices(int providerId)
         {
-            var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByIdAsync(providerId) ?? throw new ApplicationException("Provider not found");
+            var provider = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetByIdAsync(providerId) ?? throw new KeyNotFoundException("Provider not found");
             var services = provider.Services;
             foreach (var service in services)
             {
                 service.IsDisabled = true;
-                await _unitOfWork.GetRepository<ServicesRepository, Service>().UpdateAsync(service);
+                _ = await _unitOfWork.GetRepository<ServicesRepository, Service>().UpdateAsync(service) ?? throw new DbUpdateException("Service update failed");
             }
             _unitOfWork.Commit();
         }

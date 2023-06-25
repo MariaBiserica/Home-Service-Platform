@@ -43,24 +43,57 @@ namespace HomeServicesApi.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddServiceType(string serviceTypeName)
         {
-            var serviceType = await _adminsService.AddServiceType(serviceTypeName);
-            return Ok(serviceType);
+            try
+            {
+                var serviceType = await _adminsService.AddServiceType(serviceTypeName);
+                return Ok(serviceType);
+            }
+            catch (InvalidOperationException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpDelete("{adminId:int}/delete-admin")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteAdmin([FromRoute]int adminId)
         {
-            await _adminsService.DeleteAdmin(adminId);
-            return Ok();
+            try
+            {
+                await _adminsService.DeleteAdmin(adminId);
+                return Ok();
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpDelete("{serviceTypeId:int}/delete-service-type")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteServiceType([FromRoute] int serviceTypeId)
         {
-            await _adminsService.DeleteServiceType(serviceTypeId);
-            return Ok();
+            try
+            {
+                await _adminsService.DeleteServiceType(serviceTypeId);
+                return Ok();
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }
