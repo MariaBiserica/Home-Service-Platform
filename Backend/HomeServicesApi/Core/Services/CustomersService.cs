@@ -113,9 +113,10 @@ namespace Core.Services
                 }
                 _unitOfWork.Commit();
             }
-
-            payment = await _unitOfWork.GetRepository<PaymentRepository, Payment>().GetByIdAsync((int)payload.PaymentId) ?? throw new ApplicationException("Payment not found");
-
+            else
+            {
+                payment = await _unitOfWork.GetRepository<PaymentRepository, Payment>().GetByIdAsync((int)payload.PaymentId) ?? throw new ApplicationException("Payment not found");
+            }
 
             var booking = new Booking()
             {

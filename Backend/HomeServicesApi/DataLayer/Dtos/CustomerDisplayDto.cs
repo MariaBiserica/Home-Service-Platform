@@ -1,21 +1,22 @@
-﻿using System;
+﻿using DataLayer.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataLayer.Entities
+namespace DataLayer.Dtos
 {
-    public class Customer : BaseEntity
+    public class CustomerDisplayDto
     {
         public int UserId { get; set; }
-        public virtual User User { get; set; }
+        public UserDisplayDto User { get; set; }
         public int? AddressId { get; set; }
         public Address? Address { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string? Gender { get; set; }
         public DateTime? BirthDate { get; set; }
-        public List<Booking>? Bookings { get; set; }
+        public List<BookingDisplayDto>? Bookings { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Core.Dtos;
 using Core.Services;
 using DataLayer.Entities;
+using DataLayer.Mapping;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,7 @@ namespace HomeServicesApi.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll()
         {
-            var results = await _providersService.GetAll();
+            var results = (await _providersService.GetAll()).ToProviderDisplayDtos();
 
             return Ok(results);
         }
@@ -33,7 +34,7 @@ namespace HomeServicesApi.Controllers
         [Authorize(Roles = "Customer,Provider,Admin")]
         public async Task<IActionResult> GetAllServices(int providerId)
         {
-            var results = await _providersService.GetAllServices(providerId);
+            var results = (await _providersService.GetAllServices(providerId)).ToServiceDisplayDtos();
             return Ok(results);
         }
 
@@ -41,7 +42,7 @@ namespace HomeServicesApi.Controllers
         [Authorize(Roles = "Customer,Provider,Admin")]
         public async Task<IActionResult> GetServicesByType(int providerId, int serviceTypeId)
         {
-            var results = await _providersService.GetServicesByType(providerId, serviceTypeId);
+            var results = (await _providersService.GetServicesByType(providerId, serviceTypeId)).ToServiceDisplayDtos();
             return Ok(results);
         }
 
@@ -58,9 +59,9 @@ namespace HomeServicesApi.Controllers
         [Authorize(Roles = "Provider,Admin")]
         public async Task<IActionResult> GetByEmail(string email)
         {
-            var customer = await _providersService.GetByEmail(email);
+            var provider = (await _providersService.GetByEmail(email)).ToProviderDisplayDto();
 
-            return Ok(customer);
+            return Ok(provider);
         }
 
         [HttpPost("add-service")]
@@ -83,7 +84,7 @@ namespace HomeServicesApi.Controllers
             int userId = _authorizationService.GetUserIdFromToken(token);
             int providerId = (await _providersService.GetByUserId(userId)).Id;
 
-            var updatedProvider = await _providersService.UpdateProvider(providerId, payload);
+            var updatedProvider = (await _providersService.UpdateProvider(providerId, payload)).ToProviderDisplayDto();
             return Ok(updatedProvider);
         }
 
@@ -110,7 +111,7 @@ namespace HomeServicesApi.Controllers
                 return Unauthorized();
             }
 
-            var updatedService = await _providersService.UpdateService(payload);
+            var updatedService = (await _providersService.UpdateService(payload)).ToServiceDisplayDto();
             return Ok(updatedService);
         }
     }

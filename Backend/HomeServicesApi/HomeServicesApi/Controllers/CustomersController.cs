@@ -2,6 +2,7 @@
 using Core.Services;
 using DataLayer.Entities;
 using DataLayer.Enums;
+using DataLayer.Mapping;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -52,18 +53,15 @@ namespace HomeServicesApi.Controllers
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> AddBooking(BookingDto payload)
         {
-
             await _customersService.AddBooking(payload);
             return Ok();
-
         }
-
 
         [HttpGet("{customerId:int}/get-all-bookings")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllBookings([FromRoute] int customerId)
         {
-            var bookings = await _customersService.GetAllBookings(customerId);
+            var bookings = (await _customersService.GetAllBookings(customerId)).ToBookingDisplayDtos();
             return Ok(bookings);
         }
 
@@ -75,7 +73,7 @@ namespace HomeServicesApi.Controllers
             int userId = _authorizationService.GetUserIdFromToken(token);
             int customerId = (await _customersService.GetByUserId(userId)).Id;
 
-            var bookings = await _customersService.GetAllBookings(customerId);
+            var bookings = (await _customersService.GetAllBookings(customerId)).ToBookingDisplayDtos();
             return Ok(bookings);
         }
 
@@ -83,7 +81,7 @@ namespace HomeServicesApi.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetBookingsByStatus([FromRoute] int customerId, BookingStatus status)
         {
-            var bookings = await _customersService.GetBookingsByStatus(customerId, status);
+            var bookings = (await _customersService.GetBookingsByStatus(customerId, status)).ToBookingDisplayDtos();
             return Ok(bookings);
         }
 
@@ -95,7 +93,7 @@ namespace HomeServicesApi.Controllers
             int userId = _authorizationService.GetUserIdFromToken(token);
             int customerId = (await _customersService.GetByUserId(userId)).Id;
 
-            var bookings = await _customersService.GetBookingsByStatus(customerId, status);
+            var bookings = (await _customersService.GetBookingsByStatus(customerId, status)).ToBookingDisplayDtos();
             return Ok(bookings);
         }
 
@@ -103,7 +101,7 @@ namespace HomeServicesApi.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetBookingsByDate([FromRoute] int customerId, DateTime date)
         {
-            var bookings = await _customersService.GetBookingsByDate(customerId, date);
+            var bookings = (await _customersService.GetBookingsByDate(customerId, date)).ToBookingDisplayDtos();
             return Ok(bookings);
         }
 
@@ -115,7 +113,7 @@ namespace HomeServicesApi.Controllers
             int userId = _authorizationService.GetUserIdFromToken(token);
             int customerId = (await _customersService.GetByUserId(userId)).Id;
 
-            var bookings = await _customersService.GetBookingsByDate(customerId, date);
+            var bookings = (await _customersService.GetBookingsByDate(customerId, date)).ToBookingDisplayDtos();
             return Ok(bookings);
         }
 
@@ -123,7 +121,7 @@ namespace HomeServicesApi.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCustomerInfo([FromRoute] int customerId, UpdateCustomerDto payload)
         {
-            var updatedCustomer = await _customersService.UpdateCustomer(customerId, payload);
+            var updatedCustomer = (await _customersService.UpdateCustomer(customerId, payload)).ToCustomerDisplayDto();
             return Ok(updatedCustomer);
         }
 
@@ -135,7 +133,7 @@ namespace HomeServicesApi.Controllers
             int userId = _authorizationService.GetUserIdFromToken(token);
             int customerId = (await _customersService.GetByUserId(userId)).Id;
 
-            var updatedCustomer = await _customersService.UpdateCustomer(customerId, payload);
+            var updatedCustomer = (await _customersService.UpdateCustomer(customerId, payload)).ToCustomerDisplayDto();
             return Ok(updatedCustomer);
         }
     }

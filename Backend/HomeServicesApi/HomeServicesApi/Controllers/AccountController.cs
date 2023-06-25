@@ -1,5 +1,6 @@
 ﻿using Core.Dtos;
 using Core.Services;
+using DataLayer.Mapping;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -61,7 +62,7 @@ namespace HomeServicesApi.Controllers
             {
                 return BadRequest("Invalid password"!);
             }
-            return Ok(modifiedUser);
+            return Ok(modifiedUser.ToUserDisplayDto());
         }
 
         [HttpPut("change-Username")]
@@ -76,7 +77,7 @@ namespace HomeServicesApi.Controllers
             {
                 return BadRequest("Invalid password!");
             }
-            return Ok(modifiedUser);
+            return Ok(modifiedUser.ToUserDisplayDto());
         }
 
         [HttpPut("change-email")]
@@ -91,7 +92,7 @@ namespace HomeServicesApi.Controllers
             {
                 return BadRequest("Invalid password!");
             }
-            return Ok(modifiedUser);
+            return Ok(modifiedUser.ToUserDisplayDto());
         }
 
         [HttpPut("change-phone-number")]
@@ -106,7 +107,7 @@ namespace HomeServicesApi.Controllers
             {
                 return BadRequest("Invalid password!");
             }
-            return Ok(modifiedUser);
+            return Ok(modifiedUser.ToUserDisplayDto());
         }
     }
 }

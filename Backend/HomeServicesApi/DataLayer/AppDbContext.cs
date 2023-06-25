@@ -34,6 +34,11 @@ namespace DataLayer
             modelBuilder.Entity<Booking>().Navigation(p => p.Service).AutoInclude();
             modelBuilder.Entity<Booking>().Navigation(p => p.Payment).AutoInclude();
 
+
+            modelBuilder.Entity<Service>().Navigation(p => p.Provider).AutoInclude();
+            modelBuilder.Entity<Service>().Navigation(p => p.Type).AutoInclude();
+            //modelBuilder.Entity<Service>().Navigation(p => p.Bookings).AutoInclude();
+
             modelBuilder.Entity<Admin>().Navigation(p => p.User).AutoInclude(); 
             modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique(true);
             base.OnModelCreating(modelBuilder);
