@@ -26,6 +26,7 @@ namespace DataLayer.Entities
         }
         public int ProviderId { get; set; }
         public Provider Provider { get; set; }
+        public bool IsDisabled { get; set; } = false;
         public List<Booking> Bookings { get; set; }
 
     }

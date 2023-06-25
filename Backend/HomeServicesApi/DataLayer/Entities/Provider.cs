@@ -11,7 +11,7 @@ namespace DataLayer.Entities
         public int UserId { get; set; }
         public User User { get; set; }
         public string Bio { get; set; }
-        public byte Rating { get; set; }
+        public byte Rating { get; set; } = 0;
         public int? AddressId { get; set; }
         public Address? Address { get; set; }
         public List<Service>? Services { get; set; }

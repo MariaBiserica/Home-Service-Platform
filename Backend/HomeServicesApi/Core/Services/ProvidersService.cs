@@ -80,7 +80,6 @@ namespace Core.Services
 
             var newProvider = new Provider
             {
-                Rating = 0,
                 Bio = registerData.Bio,
                 User = user
             };
