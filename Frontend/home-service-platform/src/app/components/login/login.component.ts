@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CustomValidators } from '../../helpers/validators';
 import { UserService } from 'src/app/services/user.service';
+import { Router } from '@angular/router';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +25,7 @@ export class LoginComponent implements OnInit {
   form!: FormGroup;
   isDisabled: boolean = true;
 
-  constructor(private fb: FormBuilder, private userService: UserService) { }
+  constructor(private fb: FormBuilder, private userService: UserService, private router: Router, private loginMessage:NzMessageService) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -60,13 +62,20 @@ export class LoginComponent implements OnInit {
     this.email = this.form.value.email;
     this.password = this.form.value.password;
     this.rememberMe = this.form.value.rememberMe;
-    console.log(this.username,this.email, this.password, this.rememberMe);
-    this.userService.loginUser({firstName:"",lastName:"", email: this.email, username:this.username,imageUrl:"", password:this.password});
+    //console.log(this.username,this.email, this.password, this.rememberMe);
     // Construct the request payload
     var payload = {
-        usernameOrEmail: this.usernameOrEmail,
-        password: this.password
+      usernameOrEmail: this.usernameOrEmail,
+      password: this.password
     };
+    
+    if(this.userService.loginUser({firstName:"",lastName:"", email: this.email, username:this.username,imageUrl:"", password:this.password}))
+    {
+      this.router.navigateByUrl('/dashboard');
+    }
+    else{
+        this.loginMessage.create('warning', 'Login unsuccessful');
+    }
 
     // Make the API call to https://reqres.in/api/login
     fetch('https://reqres.in/api/login', {

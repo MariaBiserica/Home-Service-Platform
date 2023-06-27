@@ -18,18 +18,26 @@ export class UserService {
   };
   constructor() {}
 
-  set users(usersToSet: any) {
-    this.currentUser = usersToSet;
+  setCurrentUser(user:User)
+  {
+    this.currentUser = user;
+  }
+  getCurrentUser()
+  {
+    return this.currentUser;
   }
 
-  loginUser(userLogin: User) {
+  loginUser(userLogin: User): boolean {
     const index = this.userList.findIndex(
       (user) => user.username == userLogin.username
     );
     if (index != -1) {
       console.log('User accepted');
+      this.setCurrentUser(this.userList[index]);
+      return true;
     } else {
       console.log('User denied');
+      return false;
     }
   }
   signUpUser(userSignUp: User) {
