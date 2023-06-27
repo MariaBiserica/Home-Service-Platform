@@ -38,6 +38,11 @@
           <i nz-icon [nzType]="getSortIcon('description')" nzTheme="outline"></i>
         </th>
 
+        <th (click)="sortTable('contact')">
+          Contact
+          <i nz-icon [nzType]="getSortIcon('contact')" nzTheme="outline"></i>
+        </th>
+
         <th>
           Image
         </th>
@@ -57,9 +62,21 @@
         <td nzLeft style="font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">
           {{ data.name | uppercase }}
         </td>
-        <td>{{ data.provider }}</td>
-        <td style="color: rgb(0, 187, 255); text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">{{ data.description }}</td>
-        <td><img [src]="data.image" alt="poster picture here" class="image-card"></td>
+        <td>
+          {{ data.provider }}
+        </td>
+        <td 
+          style="color: 
+          rgb(0, 187, 255); text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);"
+          >
+          {{ data.description }}
+        </td>
+        <td>
+          {{ data.contact }}
+        </td>
+        <td>
+          <img [src]="data.image" alt="poster picture here" class="image-card">
+        </td>
         <td>
           <div class="rating">
             <span
@@ -68,7 +85,7 @@
               [ngClass]="{ 'filled': i < data.rating, 'half-star': i > data.rating-1 && i < data.rating, 'empty': i >= data.rating }"
             ></span>
           </div>
-        </td>                                                                        
+        </td>
         <td>
           <div class="icon-container">
             <span class="icon"
@@ -119,6 +136,12 @@
         <nz-form-label [nzSpan]="8">Description</nz-form-label>
         <nz-form-control [nzSpan]="16" nzErrorTip="Too short! Please describe the plot in at least 5 words!">
           <textarea nz-input formControlName="description"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8">Contact</nz-form-label>
+        <nz-form-control [nzSpan]="16" nzErrorTip="Please enter a valid E-mail or Phone number!">
+          <input nz-input formControlName="contact" />
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>

@@ -104,4 +104,18 @@ export class CustomValidators {
     
     return { invalidUserType: true };
   };
+
+  static emailOrPhone(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (value === null || value === undefined || value.trim() === '') {
+      return null;
+    }
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    // const phoneRegex = /^(\d{10}|\d{4}-\d{3}-\d{3})$/;
+    const phoneRegex = /^(\d{4}[-\s]?\d{3}[-\s]?\d{3}|\d{10})$/;
+    if (!emailRegex.test(value) && !phoneRegex.test(value)) {
+      return { emailOrPhone: true };
+    }
+    return null;
+  }  
 }

@@ -3,6 +3,7 @@
     "name": "Cleaning Service",
     "provider": "ABC Cleaning Company",
     "description": "Professional cleaning service for homes and offices.",
+    "contact": "1234 567 890",
     "review": {
       "title": "Review Title",
       "description": "Review Description",
@@ -15,6 +16,7 @@
     "name": "Cooking Service",
     "provider": "XYZ Catering",
     "description": "Gourmet cooking service for events and special occasions.",
+    "contact": "cookingService@email.com",
     "image": "https://i.pinimg.com/564x/8f/2e/ee/8f2eee0071b519dd3e920bc1d9579613.jpg",
     "rating": 4.8
   },
@@ -22,6 +24,7 @@
     "name": "Mealkit Delivery Service",
     "provider": "Fresh Foods Co.",
     "description": "No time for grocery shopping? We deliver fresh ingredients to your door. Come home to a delicious meal!",
+    "contact": "0771-234-567",
     "image": "https://i.pinimg.com/564x/49/91/ff/4991ff12dfb68f1cb30ca699d18183a5.jpg",
     "rating": 5.0
   }

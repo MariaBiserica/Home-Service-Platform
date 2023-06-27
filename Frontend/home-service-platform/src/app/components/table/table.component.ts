@@ -47,6 +47,11 @@ export class TableComponent implements OnInit {
   };
   descriptionSortOrder: NzTableSortOrder | null = null;
 
+  contactSortFn: NzTableSortFn<Service> = (a: Service, b: Service) => {
+    return a.contact.localeCompare(b.contact);
+  };
+  contactSortOrder: NzTableSortOrder | null = null;
+
   ratingSortFn: NzTableSortFn<Service> = (a: Service, b: Service) => {
     return a.rating - b.rating;
   };  
@@ -79,6 +84,7 @@ export class TableComponent implements OnInit {
       name: ['', [Validators.required]],
       provider: ['', [Validators.required]],
       description: ['', [Validators.required, CustomValidators.descriptionWordsCount(5)]],
+      contact: ['', [Validators.required, CustomValidators.emailOrPhone]],
       image: ['', [Validators.required, CustomValidators.imageUrl]],
       rating: [null, [Validators.required, CustomValidators.ratingRange(0, 5)]]
     });
@@ -106,6 +112,7 @@ export class TableComponent implements OnInit {
       name: service.name,
       provider: service.provider,
       description: service.description,
+      contact: service.contact,
       image: service.image,
       rating: service.rating
     });
@@ -131,6 +138,7 @@ export class TableComponent implements OnInit {
       name: this.form.value.name,
       provider: this.form.value.provider,
       description: this.form.value.description,
+      contact: this.form.value.contact,
       review: this.form.value.review,
       image: this.form.value.image,
       rating: this.form.value.rating
@@ -223,6 +231,13 @@ export class TableComponent implements OnInit {
       this.servicesList = [...sortedList]; // Assign the sorted data to a new array
       this.descriptionSortOrder = this.descriptionSortOrder === 'ascend' ? 'descend' : 'ascend';
     }
+    else if (column === 'contact') {
+      const sortedList = this.servicesList.sort((a, b) =>
+        this.contactSortFn(a, b) * (this.contactSortOrder === 'ascend' ? 1 : -1)
+      );
+      this.servicesList = [...sortedList]; // Assign the sorted data to a new array
+      this.contactSortOrder = this.contactSortOrder === 'ascend' ? 'descend' : 'ascend';
+    }
     else if (column === 'rating') {
       const sortedList = this.servicesList.sort((a, b) =>
         this.ratingSortFn(a, b) * (this.ratingSortOrder === 'ascend' ? 1 : -1)
@@ -248,6 +263,13 @@ export class TableComponent implements OnInit {
       }
     }
     else if (column === 'description') {
+      if (this.descriptionSortOrder === 'ascend') {
+        return 'arrow-up';
+      } else if (this.descriptionSortOrder === 'descend') {
+        return 'arrow-down';
+      }
+    }
+    else if (column === 'contact') {
       if (this.descriptionSortOrder === 'ascend') {
         return 'arrow-up';
       } else if (this.descriptionSortOrder === 'descend') {
