@@ -94,4 +94,14 @@ export class CustomValidators {
     }
     return null;
   }
+
+  static userRole: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value;
+    
+    if (value === 'CUSTOMER' || value === 'PROVIDER') {
+      return null; // User role is valid
+    }
+    
+    return { invalidUserType: true };
+  };
 }

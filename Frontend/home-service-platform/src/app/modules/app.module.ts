@@ -19,6 +19,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import { DashboardFeatureModule } from './dashboard-feature.module';
 
 
@@ -43,6 +44,7 @@ registerLocaleData(en);
     NzButtonModule,
     NzMessageModule,
     NzAvatarModule,
+    NzSelectModule,
     DashboardFeatureModule
   ],
   providers: [
