@@ -34,16 +34,16 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      username: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, CustomValidators.password]],
+      username: [localStorage.getItem('username') || '', [Validators.required]],
+      email: [localStorage.getItem('email') || '', [Validators.required, Validators.email]],
+      password: [localStorage.getItem('password') || '', [Validators.required, CustomValidators.password]],
       rememberMe: [false]
     });
-
+  
     this.form.valueChanges.subscribe(() => {
       this.isDisabled = this.form.invalid;
     });
-  }
+  }  
 
   hideShowPassword() {
     this.isText = !this.isText;
@@ -61,6 +61,21 @@ export class LoginComponent implements OnInit {
     return '';
   }
 
+  onRememberMeChange(event: any) {
+    const checked = event.target.checked;
+    if (checked) {
+      // Store the user's login credentials in local storage
+      localStorage.setItem('username', this.username);
+      localStorage.setItem('email', this.email);
+      localStorage.setItem('password', this.password);
+    } else {
+      // Clear the stored login credentials from local storage
+      localStorage.removeItem('username');
+      localStorage.removeItem('email');
+      localStorage.removeItem('password');
+    }
+  }  
+
   onSubmit() {
     this.username = this.form.value.username;
     this.email = this.form.value.email;
@@ -68,13 +83,22 @@ export class LoginComponent implements OnInit {
     this.rememberMe = this.form.value.rememberMe;
     
     // Check the user credentials
-    if(this.userService.loginUser({firstName:"",lastName:"", email: this.email, username:this.username,imageUrl:"", password:this.password, role:""}))
-    {
+    if (this.userService.loginUser({ firstName: "", lastName: "", email: this.email, username: this.username, imageUrl: "", password: this.password, role: "" })) {
+      // Store the user login credentials if the "Remember me" checkbox is checked
+      if (this.rememberMe) {
+        localStorage.setItem('username', this.username);
+        localStorage.setItem('email', this.email);
+        localStorage.setItem('password', this.password);
+      } else {
+        // Clear the stored login credentials if the "Remember me" checkbox is not checked
+        localStorage.removeItem('username');
+        localStorage.removeItem('email');
+        localStorage.removeItem('password');
+      }
+
       this.router.navigateByUrl('/dashboard');
       this.loginMessage.create('success', 'Login successful');
-    }
-    else
-    {
+    } else {
       this.loginMessage.create('warning', 'Login unsuccessful');
     }
 
