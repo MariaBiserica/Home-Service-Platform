@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CustomValidators } from '../../helpers/validators';
 import { Service } from 'src/app/interfaces/service.interface';
@@ -31,7 +31,7 @@ export class TableComponent implements OnInit {
   searchTerm: string = '';
   searchIcon = 'search';
 
-  // Sorting variables
+  // Sorting variables for table header
   serviceNameSortFn: NzTableSortFn<Service> = (a: Service, b: Service) => {
     return a.name.localeCompare(b.name);
   };
@@ -57,7 +57,8 @@ export class TableComponent implements OnInit {
     private route: ActivatedRoute, 
     private fb: FormBuilder,
     private iconService: NzIconService,
-    private modalService: NzModalService
+    private modalService: NzModalService,
+    private router: Router,
   ) {
     this.route.queryParams.subscribe((res: any) => {
       console.log(res);
@@ -92,10 +93,114 @@ export class TableComponent implements OnInit {
     });
   }
 
+  // Services functions
   deleteService(movie: Service) {
     this.servicesService.deleteService(movie);
   }
 
+  editService(service: Service) {
+    this.initialService = service;
+
+    this.isInEditMode = true;
+    this.form.setValue({
+      name: service.name,
+      provider: service.provider,
+      description: service.description,
+      image: service.image,
+      rating: service.rating
+    });
+
+    this.showModal();
+  }
+
+  // Check before logout functions
+  confirmLogout(): void {
+    const confirmed = window.confirm('Are you sure you want to disconnect?');
+    if (confirmed) {
+      this.router.navigate(['/login']);
+    }
+  }
+
+  // Modal functions
+  showModal(): void {
+    this.isVisible = true;
+  }
+
+  getServiceFromForm(): Service {
+    return {
+      name: this.form.value.name,
+      provider: this.form.value.provider,
+      description: this.form.value.description,
+      review: this.form.value.review,
+      image: this.form.value.image,
+      rating: this.form.value.rating
+    };
+  }
+
+  handleCancel(): void {
+    this.isVisible = false;
+    this.form.reset();
+  }
+
+  handleOk(): void {
+    if(this.isInEditMode){
+      this.isInEditMode = false;
+      this.servicesService.updateService(this.initialService, this.getServiceFromForm());
+    }
+    else{
+      this.servicesService.addNewService(this.getServiceFromForm());
+    }
+
+    this.isVisible = false;
+    this.form.reset();
+  }
+
+  // Open review dialog table action
+  openReviewDialog(service: Service, review: Review | undefined): void {
+    this.initialService = service;
+    const modalRef = this.modalService.create({
+      nzTitle: 'Review',
+      nzContent: ReviewDialogComponent,
+      nzComponentParams: {
+        review: review
+      }
+    });
+  
+    this.modalService.afterAllClose.subscribe(() => {
+      if (modalRef.getContentComponent().review) {
+        // Handle the updated review if needed
+        service.review = modalRef.getContentComponent().review;
+        this.servicesService.updateService(this.initialService, service);
+      }
+    });
+  } 
+
+  // Search bar functions
+  search() {
+    const searchText = this.searchControl.value.toLowerCase();
+  
+    // Perform the search filtering
+    const filteredData = this.servicesList.filter(item =>
+      item.name.toLowerCase().includes(searchText) ||
+      item.provider.toLowerCase().includes(searchText)
+    );
+  
+    // Update the table data
+    this.servicesList = filteredData;
+  }
+
+  onSearchTermChange(): void {
+    // Check if the search term is empty
+    if (!this.searchTerm) {
+      this.refreshData();
+    }
+  }
+  
+  refreshData(): void {
+    this.servicesList = this.servicesService.services;
+  } 
+  
+  // Sorting table by header click functions
   sortTable(column: string): void {
     if (column === 'name') {
       const sortedList = this.servicesList.sort((a, b) =>
@@ -158,96 +263,4 @@ export class TableComponent implements OnInit {
     }
     return '';
   } 
-
-  editService(service: Service) {
-    this.initialService = service;
-
-    this.isInEditMode = true;
-    this.form.setValue({
-      name: service.name,
-      provider: service.provider,
-      description: service.description,
-      image: service.image,
-      rating: service.rating
-    });
-
-    this.showModal();
-  }
-
-  showModal(): void {
-    this.isVisible = true;
-  }
-
-  getServiceFromForm(): Service {
-    return {
-      name: this.form.value.name,
-      provider: this.form.value.provider,
-      description: this.form.value.description,
-      review: this.form.value.review,
-      image: this.form.value.image,
-      rating: this.form.value.rating
-    };
-  }
-
-  handleCancel(): void {
-    this.isVisible = false;
-    this.form.reset();
-  }
-
-  handleOk(): void {
-    if(this.isInEditMode){
-      this.isInEditMode = false;
-      this.servicesService.updateService(this.initialService, this.getServiceFromForm());
-    }
-    else{
-      this.servicesService.addNewService(this.getServiceFromForm());
-    }
-
-    this.isVisible = false;
-    this.form.reset();
-  }
-
-  search() {
-    const searchText = this.searchControl.value.toLowerCase();
-  
-    // Perform the search filtering
-    const filteredData = this.servicesList.filter(item =>
-      item.name.toLowerCase().includes(searchText) ||
-      item.provider.toLowerCase().includes(searchText)
-    );
-  
-    // Update the table data
-    this.servicesList = filteredData;
-  }
-
-  onSearchTermChange(): void {
-    // Check if the search term is empty
-    if (!this.searchTerm) {
-      this.refreshData();
-    }
-  }
-  
-  refreshData(): void {
-    this.servicesList = this.servicesService.services;
-  }
-
-  openReviewDialog(service: Service, review: Review | undefined): void {
-    this.initialService = service;
-    const modalRef = this.modalService.create({
-      nzTitle: 'Review',
-      nzContent: ReviewDialogComponent,
-      nzComponentParams: {
-        review: review
-      }
-    });
-  
-    this.modalService.afterAllClose.subscribe(() => {
-      if (modalRef.getContentComponent().review) {
-        // Handle the updated review if needed
-        service.review = modalRef.getContentComponent().review;
-        this.servicesService.updateService(this.initialService, service);
-      }
-    });
-  }  
-  
 }
