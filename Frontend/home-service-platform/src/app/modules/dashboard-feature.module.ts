@@ -15,6 +15,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { ReviewDialogComponent } from '../components/review-dialog/review-dialog.component';
 import { ToArrayPipe } from '../pipes/to-array.pipe';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
 
 @NgModule({
   declarations: [
@@ -41,6 +43,8 @@ import { ToArrayPipe } from '../pipes/to-array.pipe';
     NzModalModule,
     NzFormModule,
     NzInputModule,
+    NzTagModule,
+    NzSpaceModule
   ],
   exports: [ToArrayPipe]
 })

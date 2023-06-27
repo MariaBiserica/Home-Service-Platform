@@ -5,4 +5,5 @@ export interface User{
     username:string;
     password:string;
     imageUrl?:string;
+    role: string;
 }

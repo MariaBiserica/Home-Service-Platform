@@ -9,7 +9,6 @@ import { User } from 'src/app/interfaces/user.interface';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor(private userService:UserService) { }
   user: User = {
     firstName: '',
     lastName: '',
@@ -17,9 +16,12 @@ export class HeaderComponent implements OnInit {
     username: '',
     password: '',
     imageUrl: '',
+    role: '',
   };
+
+  constructor(private userService:UserService) { }
+
   ngOnInit(): void {
     this.user = this.userService.getCurrentUser();
   }
-
 }

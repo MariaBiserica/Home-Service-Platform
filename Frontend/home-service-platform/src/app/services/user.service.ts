@@ -15,15 +15,16 @@ export class UserService {
     username: '',
     password: '',
     imageUrl: '',
+    role: '',
   };
+
   constructor() {}
 
-  setCurrentUser(user:User)
-  {
+  setCurrentUser(user:User){
     this.currentUser = user;
   }
-  getCurrentUser()
-  {
+
+  getCurrentUser(){
     return this.currentUser;
   }
 
@@ -40,8 +41,11 @@ export class UserService {
       return false;
     }
   }
+
   signUpUser(userSignUp: User) {
     this.userList.push(userSignUp);
+
+    //! Save the new user list to the json file -- Not working
     //var json = JSON.stringify(this.userList);
     //const fs = require('fs');
     //fs.writeFile('user.json', json);

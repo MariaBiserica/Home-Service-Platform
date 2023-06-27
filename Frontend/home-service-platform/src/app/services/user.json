@@ -5,6 +5,16 @@
     "email": "cosmin@email.ro",
     "username": "Cosmeen",
     "password": "Cosmin1!",
-    "imageUrl": "https://images.unsplash.com/photo-1634673970798-a15ae56f6c65?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1856&q=80"
+    "imageUrl": "https://images.unsplash.com/photo-1634673970798-a15ae56f6c65?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1856&q=80",
+    "role": "CUSTOMER"
+  },
+  {
+    "firstName": "Maria",
+    "lastName": "Biserica",
+    "email": "mariabiserica@gmail.com",
+    "username": "Maria",
+    "password": "Maria1!",
+    "imageUrl": "https://i.pinimg.com/236x/81/1a/48/811a4880b53c42e2adec0d4664273ca5.jpg",
+    "role": "PROVIDER"
   }
 ]
