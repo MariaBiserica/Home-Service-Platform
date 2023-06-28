@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { Review } from 'src/app/interfaces/review.interface';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-review-dialog',
@@ -20,6 +21,7 @@ export class ReviewDialogComponent {
   constructor(
     private modalRef: NzModalRef,
     private fb: FormBuilder,
+    private userService: UserService,
   ) { }
   
 
@@ -27,7 +29,6 @@ export class ReviewDialogComponent {
     this.form = this.fb.group({
       title: ['', [Validators.required]],
       description: ['', [Validators.required]],
-      author: ['', [Validators.required]]
     });
 
     this.form.valueChanges.subscribe(() => {
@@ -59,6 +60,7 @@ export class ReviewDialogComponent {
 
   handleOk(): void {
     this.review = this.form.value;
+    this.review.author = this.userService.getCurrentUser().username;
   
     this.editing = false;
     this.isNewReview = false;

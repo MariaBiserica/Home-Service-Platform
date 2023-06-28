@@ -12,6 +12,8 @@ import { SearchOutline } from '@ant-design/icons-angular/icons';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { ReviewDialogComponent } from '../review-dialog/review-dialog.component';
 import { Review } from 'src/app/interfaces/review.interface';
+import { User } from 'src/app/interfaces/user.interface';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-table',
@@ -30,6 +32,16 @@ export class TableComponent implements OnInit {
 
   searchTerm: string = '';
   searchIcon = 'search';
+
+  user: User = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    username: '',
+    password: '',
+    imageUrl: '',
+    role: '',
+  };
 
   // Sorting variables for table header
   serviceNameSortFn: NzTableSortFn<Service> = (a: Service, b: Service) => {
@@ -64,6 +76,7 @@ export class TableComponent implements OnInit {
     private iconService: NzIconService,
     private modalService: NzModalService,
     private router: Router,
+    private userService: UserService,
   ) {
     this.route.queryParams.subscribe((res: any) => {
       console.log(res);
@@ -78,6 +91,8 @@ export class TableComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.user = this.userService.getCurrentUser();
+
     this.servicesList = this.servicesService.services;
     console.log(this.servicesList);
     this.form = this.fb.group({
@@ -270,9 +285,9 @@ export class TableComponent implements OnInit {
       }
     }
     else if (column === 'contact') {
-      if (this.descriptionSortOrder === 'ascend') {
+      if (this.contactSortOrder === 'ascend') {
         return 'arrow-up';
-      } else if (this.descriptionSortOrder === 'descend') {
+      } else if (this.contactSortOrder === 'descend') {
         return 'arrow-down';
       }
     }

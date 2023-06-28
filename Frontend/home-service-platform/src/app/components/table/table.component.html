@@ -1,6 +1,6 @@
 <div class="table-container">
   <div class="table-operations">
-    <button nz-button (click)="showModal()" nzType="primary">
+    <button *ngIf="user.role === 'PROVIDER'" nz-button (click)="showModal()" nzType="primary">
       Add New Item
     </button>
     <button nz-button nzType="primary" (click)="confirmLogout()">
@@ -92,18 +92,21 @@
               nz-icon 
               nzType="message" 
               nzTheme="outline"
+              *ngIf="user.role === 'CUSTOMER'"
               (click)="openReviewDialog(data, data.review)"
             ></span>
             <span class="icon"
               nz-icon
               nzType="delete"
               nzTheme="outline"
+              *ngIf="user.role === 'PROVIDER'"
               (click)="deleteService(data)"
             ></span>
             <span class="icon"
               nz-icon
               nzType="edit"
               nzTheme="outline"
+              *ngIf="user.role === 'PROVIDER'"
               (click)="editService(data)"
             ></span>
           </div>
