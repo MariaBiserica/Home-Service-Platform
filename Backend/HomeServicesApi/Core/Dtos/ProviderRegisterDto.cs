@@ -9,7 +9,6 @@ namespace Core.Dtos
     public class ProviderRegisterDto
     {
         public UserRegisterDto UserData { get; set; }
-        public string Username { get; set; }
         public string Bio { get; set; }
 
     }

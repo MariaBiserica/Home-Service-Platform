@@ -29,7 +29,7 @@ namespace HomeServicesApi.Controllers
         {
             var results = await _customersService.GetAll();
 
-            return Ok(results);
+            return Ok(results.ToCustomerDisplayDtos());
         }
 
         [HttpPost("login")]
@@ -63,7 +63,7 @@ namespace HomeServicesApi.Controllers
             try
             {
                 var customer = await _customersService.GetByEmail(email);
-                return Ok(customer);
+                return Ok(customer.ToCustomerDisplayDto());
             }
             catch (KeyNotFoundException e)
             {

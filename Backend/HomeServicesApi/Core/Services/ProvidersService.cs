@@ -66,7 +66,7 @@ namespace Core.Services
             var hashedPassword = _authService.HashPassword(registerData.UserData.Password);
             var newUser = new User
             {
-                Username = registerData.Username,
+                Username = registerData.UserData.Username,
                 Email = registerData.UserData.Email,
                 PasswordHash = hashedPassword
             };
