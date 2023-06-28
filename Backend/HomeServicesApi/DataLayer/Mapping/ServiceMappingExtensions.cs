@@ -34,11 +34,11 @@ namespace DataLayer.Mapping
                 Description = service.Description,
                 Prices = service.Prices,
                 ProviderId = service.ProviderId,
-                Provider = service.Provider.ToProviderDisplayDto(),
+                Provider = service.Provider.ToProviderForServiceDisplayDto(),
             };
         }
 
-        public static List<ServiceForProviderDisplayDto> ToServiceForProviderDisplayDtos(this List<Service> services)
+        public static List<ServiceDisplayDto> ToServiceForProviderDisplayDtos(this List<Service> services)
         {
             if (services == null)
             {
@@ -47,21 +47,20 @@ namespace DataLayer.Mapping
             return services.Select(s => s.ToServiceForProviderDisplayDto()).ToList();
         }
 
-        public static ServiceForProviderDisplayDto ToServiceForProviderDisplayDto(this Service service)
+        public static ServiceDisplayDto ToServiceForProviderDisplayDto(this Service service)
         {
             if (service == null)
             {
                 return null;
             }
 
-            return new ServiceForProviderDisplayDto
+            return new ServiceDisplayDto
             {
                 Title = service.Title,
                 ServiceTypeId = service.ServiceTypeId,
                 Type = service.Type,
                 Description = service.Description,
-                Prices = service.Prices,
-                ProviderId = service.ProviderId
+                Prices = service.Prices
             };
         }
     }

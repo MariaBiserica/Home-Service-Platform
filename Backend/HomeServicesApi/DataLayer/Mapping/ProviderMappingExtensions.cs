@@ -36,5 +36,22 @@ namespace DataLayer.Mapping
                 Services = provider.Services.ToServiceForProviderDisplayDtos()
             };
         }
+
+        public static ProviderDisplayDto ToProviderForServiceDisplayDto(this Provider provider)
+        {
+            if (provider == null)
+            {
+                return null;
+            }
+            return new ProviderDisplayDto
+            {
+                UserId = provider.UserId,
+                User = provider.User.ToUserDisplayDto(),
+                Bio = provider.Bio,
+                Rating = provider.Rating,
+                AddressId = provider.AddressId,
+                Address = provider.Address
+            };
+        }
     }
 }

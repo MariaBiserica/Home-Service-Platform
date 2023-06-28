@@ -18,6 +18,6 @@ namespace DataLayer.Dtos
         public string? Description { get; set; }
         public Dictionary<string, float> Prices { get; set; }
         public int ProviderId { get; set; }
-        public ProviderDisplayDto Provider { get; set; }
+        public ProviderDisplayDto? Provider { get; set; }
     }
 }

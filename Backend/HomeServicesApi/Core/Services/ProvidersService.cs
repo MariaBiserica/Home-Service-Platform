@@ -33,7 +33,13 @@ namespace Core.Services
             return providers;
         }
 
-        public async Task<List<Service>> GetAllServices(int providerId)
+        public async Task<List<Service>> GetAllServices()
+        {
+            var services = await _unitOfWork.GetRepository<ServicesRepository, Service>().GetAllAsync();
+            return services;
+        }
+
+        public async Task<List<Service>> GetAllProviderServices(int providerId)
         {
 
             var services = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetServices(providerId);

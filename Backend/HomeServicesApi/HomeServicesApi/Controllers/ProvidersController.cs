@@ -32,9 +32,17 @@ namespace HomeServicesApi.Controllers
 
         [HttpGet("get-all-services")]
         [Authorize(Roles = "Customer,Provider,Admin")]
-        public async Task<IActionResult> GetAllServices(int providerId)
+        public async Task<IActionResult> GetAllServices()
         {
-            var results = (await _providersService.GetAllServices(providerId)).ToServiceDisplayDtos();
+            var results = (await _providersService.GetAllServices()).ToServiceDisplayDtos();
+            return Ok(results);
+        }
+
+        [HttpGet("get-all-provider-services")]
+        [Authorize(Roles = "Customer,Provider,Admin")]
+        public async Task<IActionResult> GetAllProviderServices(int providerId)
+        {
+            var results = (await _providersService.GetAllProviderServices(providerId)).ToServiceDisplayDtos();
             return Ok(results);
         }
 
