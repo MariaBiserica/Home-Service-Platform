@@ -61,6 +61,18 @@ builder.Services.AddSwaggerGen(options =>
      });
 });
 
+//for testing on localhost only
+builder.Services.AddCors(corsBuilder =>
+{
+    corsBuilder.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin();
+        policy.AllowAnyMethod();
+        policy.AllowAnyHeader();
+    });
+});
+//
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -74,6 +86,10 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+//for testing on localhost only
+app.UseCors("AllowAll");
+//
 
 app.MapControllers();
 
