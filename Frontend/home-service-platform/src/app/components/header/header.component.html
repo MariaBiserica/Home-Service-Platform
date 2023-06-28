@@ -1,5 +1,18 @@
-<nz-page-header
+<nz-page-header 
   class="site-page-header"
   nzTitle="Home Service Platform"
   nzSubtitle="This is a platform for home service providers and customers to connect with each other."
-></nz-page-header>
+  >
+  <!--extra user info-->
+  <nz-page-header-extra>
+    <nz-space>
+      <img *nzSpaceItem [src]="user.imageUrl" alt="User avatar">
+      <div *nzSpaceItem>
+        <div class="username">{{ user.username }}</div>
+        <div class="email">{{ user.email }}</div>
+      </div>
+      <nz-tag *nzSpaceItem [nzColor]="'cyan'">{{ user.role }}</nz-tag>
+    </nz-space>
+  </nz-page-header-extra>
+
+</nz-page-header>

@@ -9,7 +9,7 @@
                     <div class="panel-body p-3">
                         <nz-form [formGroup]="form" nzLayout="vertical">
                             <nz-form-item class="input-field">
-                                <span class="fa fa-user p-2"></span>
+                                <span class="fa fa-user-circle p-2"></span>
                                 <nz-form-control nzErrorTip="Please enter your Username!">
                                     <input type="text" placeholder="Username" formControlName="username">
                                 </nz-form-control>
@@ -31,17 +31,20 @@
                             </nz-form-item>
 
                             <nz-form-item>
-                                <input type="checkbox" class="form-check-input" formControlName="rememberMe">
+                                <input type="checkbox" class="form-check-input" formControlName="rememberMe" 
+                                    (change)="onRememberMeChange($event)">
                                 <label class="form-check-label" for="rememberMe">Remember me</label>
                             </nz-form-item>
 
                             <div class="form-inline fr mt-4">
                                 <a id="forget" class="font-weight-bold">Forgot Password?</a>
                             </div>
+
                             <button nz-button nzType="primary" style="width: 100%; border-radius: 20px; margin-top: 5px;"
                                     (click)="onSubmit()" 
                                     [disabled]="isDisabled"
-                                    routerLink="/dashboard">Login</button>
+                                    >Login</button>
+
                             <div class="text-center pt-4 text-muted">Don't have account? 
                                 <a id="forget" routerLink="/signup">Sign Up </a>
                             </div>

@@ -1,138 +1,164 @@
 <div class="table-container">
-    <div class="table-operations">
-      <button nz-button (click)="showModal()" nzType="primary">
-        Add New Item
-      </button>
-      <button nz-button routerLink="/login" nzType="primary">
-        Back to Login
-      </button> 
-    </div>    
+  <div class="table-operations">
+    <button *ngIf="user.role === 'PROVIDER'" nz-button (click)="showModal()" nzType="primary">
+      Add New Item
+    </button>
+    <button nz-button nzType="primary" (click)="confirmLogout()">
+      Back to Login
+    </button>
+  </div>    
 
-    <div class="my-search-bar">
-      <nz-input-group [nzAddOnBeforeIcon]="searchIcon">
-        <input
-          nz-input
-          placeholder="Search by Service Name / Provider"
-          [formControl]="searchControl"
-          [(ngModel)]="searchTerm" 
-          (ngModelChange)="onSearchTermChange()"
-        />
-      </nz-input-group>
-    </div>
-
-    <nz-table #basicTable [nzData]="servicesList" [nzPageSize]="8">
-      <thead>
-        <tr>
-          <th nzLeft (click)="sortTable('name')">
-            Service Name
-            <i nz-icon [nzType]="getSortIcon('name')" nzTheme="outline"></i>
-          </th>
-
-          <th (click)="sortTable('provider')">
-            Provider
-            <i nz-icon [nzType]="getSortIcon('provider')" nzTheme="outline"></i>
-          </th>
-
-          <th (click)="sortTable('description')">
-            Description
-            <i nz-icon [nzType]="getSortIcon('description')" nzTheme="outline"></i>
-          </th>
-
-          <th>
-            Image
-          </th>
-
-          <th (click)="sortTable('rating')" [width]="200">
-            Rating
-            <i nz-icon [nzType]="getSortIcon('rating')" nzTheme="outline"></i>
-          </th>
-          
-          <th>
-            Actions            
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let data of servicesList">
-          <td nzLeft style="font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">
-            {{ data.name | uppercase }}
-          </td>
-          <td>{{ data.provider }}</td>
-          <td style="color: rgb(0, 187, 255); text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">{{ data.description }}</td>
-          <td><img [src]="data.image" alt="poster picture here" class="image-card"></td>
-          <td>
-            <div class="rating">
-              <span
-                class="star"
-                *ngFor="let star of 5 | toArray; let i = index"
-                [ngClass]="{ 'filled': i < data.rating, 'half-star': i > data.rating-1 && i < data.rating, 'empty': i >= data.rating }"
-              ></span>
-            </div>
-          </td>                                                                        
-          <td>
-            <div class="icon-container">
-              <span class="icon"
-                nz-icon 
-                nzType="message" 
-                nzTheme="outline"
-                (click)="openReviewDialog(data, data.review)"
-              ></span>
-              <span class="icon"
-                nz-icon
-                nzType="delete"
-                nzTheme="outline"
-                (click)="deleteService(data)"
-              ></span>
-              <span class="icon"
-                nz-icon
-                nzType="edit"
-                nzTheme="outline"
-                (click)="editService(data)"
-              ></span>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </nz-table>
+  <div class="my-search-bar">
+    <nz-input-group [nzAddOnBeforeIcon]="searchIcon">
+      <input
+        nz-input
+        placeholder="Search by Service Name / Provider"
+        [formControl]="searchControl"
+        [(ngModel)]="searchTerm" 
+        (ngModelChange)="onSearchTermChange()"
+      />
+    </nz-input-group>
   </div>
+
+  <nz-table #basicTable [nzData]="servicesList" [nzPageSize]="8">
+    <thead>
+      <tr>
+        <th nzLeft (click)="sortTable('name')">
+          Service Name
+          <i nz-icon [nzType]="getSortIcon('name')" nzTheme="outline"></i>
+        </th>
+
+        <th (click)="sortTable('provider')">
+          Provider
+          <i nz-icon [nzType]="getSortIcon('provider')" nzTheme="outline"></i>
+        </th>
+
+        <th (click)="sortTable('description')">
+          Description
+          <i nz-icon [nzType]="getSortIcon('description')" nzTheme="outline"></i>
+        </th>
+
+        <th (click)="sortTable('contact')">
+          Contact
+          <i nz-icon [nzType]="getSortIcon('contact')" nzTheme="outline"></i>
+        </th>
+
+        <th>
+          Image
+        </th>
+
+        <th (click)="sortTable('rating')" [width]="200">
+          Rating
+          <i nz-icon [nzType]="getSortIcon('rating')" nzTheme="outline"></i>
+        </th>
+        
+        <th>
+          Actions            
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of servicesList">
+        <td nzLeft style="font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);"
+            nz-popover nzPopoverTitle="Extra details" nzPopoverContent="{{ getDetails(data) }}" >
+          {{ data.name | uppercase }}
+        </td>
+        <td>
+          {{ data.provider }}
+        </td>
+        <td 
+          style="color: 
+          rgb(0, 187, 255); text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);"
+          >
+          {{ data.description }}
+        </td>
+        <td>
+          {{ data.contact }}
+        </td>
+        <td>
+          <img [src]="data.image" alt="poster picture here" class="image-card">
+        </td>
+        <td>
+          <div class="rating">
+            <span
+              class="star"
+              *ngFor="let star of 5 | toArray; let i = index"
+              [ngClass]="{ 'filled': i < data.rating, 'half-star': i > data.rating-1 && i < data.rating, 'empty': i >= data.rating }"
+            ></span>
+          </div>
+        </td>
+        <td>
+          <div class="icon-container">
+            <span class="icon"
+              nz-icon 
+              nzType="message" 
+              nzTheme="outline"
+              (click)="openReviewDialog(data, data.review)"
+            ></span>
+            <span class="icon"
+              nz-icon
+              nzType="delete"
+              nzTheme="outline"
+              *ngIf="user.role === 'PROVIDER'"
+              (click)="deleteService(data)"
+            ></span>
+            <span class="icon"
+              nz-icon
+              nzType="edit"
+              nzTheme="outline"
+              *ngIf="user.role === 'PROVIDER'"
+              (click)="editService(data)"
+            ></span>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
   
-  <nz-modal [nzVisible]="isVisible" nzTitle="Add / Edit Item" [nzFooter]="modalFooter" (nzOnCancel)="handleCancel()">
-    <ng-template #modalFooter>
-      <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
-      <button nz-button nzType="primary" (click)="handleOk()" [disabled]="isDisabled">OK</button>
-    </ng-template>
-    <ng-container *nzModalContent>
-      <nz-form [formGroup]="form" nzLayout="vertical">
-        <nz-form-item>
-          <nz-form-label [nzSpan]="8">Service Name</nz-form-label>
-          <nz-form-control [nzSpan]="16" nzErrorTip="Please enter a name for your service!">
-            <input nz-input formControlName="name" />
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-label [nzSpan]="8">Provider</nz-form-label>
-          <nz-form-control [nzSpan]="16" nzErrorTip="Please enter the provider name!">
-            <input nz-input formControlName="provider" />
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-label [nzSpan]="8">Description</nz-form-label>
-          <nz-form-control [nzSpan]="16" nzErrorTip="Too short! Please describe the plot in at least 5 words!">
-            <textarea nz-input formControlName="description"></textarea>
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-label [nzSpan]="8">Image</nz-form-label>
-          <nz-form-control [nzSpan]="16" nzErrorTip="Please enter a valid URL for a JPG, JPEG, or PNG image!">
-            <input nz-input formControlName="image" />
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-label [nzSpan]="8">Rating</nz-form-label>
-          <nz-form-control [nzSpan]="16" nzErrorTip="Rating must be between 0 and 5!">
-            <input nz-input formControlName="rating" type="number" step="0.1" />
-          </nz-form-control>
-        </nz-form-item>
-      </nz-form>    
-    </ng-container>
-  </nz-modal>
+<nz-modal [nzVisible]="isVisible" nzTitle="Add / Edit Item" [nzFooter]="modalFooter" (nzOnCancel)="handleCancel()">
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
+    <button nz-button nzType="primary" (click)="handleOk()" [disabled]="isDisabled">OK</button>
+  </ng-template>
+  <ng-container *nzModalContent>
+    <nz-form [formGroup]="form" nzLayout="vertical">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8">Service Name</nz-form-label>
+        <nz-form-control [nzSpan]="16" nzErrorTip="Please enter a name for your service!">
+          <input nz-input formControlName="name" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8">Provider</nz-form-label>
+        <nz-form-control [nzSpan]="16" nzErrorTip="Please enter the provider name!">
+          <input nz-input formControlName="provider" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8">Description</nz-form-label>
+        <nz-form-control [nzSpan]="16" nzErrorTip="Too short! Please describe the plot in at least 5 words!">
+          <textarea nz-input formControlName="description"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8">Contact</nz-form-label>
+        <nz-form-control [nzSpan]="16" nzErrorTip="Please enter a valid E-mail or Phone number!">
+          <input nz-input formControlName="contact" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8">Image</nz-form-label>
+        <nz-form-control [nzSpan]="16" nzErrorTip="Please enter a valid URL for a JPG, JPEG, or PNG image!">
+          <input nz-input formControlName="image" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8">Rating</nz-form-label>
+        <nz-form-control [nzSpan]="16" nzErrorTip="Rating must be between 0 and 5!">
+          <input nz-input formControlName="rating" type="number" step="0.1" />
+        </nz-form-control>
+      </nz-form-item>
+    </nz-form>    
+  </ng-container>
+</nz-modal>
