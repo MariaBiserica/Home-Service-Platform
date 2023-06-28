@@ -101,7 +101,10 @@ export class TableComponent implements OnInit {
       description: ['', [Validators.required, CustomValidators.descriptionWordsCount(5)]],
       contact: ['', [Validators.required, CustomValidators.emailOrPhone]],
       image: ['', [Validators.required, CustomValidators.imageUrl]],
-      rating: [null, [Validators.required, CustomValidators.ratingRange(0, 5)]]
+      rating: [null, [Validators.required, CustomValidators.checkRange(0, 5)]],
+      price: [null, [Validators.required, CustomValidators.checkRange(0, 1000)]],
+      workingHours: ['', [Validators.required]],
+      location: ['', [Validators.required]],
     });
 
     this.form.valueChanges.subscribe(() => {
@@ -156,7 +159,10 @@ export class TableComponent implements OnInit {
       contact: this.form.value.contact,
       review: this.form.value.review,
       image: this.form.value.image,
-      rating: this.form.value.rating
+      rating: this.form.value.rating,
+      price: this.form.value.price,
+      workingHours: this.form.value.workHours,
+      location: this.form.value.location,
     };
   }
 
@@ -176,6 +182,13 @@ export class TableComponent implements OnInit {
 
     this.isVisible = false;
     this.form.reset();
+  }
+
+  // Extra details function
+  getDetails(hoveredData: Service): string {
+    return `PRICE: ${hoveredData.price} euros;
+    WORKING HOURS: ${hoveredData.workingHours};
+    LOCATION: ${hoveredData.location};`;
   }
 
   // Open review dialog table action

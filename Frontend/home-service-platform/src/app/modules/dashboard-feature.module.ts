@@ -17,6 +17,7 @@ import { ReviewDialogComponent } from '../components/review-dialog/review-dialog
 import { ToArrayPipe } from '../pipes/to-array.pipe';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { NzPopoverModule } from 'ng-zorro-antd/popover';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
     NzFormModule,
     NzInputModule,
     NzTagModule,
-    NzSpaceModule
+    NzSpaceModule,
+    NzPopoverModule,
   ],
   exports: [ToArrayPipe]
 })

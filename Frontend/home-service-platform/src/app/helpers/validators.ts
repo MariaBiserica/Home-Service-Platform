@@ -68,7 +68,7 @@ export class CustomValidators {
     };
   } 
   
-  static ratingRange(min: number, max: number): ValidatorFn 
+  static checkRange(min: number, max: number): ValidatorFn 
   {
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value;

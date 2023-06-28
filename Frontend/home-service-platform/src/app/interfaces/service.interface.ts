@@ -8,5 +8,8 @@ export interface Service {
     review?: Review;
     image: string;
     rating: number;
+    price: number;
+    workingHours: string;
+    location: string;
 }
   

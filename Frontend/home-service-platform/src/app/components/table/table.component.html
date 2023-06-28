@@ -59,7 +59,8 @@
     </thead>
     <tbody>
       <tr *ngFor="let data of servicesList">
-        <td nzLeft style="font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">
+        <td nzLeft style="font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);"
+            nz-popover nzPopoverTitle="Extra details" nzPopoverContent="{{ getDetails(data) }}" >
           {{ data.name | uppercase }}
         </td>
         <td>
