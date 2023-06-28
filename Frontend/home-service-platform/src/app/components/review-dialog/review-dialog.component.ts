@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { Review } from 'src/app/interfaces/review.interface';
+import { User } from 'src/app/interfaces/user.interface';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -18,6 +19,16 @@ export class ReviewDialogComponent {
   form!: FormGroup;
   isDisabled: boolean = true;
 
+  user: User = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    username: '',
+    password: '',
+    imageUrl: '',
+    role: '',
+  };
+
   constructor(
     private modalRef: NzModalRef,
     private fb: FormBuilder,
@@ -26,6 +37,8 @@ export class ReviewDialogComponent {
   
 
   ngOnInit() {
+    this.user = this.userService.getCurrentUser();
+
     this.form = this.fb.group({
       title: ['', [Validators.required]],
       description: ['', [Validators.required]],
@@ -60,7 +73,7 @@ export class ReviewDialogComponent {
 
   handleOk(): void {
     this.review = this.form.value;
-    this.review.author = this.userService.getCurrentUser().username;
+    this.review.author = this.user.username;
   
     this.editing = false;
     this.isNewReview = false;

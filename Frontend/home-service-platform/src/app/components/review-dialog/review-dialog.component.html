@@ -4,13 +4,17 @@
     <p class="review-dialog-description">{{ review.description }}</p>
     <p>{{ review.author }}</p>
     <div class="review-dialog-footer">
-      <button nz-button nzType="primary" nzShape="round" (click)="editReview()">Edit Review</button>
+      <button nz-button nzType="primary" nzShape="round" 
+        *ngIf="user.role === 'CUSTOMER'"
+        (click)="editReview()">Edit Review</button>
     </div>
   </div>
 
   <div *ngIf="!review">
     <p>No review exists.</p>
-    <button nz-button nzType="dashed" nzShape="round" nzDanger (click)="addReview()">Add Review</button>
+    <button nz-button nzType="dashed" nzShape="round" nzDanger 
+      *ngIf="user.role === 'CUSTOMER'"
+      (click)="addReview()">Add Review</button>
   </div>
 </div>
 
