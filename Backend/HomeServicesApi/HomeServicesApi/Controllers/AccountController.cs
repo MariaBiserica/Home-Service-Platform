@@ -26,6 +26,14 @@ namespace HomeServicesApi.Controllers
             _authorizationService = authorizationService;
         }
 
+        /// <summary>
+        /// Register a new customer
+        /// </summary>
+        /// <param name="payload">All fields are required, except username</param>
+        /// <returns></returns>
+        /// <response code="200">Successful request, customer has been added to the database</response>
+        /// <response code="400">Unsuccesful request, the request body is incorrect or another error occurred</response>
+        /// <response code="500">Unsuccesful request, an error occurred when adding the customer in the database</response>
         [HttpPost("register/customer")]
         [AllowAnonymous]
         public async Task<IActionResult> RegisterCustomer(CustomerRegisterDto payload)
@@ -50,6 +58,14 @@ namespace HomeServicesApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Register a new provider
+        /// </summary>
+        /// <param name="payload">All fields are required, except username</param>
+        /// <returns></returns>
+        /// <response code="200">Successful request, provider has been added to the database</response>
+        /// <response code="400">Unsuccesful request, the request body is incorrect or another error occurred</response>
+        /// <response code="500">Unsuccesful request, an error occurred when adding the provider in the database</response>
         [HttpPost("register/provider")]
         [AllowAnonymous]
         public async Task<IActionResult> RegisterProvider(ProviderRegisterDto payload)
