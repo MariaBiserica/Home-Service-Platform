@@ -31,10 +31,10 @@ namespace DataLayer.Repositories
             return await DbSet.ToListAsync();
         }
 
-        public async Task<T> AddAsync(T entity)
+        public async Task<T?> AddAsync(T entity)
         {
-            await DbSet.AddAsync(entity);
-            return entity;
+            var x= await DbSet.AddAsync(entity);
+            return x.State == EntityState.Added ? x.Entity : null;
         }
 
         public async Task<T> UpdateAsync(T entity)

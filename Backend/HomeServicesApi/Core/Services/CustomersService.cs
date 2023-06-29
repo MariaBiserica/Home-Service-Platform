@@ -43,11 +43,13 @@ namespace Core.Services
             var customer = await _unitOfWork.GetRepository<CustomersRepository, Customer>().GetByUserIdAsync(userId) ?? throw new KeyNotFoundException("User not found");
             return customer;
         }
-        
-        public async void Register(CustomerRegisterDto registerData)
+
+        public async Task Register(CustomerRegisterDto registerData)
         {
-            if (registerData == null) throw new ArgumentException("Invalid data");
-            
+            if (registerData == null || string.IsNullOrEmpty(registerData.UserData.Email) || string.IsNullOrEmpty(registerData.UserData.Password)
+                || string.IsNullOrEmpty(registerData.FirstName) || string.IsNullOrEmpty(registerData.LastName))
+                throw new ArgumentException("Invalid data");
+
             var hashedPassword = _authService.HashPassword(registerData.UserData.Password);
             var newUser = new User
             {

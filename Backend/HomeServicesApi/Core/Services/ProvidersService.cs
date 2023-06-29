@@ -65,9 +65,11 @@ namespace Core.Services
             return provider;
         }
 
-        public async void Register(ProviderRegisterDto registerData)
+        public async Task Register(ProviderRegisterDto registerData)
         {
-            if (registerData == null) throw new ArgumentException("Invalid data");
+            if (registerData == null || string.IsNullOrEmpty(registerData.UserData.Email) || string.IsNullOrEmpty(registerData.UserData.Password)
+                || string.IsNullOrEmpty(registerData.Bio))
+                throw new ArgumentException("Invalid data");
 
             var hashedPassword = _authService.HashPassword(registerData.UserData.Password);
             var newUser = new User
@@ -210,7 +212,7 @@ namespace Core.Services
                     .GetByIdAsync((int)payload.TypeId);
                 service.Type = type;
             }
-            catch {}
+            catch { }
 
             var commonProperties = service.GetType().GetProperties().Where(x => payload.GetType().GetProperty(x.Name) != null && x.Name != "TypeId");
             foreach (var property in commonProperties)

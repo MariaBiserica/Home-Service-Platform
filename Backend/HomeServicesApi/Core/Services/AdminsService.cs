@@ -23,7 +23,7 @@ namespace Core.Services
             _authorizationService = authorizationService;
         }
 
-        public async void Register(UserRegisterDto registerData)
+        public async Task Register(UserRegisterDto registerData)
         {
             if (registerData == null) throw new ArgumentException("Invalid data");
 

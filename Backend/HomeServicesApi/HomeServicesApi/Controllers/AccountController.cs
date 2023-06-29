@@ -29,30 +29,35 @@ namespace HomeServicesApi.Controllers
 
         [HttpPost("register/customer")]
         [AllowAnonymous]
-        public IActionResult RegisterCustomer(CustomerRegisterDto payload)
+        public async Task<IActionResult> RegisterCustomer(CustomerRegisterDto payload)
         {
             try
             {
-                _customersService.Register(payload);
+                await _customersService.Register(payload);
                 return Ok();
             }
             catch (InvalidOperationException e)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
-            catch (Exception e)
+            catch (ArgumentException e)
             {
                 return BadRequest(e.Message);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+
             }
         }
 
         [HttpPost("register/provider")]
         [AllowAnonymous]
-        public IActionResult RegisterProvider(ProviderRegisterDto payload)
+        public async Task<IActionResult> RegisterProvider(ProviderRegisterDto payload)
         {
             try
             {
-                _providersService.Register(payload);
+                await _providersService.Register(payload);
                 return Ok();
             }
             catch (InvalidOperationException e)
@@ -67,11 +72,11 @@ namespace HomeServicesApi.Controllers
 
         [HttpPost("register/admin")]
         [Authorize(Roles = "Admin")]
-        public IActionResult RegisterAdmin(UserRegisterDto payload)
+        public async Task<IActionResult> RegisterAdmin(UserRegisterDto payload)
         {
             try
             {
-                _adminsService.Register(payload);
+                await _adminsService.Register(payload);
                 return Ok();
             }
             catch (InvalidOperationException e)
@@ -104,7 +109,7 @@ namespace HomeServicesApi.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
-            catch (UnauthorizedAccessException e )
+            catch (UnauthorizedAccessException e)
             {
                 return Unauthorized(e.Message);
             }
