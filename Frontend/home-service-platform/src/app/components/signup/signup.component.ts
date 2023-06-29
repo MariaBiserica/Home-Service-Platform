@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CustomValidators } from 'src/app/helpers/validators';
+import { UserService } from 'src/app/services/user.service';
+import { User } from 'src/app/interfaces/user.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -16,7 +19,7 @@ export class SignupComponent implements OnInit {
   form!: FormGroup;
   isDisabled: boolean = true;
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private userService:UserService, private router:Router) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -34,6 +37,36 @@ export class SignupComponent implements OnInit {
 
     this.form.valueChanges.subscribe(() => {
       this.isDisabled = this.form.invalid;
+    });
+  }
+
+  onSubmit()
+  {
+      const signupData: User = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      username: '',
+      password: '',
+      imageUrl: '',
+      role: '',
+      bio:''
+    };
+
+    signupData.username=this.form.controls['username'].value;
+    signupData.email=this.form.controls['email'].value;
+    signupData.password=this.form.controls['password'].value;
+    signupData.firstName=this.form.controls['firstName'].value;
+    signupData.lastName=this.form.controls['lastName'].value; 
+    signupData.role=this.form.controls['role'].value;
+    this.userService.signupUser(signupData).subscribe({
+      next:(response)=>{
+        console.log(response);
+      this.router.navigateByUrl('');
+      },
+      error:(error)=>{
+        console.log(error);
+      }
     });
   }
 

@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Service } from '../interfaces/service.interface';
-import { Subject } from 'rxjs';
+import { Observable, Subject, empty } from 'rxjs';
 import userData from './user.json';
 import { User } from '../interfaces/user.interface';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private userList: User[] = userData;
+  private userToken:string ='';
+  private baseUrl:string = 'https://localhost:7269/api/';
   private currentUser: User = {
     firstName: '',
     lastName: '',
@@ -16,9 +18,16 @@ export class UserService {
     password: '',
     imageUrl: '',
     role: '',
+    bio:''
+  };
+  readonly httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ',//TODO to concatenate token to every request
+    }),
   };
 
-  constructor() {}
+  constructor(private httpClient:HttpClient) {}
 
   setCurrentUser(user:User){
     this.currentUser = user;
@@ -27,27 +36,80 @@ export class UserService {
   getCurrentUser(){
     return this.currentUser;
   }
-
-  loginUser(userLogin: User): boolean {
-    const index = this.userList.findIndex(
-      (user) => user.username == userLogin.username
-    );
-    if (index != -1) {
-      console.log('User accepted');
-      this.setCurrentUser(this.userList[index]);
-      return true;
-    } else {
-      console.log('User denied');
-      return false;
-    }
+  setToken(value:string):void
+  {
+    this.userToken=value;
+  }
+  getToken():string|null
+  {
+    return this.userToken;
+  }
+  
+  setRole(value:string)
+  {
+    this.currentUser.role = value;
+  }
+  getRole():string
+  {
+    return this.currentUser.role;
+  }
+  loginUser(payload:any):Observable<any> {
+    return this.httpClient.post(this.baseUrl+'customers/login', payload, this.httpOptions);
   }
 
-  signUpUser(userSignUp: User) {
-    this.userList.push(userSignUp);
+  loginProvider(payload:any):Observable<any> {
+    return this.httpClient.post(this.baseUrl+'providers/login', payload, this.httpOptions);
+  }
 
-    //! Save the new user list to the json file -- Not working
-    //var json = JSON.stringify(this.userList);
-    //const fs = require('fs');
-    //fs.writeFile('user.json', json);
+  signupUser(data:any):Observable<any> {
+    console.log(data.role);
+    if(data.role=='CUSTOMER'){
+      const userData = {username:data.username,
+        email: data.email,
+        password:data.password};
+      const payload = {userData:userData,
+      firstName:data.firstName,
+      lastName:data.lastName};
+      console.log(payload);
+    return this.httpClient.post(this.baseUrl+'account/register/customer', payload);
+    }
+    else if(data.role=="PROVIDER"){
+    const payload = {userData:{username:data.username,
+      email: data.email,
+      password:data.password},
+    bio:data.bio}
+      return this.httpClient.post(this.baseUrl+'account/register/provider', payload);
+    }
+    
+    return  new Observable<any>;
+  //*TODO 
+  //   var payload = {
+  //     usernameOrEmail: this.usernameOrEmail,
+  //     password: this.password
+  //   };
+
+  //   // Make the API call to https://reqres.in/api/login
+  //   fetch('https://reqres.in/api/login', {
+  //       method: 'POST',
+  //       headers: {
+  //           'Content-Type': 'application/json'
+  //       },
+  //       body: JSON.stringify(payload)
+  //   })
+  //   .then(response => response.json())
+  //   .then(data => {
+  //       // Handle the API response
+  //       if (data.token) {
+  //           // Login successful, redirect to another page or perform further actions
+  //           console.log("Login successful");
+  //       } else {
+  //           // Login failed, display an error message or perform other error handling
+  //           console.error("Login failed");
+  //       }
+  //   })
+  //   .catch(error => {
+  //       // Handle any errors that occurred during the API call
+  //       console.error("API request failed:", error);
+  //   });
   }
 }

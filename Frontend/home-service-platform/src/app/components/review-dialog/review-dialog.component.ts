@@ -27,6 +27,7 @@ export class ReviewDialogComponent {
     password: '',
     imageUrl: '',
     role: '',
+    bio:''
   };
 
   constructor(

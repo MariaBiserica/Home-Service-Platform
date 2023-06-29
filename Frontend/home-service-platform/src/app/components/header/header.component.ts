@@ -17,6 +17,7 @@ export class HeaderComponent implements OnInit {
     password: '',
     imageUrl: '',
     role: '',
+    bio:''
   };
 
   constructor(private userService:UserService) { }

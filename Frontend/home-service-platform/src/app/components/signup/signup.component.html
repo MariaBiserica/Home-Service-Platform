@@ -64,7 +64,7 @@
                             </nz-form-item>
 
                             <button nz-button nzType="primary" style="width: 100%; border-radius: 20px; margin-top: 5px;"
-                                    [disabled]="isDisabled">Sign Up</button>
+                                    [disabled]="isDisabled" (click)="onSubmit()">Sign Up</button>
 
                             <div class="text-center pt-4 text-muted">Already have account? 
                                 <a id="forget" routerLink="/login">Login </a>

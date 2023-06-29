@@ -4,6 +4,7 @@ import { CustomValidators } from '../../helpers/validators';
 import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { LoginPayload } from 'src/app/interfaces/login.payload.interface';
 
 @Component({
   selector: 'app-login',
@@ -81,56 +82,52 @@ export class LoginComponent implements OnInit {
     this.email = this.form.value.email;
     this.password = this.form.value.password;
     this.rememberMe = this.form.value.rememberMe;
-    
+    const payload: LoginPayload = {email:this.email, password:this.password};
     // Check the user credentials
-    if (this.userService.loginUser({ firstName: "", lastName: "", email: this.email, username: this.username, imageUrl: "", password: this.password, role: "" })) {
-      // Store the user login credentials if the "Remember me" checkbox is checked
-      if (this.rememberMe) {
-        localStorage.setItem('username', this.username);
-        localStorage.setItem('email', this.email);
-        localStorage.setItem('password', this.password);
-      } else {
-        // Clear the stored login credentials if the "Remember me" checkbox is not checked
-        localStorage.removeItem('username');
-        localStorage.removeItem('email');
-        localStorage.removeItem('password');
-      }
-
-      this.router.navigateByUrl('/dashboard');
+    this.userService.loginUser(payload).subscribe({
+      next:(response)=>{
+        console.log(response);
+        this.userService.setToken(response.token);
+        localStorage.setItem('token', response.token);
+        if (this.rememberMe) {
+          localStorage.setItem('username', this.username);
+          localStorage.setItem('email', this.email);
+          localStorage.setItem('password', this.password);
+        } else {
+          // Clear the stored login credentials if the "Remember me" checkbox is not checked
+          localStorage.removeItem('username');
+          localStorage.removeItem('email');
+          localStorage.removeItem('password');
+        }
+      this.userService.setRole('CUSTOMER');
       this.loginMessage.create('success', 'Login successful');
-    } else {
-      this.loginMessage.create('warning', 'Login unsuccessful');
-    }
-
-  //! This is the code for the API call to https://reqres.in/api/login
-  //   // Construct the request payload
-  //   var payload = {
-  //     usernameOrEmail: this.usernameOrEmail,
-  //     password: this.password
-  //   };
-
-  //   // Make the API call to https://reqres.in/api/login
-  //   fetch('https://reqres.in/api/login', {
-  //       method: 'POST',
-  //       headers: {
-  //           'Content-Type': 'application/json'
-  //       },
-  //       body: JSON.stringify(payload)
-  //   })
-  //   .then(response => response.json())
-  //   .then(data => {
-  //       // Handle the API response
-  //       if (data.token) {
-  //           // Login successful, redirect to another page or perform further actions
-  //           console.log("Login successful");
-  //       } else {
-  //           // Login failed, display an error message or perform other error handling
-  //           console.error("Login failed");
-  //       }
-  //   })
-  //   .catch(error => {
-  //       // Handle any errors that occurred during the API call
-  //       console.error("API request failed:", error);
-  //   });
+      this.router.navigateByUrl('/dashboard');
+      },
+      error:(error)=>{
+        this.userService.loginProvider(payload).subscribe({
+          next:(response)=>{
+            console.log(response);
+            this.userService.setToken(response.token);
+            localStorage.setItem('token', response.token);
+            if (this.rememberMe) {
+              localStorage.setItem('username', this.username);
+              localStorage.setItem('email', this.email);
+              localStorage.setItem('password', this.password);
+            } else {
+              // Clear the stored login credentials if the "Remember me" checkbox is not checked
+              localStorage.removeItem('username');
+              localStorage.removeItem('email');
+              localStorage.removeItem('password');
+            }
+          this.userService.setRole('PROVIDER');
+          this.loginMessage.create('success', 'Login successful');
+          this.router.navigateByUrl('/dashboard');
+          },
+          error:(error)=>{
+            this.loginMessage.create('warning', 'Login error');
+          }
+        });
+      }
+    });
   }
 }
