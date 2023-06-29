@@ -1,8 +1,6 @@
-﻿using DataLayer.UnitOfWork;
+﻿using Core.Services;
 using DataLayer;
-using Microsoft.AspNetCore.Authorization;
-using Core.Services;
-using DataLayer.Repositories;
+using DataLayer.UnitOfWork;
 
 namespace HomeServicesApi.Settings
 {

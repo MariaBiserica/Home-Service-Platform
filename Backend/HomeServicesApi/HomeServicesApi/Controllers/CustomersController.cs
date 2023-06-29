@@ -1,10 +1,8 @@
 ﻿using Core.Dtos;
 using Core.Services;
-using DataLayer.Entities;
 using DataLayer.Enums;
 using DataLayer.Mapping;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,15 +21,6 @@ namespace HomeServicesApi.Controllers
             _authorizationService = authorizationService;
         }
 
-        [HttpGet("get-all")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAll()
-        {
-            var results = await _customersService.GetAll();
-
-            return Ok(results.ToCustomerDisplayDtos());
-        }
-
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginDto payload)
@@ -44,26 +33,6 @@ namespace HomeServicesApi.Controllers
             catch (UnauthorizedAccessException e)
             {
                 return Unauthorized(e.Message);
-            }
-            catch (KeyNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-
-        }
-
-        [HttpGet("get-by-email")]
-        [Authorize(Roles = "Customer,Admin")]
-        public async Task<IActionResult> GetByEmail(string email)
-        {
-            try
-            {
-                var customer = await _customersService.GetByEmail(email);
-                return Ok(customer.ToCustomerDisplayDto());
             }
             catch (KeyNotFoundException e)
             {
@@ -102,12 +71,83 @@ namespace HomeServicesApi.Controllers
             }
         }
 
-        [HttpGet("{customerId:int}/get-all-bookings")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAllBookings([FromRoute] int customerId)
+        [HttpPut("update-customer-info")]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> UpdateCustomerInfo(UpdateCustomerDto payload)
         {
-            var bookings = (await _customersService.GetAllBookings(customerId)).ToBookingDisplayDtos();
-            return Ok(bookings);
+            try
+            {
+                string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                int userId = _authorizationService.GetUserIdFromToken(token);
+                int customerId = (await _customersService.GetByUserId(userId)).Id;
+
+                var updatedCustomer =
+                    (await _customersService.UpdateCustomer(customerId, payload)).ToCustomerDisplayDto();
+                return Ok(updatedCustomer);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (InvalidOperationException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut("{customerId:int}/update-customer-info")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateCustomerInfo([FromRoute] int customerId, UpdateCustomerDto payload)
+        {
+            try
+            {
+                var updatedCustomer =
+                    (await _customersService.UpdateCustomer(customerId, payload)).ToCustomerDisplayDto();
+                return Ok(updatedCustomer);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (InvalidOperationException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("get-by-email")]
+        [Authorize(Roles = "Customer,Admin")]
+        public async Task<IActionResult> GetByEmail(string email)
+        {
+            try
+            {
+                var customer = await _customersService.GetByEmail(email);
+                return Ok(customer.ToCustomerDisplayDto());
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet("get-all-bookings")]
@@ -129,14 +169,6 @@ namespace HomeServicesApi.Controllers
             }
         }
 
-        [HttpGet("{customerId:int}/get-bookings-by-status")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetBookingsByStatus([FromRoute] int customerId, BookingStatus status)
-        {
-            var bookings = (await _customersService.GetBookingsByStatus(customerId, status)).ToBookingDisplayDtos();
-            return Ok(bookings);
-        }
-
         [HttpGet("get-bookings-by-status")]
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetBookingsByStatus(BookingStatus status)
@@ -154,14 +186,6 @@ namespace HomeServicesApi.Controllers
             {
                 return BadRequest(e.Message);
             }
-        }
-
-        [HttpGet("{customerId:int}/get-bookings-by-date")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetBookingsByDate([FromRoute] int customerId, DateTime date)
-        {
-            var bookings = (await _customersService.GetBookingsByDate(customerId, date)).ToBookingDisplayDtos();
-            return Ok(bookings);
         }
 
         [HttpGet("get-bookings-by-date")]
@@ -183,62 +207,37 @@ namespace HomeServicesApi.Controllers
             }
         }
 
-        [HttpPut("{customerId:int}/update-customer-info")]
+        [HttpGet("{customerId:int}/get-all-bookings")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateCustomerInfo([FromRoute] int customerId, UpdateCustomerDto payload)
+        public async Task<IActionResult> GetAllBookings([FromRoute] int customerId)
         {
-            try
-            {
-                var updatedCustomer = (await _customersService.UpdateCustomer(customerId, payload)).ToCustomerDisplayDto();
-                return Ok(updatedCustomer);
-            }
-            catch (KeyNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
-            catch (DbUpdateException e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
-            catch (InvalidOperationException e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+            var bookings = (await _customersService.GetAllBookings(customerId)).ToBookingDisplayDtos();
+            return Ok(bookings);
         }
 
-        [HttpPut("update-customer-info")]
-        [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> UpdateCustomerInfo(UpdateCustomerDto payload)
+        [HttpGet("{customerId:int}/get-bookings-by-status")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetBookingsByStatus([FromRoute] int customerId, BookingStatus status)
         {
-            try
-            {
-                string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-                int userId = _authorizationService.GetUserIdFromToken(token);
-                int customerId = (await _customersService.GetByUserId(userId)).Id;
+            var bookings = (await _customersService.GetBookingsByStatus(customerId, status)).ToBookingDisplayDtos();
+            return Ok(bookings);
+        }
 
-                var updatedCustomer = (await _customersService.UpdateCustomer(customerId, payload)).ToCustomerDisplayDto();
-                return Ok(updatedCustomer);
-            }
-            catch (KeyNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
-            catch (DbUpdateException e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
-            catch (InvalidOperationException e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+        [HttpGet("{customerId:int}/get-bookings-by-date")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetBookingsByDate([FromRoute] int customerId, DateTime date)
+        {
+            var bookings = (await _customersService.GetBookingsByDate(customerId, date)).ToBookingDisplayDtos();
+            return Ok(bookings);
+        }
+
+        [HttpGet("get-all")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAll()
+        {
+            var results = await _customersService.GetAll();
+
+            return Ok(results.ToCustomerDisplayDtos());
         }
     }
 }

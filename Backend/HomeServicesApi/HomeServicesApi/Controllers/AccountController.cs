@@ -2,7 +2,6 @@
 using Core.Services;
 using DataLayer.Mapping;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -208,29 +207,6 @@ namespace HomeServicesApi.Controllers
             }
         }
 
-        [HttpPut("admin-disable/user")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AdminDisableCustomerAccount(int userId)
-        {
-            try
-            {
-                await _accountsService.AdminDisableCustomerAccount(userId);
-                return Ok();
-            }
-            catch (KeyNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
-            catch (DbUpdateException e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
         [HttpPut("disable/provider")]
         [Authorize(Roles = "Provider")]
         public async Task<IActionResult> DisableProviderAccount(string password)
@@ -256,6 +232,29 @@ namespace HomeServicesApi.Controllers
             catch (UnauthorizedAccessException e)
             {
                 return Unauthorized(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut("admin-disable/user")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AdminDisableCustomerAccount(int userId)
+        {
+            try
+            {
+                await _accountsService.AdminDisableCustomerAccount(userId);
+                return Ok();
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
             catch (Exception e)
             {

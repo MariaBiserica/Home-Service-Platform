@@ -1,7 +1,6 @@
 ﻿using Core.Dtos;
 using Core.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HomeServicesApi.Controllers
@@ -60,7 +59,7 @@ namespace HomeServicesApi.Controllers
 
         [HttpDelete("{adminId:int}/delete-admin")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteAdmin([FromRoute]int adminId)
+        public async Task<IActionResult> DeleteAdmin([FromRoute] int adminId)
         {
             try
             {
