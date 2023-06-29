@@ -64,76 +64,6 @@ namespace HomeServicesApi.Controllers
             }
         }
 
-        [HttpGet("get-all")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAll()
-        {
-            var results = (await _providersService.GetAll()).ToProviderDisplayDtos();
-            return Ok(results);
-        }
-
-        [HttpGet("get-all-services")]
-        [Authorize(Roles = "Customer,Provider,Admin")]
-        public async Task<IActionResult> GetAllServices()
-        {
-            var results = (await _providersService.GetAllServices()).ToServiceDisplayDtos();
-            return Ok(results);
-        }
-
-        [HttpGet("get-all-provider-services")]
-        [Authorize(Roles = "Customer,Provider,Admin")]
-        public async Task<IActionResult> GetAllProviderServices(int providerId)
-        {
-            var results = (await _providersService.GetAllProviderServices(providerId)).ToServiceDisplayDtos();
-            return Ok(results);
-        }
-
-        [HttpGet("get-services-by-type")]
-        [Authorize(Roles = "Customer,Provider,Admin")]
-        public async Task<IActionResult> GetServicesByType(int providerId, int serviceTypeId)
-        {
-            try
-            {
-                var results = (await _providersService.GetServicesByType(providerId, serviceTypeId)).ToServiceDisplayDtos();
-                return Ok(results);
-            }
-            catch (KeyNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpGet("get-by-email")]
-        [Authorize(Roles = "Provider,Admin")]
-        public async Task<IActionResult> GetByEmail(string email)
-        {
-            try
-            {
-                var provider = (await _providersService.GetByEmail(email)).ToProviderDisplayDto();
-                return Ok(provider);
-            }
-            catch (KeyNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpGet("get-all-service-types")]
-        [Authorize(Roles = "Admin,Provider,Customer")]
-        public async Task<IActionResult> GetAllServiceTypes()
-        {
-            var serviceTypes = await _providersService.GetServiceTypes();
-            return Ok(serviceTypes);
-        }
-
         [HttpPut("update-provider")]
         [Authorize(Roles = "Provider")]
         public async Task<IActionResult> UpdateProvider(UpdateProviderDto payload)
@@ -355,6 +285,76 @@ namespace HomeServicesApi.Controllers
                 return BadRequest(e.Message);
             }
 
+        }
+
+        [HttpGet("get-all")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAll()
+        {
+            var results = (await _providersService.GetAll()).ToProviderDisplayDtos();
+            return Ok(results);
+        }
+
+        [HttpGet("get-all-services")]
+        [Authorize(Roles = "Customer,Provider,Admin")]
+        public async Task<IActionResult> GetAllServices()
+        {
+            var results = (await _providersService.GetAllServices()).ToServiceDisplayDtos();
+            return Ok(results);
+        }
+
+        [HttpGet("get-all-provider-services")]
+        [Authorize(Roles = "Customer,Provider,Admin")]
+        public async Task<IActionResult> GetAllProviderServices(int providerId)
+        {
+            var results = (await _providersService.GetAllProviderServices(providerId)).ToServiceDisplayDtos();
+            return Ok(results);
+        }
+
+        [HttpGet("get-services-by-type")]
+        [Authorize(Roles = "Customer,Provider,Admin")]
+        public async Task<IActionResult> GetServicesByType(int providerId, int serviceTypeId)
+        {
+            try
+            {
+                var results = (await _providersService.GetServicesByType(providerId, serviceTypeId)).ToServiceDisplayDtos();
+                return Ok(results);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("get-by-email")]
+        [Authorize(Roles = "Provider,Admin")]
+        public async Task<IActionResult> GetByEmail(string email)
+        {
+            try
+            {
+                var provider = (await _providersService.GetByEmail(email)).ToProviderDisplayDto();
+                return Ok(provider);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("get-all-service-types")]
+        [Authorize(Roles = "Admin,Provider,Customer")]
+        public async Task<IActionResult> GetAllServiceTypes()
+        {
+            var serviceTypes = await _providersService.GetServiceTypes();
+            return Ok(serviceTypes);
         }
     }
 }
