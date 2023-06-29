@@ -27,7 +27,7 @@ namespace HomeServicesApi.Controllers
         }
 
         /// <summary>
-        /// Register a new customer
+        /// Register a new customer (Public)
         /// </summary>
         /// <param name="payload">All fields are required, except username</param>
         /// <returns></returns>
@@ -59,7 +59,7 @@ namespace HomeServicesApi.Controllers
         }
 
         /// <summary>
-        /// Register a new provider
+        /// Register a new provider (Public)
         /// </summary>
         /// <param name="payload">All fields are required, except username</param>
         /// <returns></returns>
@@ -85,6 +85,14 @@ namespace HomeServicesApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Register a new admin (Admin only)
+        /// </summary>
+        /// <param name="payload">All fields are required, except username</param>
+        /// <returns></returns>
+        /// <response code="200">Successful request, admin has been added to the database</response>
+        /// <response code="400">Unsuccesful request, the request body is incorrect or another error occurred</response>
+        /// <response code="500">Unsuccesful request, an error occurred when adding the admin in the database</response>
         [HttpPost("register/admin")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RegisterAdmin(UserRegisterDto payload)
@@ -104,6 +112,16 @@ namespace HomeServicesApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Change account password (Customer and Provider only)
+        /// </summary>
+        /// <param name="payload"></param>
+        /// <returns>Modified user</returns>
+        /// <response code="200">Successful request, password has been changed</response>
+        /// <response code="400">Unsuccesful request, the request body is incorrect or another error occurred</response>
+        /// <response code="401">Unsuccesful request, the user is not authorized to change the password</response>
+        /// <response code="404">Unsuccesful request, the user was not found in the database</response>
+        /// <response code="500">Unsuccesful request, an error occurred when changing the password</response>
         [HttpPut("change-password")]
         [Authorize(Roles = "Customer,Provider")]
         public async Task<IActionResult> ChangePassword(ChangePasswordDto payload)
@@ -134,7 +152,17 @@ namespace HomeServicesApi.Controllers
             }
         }
 
-        [HttpPut("change-Username")]
+        /// <summary>
+        /// Change account username (Customer and Provider only)
+        /// </summary>
+        /// <param name="payload"></param>
+        /// <returns>Modified user</returns>
+        /// <response code="200">Successful request, username has been changed</response>
+        /// <response code="400">Unsuccesful request, the request body is incorrect or another error occurred</response>
+        /// <response code="401">Unsuccesful request, the user is not authorized to change the username</response>
+        /// <response code="404">Unsuccesful request, the user was not found in the database</response>
+        /// <response code="500">Unsuccesful request, an error occurred when changing the username</response>
+        [HttpPut("change-username")]
         [Authorize(Roles = "Customer,Provider")]
         public async Task<IActionResult> ChangeUsername(ChangeUsernameDto payload)
         {
@@ -164,6 +192,16 @@ namespace HomeServicesApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Change account email (Customer and Provider only)
+        /// </summary>
+        /// <param name="payload"></param>
+        /// <returns>Modified user</returns>
+        /// <response code="200">Successful request, email has been changed</response>
+        /// <response code="400">Unsuccesful request, the request body is incorrect or another error occurred</response>
+        /// <response code="401">Unsuccesful request, the user is not authorized to change the email</response>
+        /// <response code="404">Unsuccesful request, the user was not found in the database</response>
+        /// <response code="500">Unsuccesful request, an error occurred when changing the email</response>
         [HttpPut("change-email")]
         [Authorize(Roles = "Customer,Provider")]
         public async Task<IActionResult> ChangeEmail(ChangeEmailDto payload)
@@ -194,7 +232,57 @@ namespace HomeServicesApi.Controllers
             }
         }
 
-        [HttpPut("disable/user")]
+        /// <summary>
+        /// Change account phone number (Customer and Provider only)
+        /// </summary>
+        /// <param name="payload"></param>
+        /// <returns>Modified user</returns>
+        /// <response code="200">Successful request, email has been changed</response>
+        /// <response code="400">Unsuccesful request, the request body is incorrect or another error occurred</response>
+        /// <response code="401">Unsuccesful request, the user is not authorized to change the email</response>
+        /// <response code="404">Unsuccesful request, the user was not found in the database</response>
+        /// <response code="500">Unsuccesful request, an error occurred when changing the email</response>
+        [HttpPut("change-phone-number")]
+        [Authorize(Roles = "Customer,Provider")]
+        public async Task<IActionResult> ChangePhoneNumber(ChangePhoneNumberDto payload)
+        {
+            try
+            {
+                string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                int userId = _authorizationService.GetUserIdFromToken(token);
+
+                var modifiedUser = await _accountsService.UpdatePhoneNumber(userId, payload);
+                return Ok(modifiedUser.ToUserDisplayDto());
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (DbUpdateException e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Disables the account of the customer that is currently logged in (Customer only)
+        /// </summary>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        /// <response code="200">Successful request, user has been disabled</response>
+        /// <response code="400">Unsuccesful request, the request is incorrect or another error occurred</response>
+        /// <response code="401">Unsuccesful request, the user is not authorized to disable the account</response>
+        /// <response code="404">Unsuccesful request, the user was not found in the database</response>
+        /// <response code="500">Unsuccesful request, an error occurred when disabling the account</response>
+        [HttpPut("disable/customer")]
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> DisableCustomerAccount(string password)
         {
@@ -223,6 +311,16 @@ namespace HomeServicesApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Disables the account of the provider that is currently logged in (Provider only)
+        /// </summary>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        /// <response code="200">Successful request, user has been disabled</response>
+        /// <response code="400">Unsuccesful request, the request is incorrect or another error occurred</response>
+        /// <response code="401">Unsuccesful request, the user is not authorized to disable the account</response>
+        /// <response code="404">Unsuccesful request, the user was not found in the database</response>
+        /// <response code="500">Unsuccesful request, an error occurred when disabling the account</response>
         [HttpPut("disable/provider")]
         [Authorize(Roles = "Provider")]
         public async Task<IActionResult> DisableProviderAccount(string password)
@@ -255,6 +353,15 @@ namespace HomeServicesApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Disables the account of a specific customer (Admin only)
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <response code="200">Successful request, user has been disabled</response>
+        /// <response code="400">Unsuccesful request, the request is incorrect or another error occurred</response>
+        /// <response code="404">Unsuccesful request, the user was not found in the database</response>
+        /// <response code="500">Unsuccesful request, an error occurred when disabling the account</response>
         [HttpPut("admin-disable/user")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AdminDisableCustomerAccount(int userId)
@@ -278,6 +385,15 @@ namespace HomeServicesApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Disables the account of a specific provider (Admin only)
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <response code="200">Successful request, user has been disabled</response>
+        /// <response code="400">Unsuccesful request, the request is incorrect or another error occurred</response>
+        /// <response code="404">Unsuccesful request, the user was not found in the database</response>
+        /// <response code="500">Unsuccesful request, an error occurred when disabling the account</response>
         [HttpPut("admin-disable/provider")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AdminDisableProviderAccount(int userId)
@@ -297,36 +413,6 @@ namespace HomeServicesApi.Controllers
             catch (DbUpdateException e)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpPut("change-phone-number")]
-        [Authorize(Roles = "Customer,Provider")]
-        public async Task<IActionResult> ChangePhoneNumber(ChangePhoneNumberDto payload)
-        {
-            try
-            {
-                string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-                int userId = _authorizationService.GetUserIdFromToken(token);
-
-                var modifiedUser = await _accountsService.UpdatePhoneNumber(userId, payload);
-                return Ok(modifiedUser.ToUserDisplayDto());
-            }
-            catch (KeyNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
-            catch (DbUpdateException e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                return Unauthorized(e.Message);
             }
             catch (Exception e)
             {
