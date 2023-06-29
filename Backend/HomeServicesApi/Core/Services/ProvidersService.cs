@@ -49,7 +49,7 @@ namespace Core.Services
         public async Task<List<Service>> GetServicesByType(int providerId, int typeId)
         {
             var serviceType = await _unitOfWork.GetRepository<ServiceTypesRepository, ServiceType>().GetByIdAsync(typeId) ?? throw new KeyNotFoundException("Service type not found");
-            var services = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetServicesByType(providerId, serviceType);
+            var services = await _unitOfWork.GetRepository<ProvidersRepository, Provider>().GetServicesByType(providerId, serviceType) ?? throw new KeyNotFoundException("Services not found");
             return services;
         }
 
@@ -195,6 +195,10 @@ namespace Core.Services
         {
             var service = await _unitOfWork.GetRepository<ServicesRepository, Service>().GetByIdAsync(payload.ServiceId) ?? throw new KeyNotFoundException("Service not found");
             var prices = service.Prices;
+            if (!prices.ContainsKey(payload.PriceKey))
+            {
+                throw new KeyNotFoundException("Price key not found");
+            }
             prices[payload.PriceKey] = payload.PriceValue;
             service.Prices = prices;
             var updatedService = await _unitOfWork.GetRepository<ServicesRepository, Service>().UpdateAsync(service) ?? throw new DbUpdateException("Service update failed");

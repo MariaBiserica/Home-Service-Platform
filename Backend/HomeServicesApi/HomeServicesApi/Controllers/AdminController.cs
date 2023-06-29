@@ -16,6 +16,15 @@ namespace HomeServicesApi.Controllers
             _adminsService = adminsService;
         }
 
+        /// <summary>
+        /// Log in as admin (Public)
+        /// </summary>
+        /// <param name="payload"></param>
+        /// <returns>JWT token</returns>
+        /// <response code="200">Successful request, returns JWT token</response>
+        /// <response code="400">Unsuccessful request, the request body is incorrect or another error occurred</response>
+        /// <response code="401">Unsuccessful request, password is incorrect</response>
+        /// <response code="404">Unsuccessful request, the user was not found in the database</response>
         [HttpPost("admin-login")]
         public async Task<IActionResult> Login(LoginDto payload)
         {
@@ -38,6 +47,14 @@ namespace HomeServicesApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Add a service type (Admin only)
+        /// </summary>
+        /// <param name="serviceTypeName">Service type name is required</param>
+        /// <returns></returns>
+        /// <response code="200">Successful request, service type added successfully</response>
+        /// <response code="400">Bad request, the request body is incorrect or another error occurred</response>
+        /// <responese code="500">Internal server error, service type already exists</responese>
         [HttpPost("add-service-type")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddServiceType(string serviceTypeName)
@@ -57,6 +74,14 @@ namespace HomeServicesApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Delete admin (Admin only)
+        /// </summary>
+        /// <param name="adminId">Admin id is required</param>
+        /// <returns></returns>
+        /// <response code="200">Successful request, service type deleted successfully</response>
+        /// <response code="400">Bad request, the request body is incorrect or another error occurred</response>
+        /// <response code="404">Not found, admin not found in the database</response>
         [HttpDelete("{adminId:int}/delete-admin")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteAdmin([FromRoute] int adminId)
@@ -76,6 +101,15 @@ namespace HomeServicesApi.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Delete service type (Admin only)
+        /// </summary>
+        /// <param name="serviceTypeId"></param>
+        /// <returns></returns>
+        /// <response code="200">Successful request, service type deleted successfully</response>
+        /// <response code="400">Bad request, the request body is incorrect or another error occurred</response>
+        /// <response code="404">Not found, admin not found in the database</response>
         [HttpDelete("{serviceTypeId:int}/delete-service-type")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteServiceType([FromRoute] int serviceTypeId)
