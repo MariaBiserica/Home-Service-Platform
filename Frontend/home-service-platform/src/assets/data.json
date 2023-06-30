@@ -5,22 +5,22 @@
     "description": "Professional cleaning service for homes and offices.",
     "contact": "1234 567 890",
     "review": {
-      "title": "Review Title",
-      "description": "Review Description",
-      "author": "Review Author"
+      "title": "Okay Service!",
+      "description": "I hired them to clean my house, and they did an okay job. I wouldn't recommend them, though.",
+      "author": "Unsatisfied Customer"
     },
-    "image": "https://i.pinimg.com/564x/56/48/d2/5648d25c6ec3861a8ab5979c7637ab99.jpg",
+    "image": "https://i.pinimg.com/236x/0b/b0/73/0bb07337ad1d8655ae913fa3cca9de19.jpg",
     "rating": 3.2,
     "price": 100,
     "workingHours": "9:00 - 17:00",
-    "location": "Stockholm"
+    "location": "Stockholm, Sweden"
   },
   {
     "name": "Cooking Service",
-    "provider": "XYZ Catering",
+    "provider": "Chef's Table",
     "description": "Gourmet cooking service for events and special occasions.",
     "contact": "cookingService@email.com",
-    "image": "https://i.pinimg.com/564x/8f/2e/ee/8f2eee0071b519dd3e920bc1d9579613.jpg",
+    "image": "https://i.pinimg.com/564x/16/8a/87/168a878fedee969fd398c3670e730bd6.jpg",
     "rating": 4.8,
     "price": 200,
     "workingHours": "9:00 - 16:00",
@@ -31,6 +31,11 @@
     "provider": "Fresh Foods Co.",
     "description": "No time for grocery shopping? We deliver fresh ingredients to your door. Come home to a delicious meal!",
     "contact": "0771-234-567",
+    "review": {
+      "title": "Yummy!",
+      "description": "I hired them to deliver groceries to my house every week, and they did an amazing job. Highly recommended!",
+      "author": "Satisfied Customer"
+    },
     "image": "https://i.pinimg.com/564x/49/91/ff/4991ff12dfb68f1cb30ca699d18183a5.jpg",
     "rating": 5.0,
     "price": 150,
@@ -58,6 +63,11 @@
     "provider": "Paws & Whiskers Pet Care",
     "description": "Professional pet sitting and dog walking services. We'll take care of your furry friends like they're our own!",
     "contact": "petcare@example.com",
+    "review": {
+      "title": "Great Service!",
+      "description": "I hired them to take care of my dog while I was on vacation, and they did an amazing job. Highly recommended!",
+      "author": "Satisfied Customer"
+    },
     "image": "https://i.pinimg.com/564x/ec/ed/a5/eceda56f8b34fbab19beece6259fe2dd.jpg",
     "rating": 4.9,
     "price": 25,
@@ -69,8 +79,13 @@
     "provider": "FitZone Gym",
     "description": "Personalized fitness training programs designed to help you achieve your health and wellness goals.",
     "contact": "888-555-7890",
-    "image": "https://i.pinimg.com/236x/75/bc/2c/75bc2c181917b30f22e8e8a47efcf155.jpg",
-    "rating": 4.7,
+    "review": {
+      "title": "Okay Service",
+      "description": "I hired them to help me lose weight, but they didn't really do much for me. I wouldn't recommend them.",
+      "author": "Unsatisfied Customer"
+    },
+    "image": "https://i.pinimg.com/564x/b2/97/3e/b2973efd6edae06b5601c511de9d6f49.jpg",
+    "rating": 2.1,
     "price": 120,
     "workingHours": "6:00 - 22:00",
     "location": "Miami, FL"
@@ -80,7 +95,12 @@
     "provider": "TechFix Solutions",
     "description": "Fast and reliable computer repair services for both hardware and software issues.",
     "contact": "support@techfix.com",
-    "image": "https://i.pinimg.com/564x/d8/cf/12/d8cf12550cae0620ca5b26d7639574b6.jpg",
+    "review": {
+      "title": "WOW!",
+      "description": "I hired them to fix my laptop, and they did an amazing job. Highly recommended! I'll definitely be using them again in the future.",
+      "author": "Satisfied Customer"
+    },
+    "image": "https://i.pinimg.com/564x/95/cb/60/95cb60de2d11d99957d12efde259de07.jpg",
     "rating": 4.2,
     "price": 60,
     "workingHours": "9:00 - 18:00",
@@ -91,6 +111,11 @@
     "provider": "Knowledge Boost",
     "description": "Expert tutors offering one-on-one tutoring in various subjects. Improve your grades and boost your knowledge!",
     "contact": "tutors@knowledgeboost.com",
+    "review": {
+      "title": "Great Service!",
+      "description": "I hired them to help me with my math homework, and they did an amazing job. Highly recommended! My teacher even noticed an improvement in my grades.",
+      "author": "Satisfied Customer"
+    },
     "image": "https://i.pinimg.com/564x/cb/44/5c/cb445caf9371ca12b301d1b35cffa134.jpg",
     "rating": 4.6,
     "price": 50,
@@ -102,8 +127,13 @@
     "provider": "Dream Events",
     "description": "Let us plan your dream event, from weddings to corporate parties. We'll take care of every detail!",
     "contact": "events@dreamevents.com",
+    "review": {
+      "title": "Great Service!",
+      "description": "I hired them to plan my wedding, and they did an amazing job. Highly recommended! My guests were impressed with how well everything went.",
+      "author": "Satisfied Customer"
+    },
     "image": "https://i.pinimg.com/564x/e3/24/07/e3240757e2b5835fc8322da5c0ff2523.jpg",
-    "rating": 2.4,
+    "rating": 4.4,
     "price": 500,
     "workingHours": "9:00 - 17:00",
     "location": "Paris, France"
@@ -124,7 +154,12 @@
     "provider": "ColorSplash Painters",
     "description": "Professional painting services for residential and commercial properties. Transform your space with a fresh coat of paint!",
     "contact": "555-987-654",
-    "image": "https://i.pinimg.com/564x/52/6b/d6/526bd63dc2791e3c716f3e8a0c371581.jpg",
+    "review": {
+      "title": "Great Service!",
+      "description": "I hired them to paint my house, and they did an amazing job. Highly recommended! My neighbors even complimented me on how nice it looks.",
+      "author": "Satisfied Customer"
+    },
+    "image": "https://i.pinimg.com/564x/9f/e2/cf/9fe2cffd64d9d333eeaf63389a2e7ce3.jpg",
     "rating": 4.3,
     "price": 150,
     "workingHours": "8:00 - 16:00",
@@ -135,7 +170,12 @@
     "provider": "Shiny Wheels Auto Spa",
     "description": "Professional car wash and detailing services. We'll make your car shine like new!",
     "contact": "carwash@shinywheels.com",
-    "image": "https://i.pinimg.com/564x/89/61/a4/8961a487b3f9b60b91f8f12b0a0957b8.jpg",
+    "review": {
+      "title": "Definitely NOT Recommend",
+      "description": "I hired them to wash my car, and they did a terrible job. They didn't even clean the inside of my car! I would never use them again. I don't know how they stay in business.",
+      "author": "Unsatisfied Customer"
+    },
+    "image": "https://i.pinimg.com/564x/fd/ca/72/fdca72d5165ba813bebfe33efad1e57c.jpg",
     "rating": 4.7,
     "price": 20,
     "workingHours": "10:00 - 19:00",
@@ -146,7 +186,12 @@
     "provider": "FixIt All",
     "description": "Experienced handyman offering a wide range of services, from repairs to installations. We've got you covered!",
     "contact": "handyman@example.com",
-    "image": "https://i.pinimg.com/564x/6e/d4/f8/6ed4f8257f5d4e397ef260bd5e88afdd.jpg",
+    "review": {
+      "title": "Great Service!",
+      "description": "I hired them to fix my sink, and they did an amazing job. Highly recommended! They even cleaned up after themselves.",
+      "author": "Satisfied Customer"
+    },
+    "image": "https://i.pinimg.com/564x/bc/da/2d/bcda2d79689ee14fb14172729069ae72.jpg",
     "rating": 4.5,
     "price": 70,
     "workingHours": "8:00 - 18:00",
@@ -157,11 +202,176 @@
     "provider": "Pawsome Pet Care",
     "description": "Professional dog walking service for busy pet owners.",
     "contact": "555-123-4567",
+    "review": {
+      "title": "Great Service!",
+      "description": "I hired them to walk my dog, and they did an amazing job. Highly recommended! My dog loves them.",
+      "author": "Satisfied Customer"
+    },
     "image": "https://i.pinimg.com/564x/a3/e8/cc/a3e8cc46ce51927738da55147128ff4c.jpg",
     "rating": 4.5,
     "price": 30,
     "workingHours": "8:00 - 18:00",
     "location": "New York City"
+  },
+  {
+    "name": "Gardening Service",
+    "provider": "Green Thumb Landscaping",
+    "description": "Professional gardening and landscaping services to transform your outdoor space.",
+    "contact": "gardening@example.com",
+    "review": {
+      "title": "Amazing Service!",
+      "description": "Green Thumb Landscaping did an incredible job with my garden. They were punctual, attentive to detail, and transformed my backyard into a beautiful oasis. Highly recommended!",
+      "author": "Satisfied Customer"
+    },
+    "image": "https://i.pinimg.com/564x/fb/af/a5/fbafa59fbf1d9f13cb22ea43db36a786.jpg",
+    "rating": 4.9,
+    "price": 120,
+    "workingHours": "9:00 - 18:00",
+    "location": "Los Angeles, USA"
+  },
+  {
+    "name": "Personal Training Service",
+    "provider": "FitLife Personal Training",
+    "description": "Customized personal training programs to help you achieve your fitness goals.",
+    "contact": "info@fitlifept.com",
+    "review": {
+      "title": "Best Personal Trainers!",
+      "description": "FitLife Personal Training has an amazing team of trainers who are knowledgeable, motivating, and dedicated to helping their clients. I've seen incredible results and highly recommend their services.",
+      "author": "Fitness Enthusiast"
+    },
+    "image": "https://i.pinimg.com/564x/20/7c/da/207cdaaab184ae0795063e964c743f28.jpg",
+    "rating": 4.7,
+    "price": 80,
+    "workingHours": "6:00 - 22:00",
+    "location": "New York City, USA"
+  },
+  {
+    "name": "Pet Sitting Service",
+    "provider": "Pawsome Pet Care",
+    "description": "Reliable and loving pet sitting services for when you're away. Your furry friends are in good hands!",
+    "contact": "pawsomepets@example.com",
+    "review": {
+      "title": "Fantastic Care!",
+      "description": "Pawsome Pet Care took care of my pets while I was on vacation, and I couldn't be happier with their service. They provided regular updates, followed all instructions, and treated my pets like their own. Highly recommend!",
+      "author": "Happy Pet Owner"
+    },
+    "image": "https://i.pinimg.com/564x/b2/a1/c3/b2a1c30a79a19adda5ac6b737ec491f8.jpg",
+    "rating": 4.9,
+    "price": 40,
+    "workingHours": "24/7",
+    "location": "Vancouver, Canada"
+  },
+  {
+    "name": "IT Support Service",
+    "provider": "TechGenius IT Solutions",
+    "description": "Professional IT support services for individuals and businesses. We solve your tech problems, so you can focus on what you do best.",
+    "contact": "support@techgenius.com",
+    "review": {
+      "title": "Life Savers!",
+      "description": "TechGenius IT Solutions saved the day when my computer crashed. Their technicians were prompt, knowledgeable, and got my system up and running in no time. Excellent service!",
+      "author": "Grateful Customer"
+    },
+    "image": "https://i.pinimg.com/564x/69/50/f6/6950f6b1a0ad4d38def0c1c829470b4a.jpg",
+    "rating": 4.5,
+    "price": 150,
+    "workingHours": "8:00 - 20:00",
+    "location": "London, UK"
+  },
+  {
+    "name": "Tutoring Service",
+    "provider": "Academic Excellence Tutoring",
+    "description": "Expert tutors providing personalized tutoring for various subjects and grade levels.",
+    "contact": "info@academictutors.com",
+    "review": {
+      "title": "Great Improvement!",
+      "description": "Academic Excellence Tutoring has helped my child improve their grades significantly. The tutors are patient, knowledgeable, and create a positive learning environment. Highly recommended!",
+      "author": "Proud Parent"
+    },
+    "image": "https://i.pinimg.com/564x/3d/3f/96/3d3f96cb9116a92c2f32ed948267ec60.jpg",
+    "rating": 4.8,
+    "price": 60,
+    "workingHours": "15:00 - 19:00",
+    "location": "Toronto, Canada"
+  },
+  {
+    "name": "Event Planning Service",
+    "provider": "Dreamy Events",
+    "description": "Expert event planners to bring your vision to life and create memorable experiences.",
+    "contact": "hello@dreamyevents.com",
+    "review": {
+      "title": "Dreamy Events Indeed!",
+      "description": "Dreamy Events helped me plan my wedding, and it was a dream come true. They took care of every detail, and the result was a magical day that exceeded my expectations. Highly recommend their services!",
+      "author": "Happy Bride"
+    },
+    "image": "https://i.pinimg.com/564x/43/e2/e4/43e2e4fd27b03fd8567b10ece7003395.jpg",
+    "rating": 4.9,
+    "price": 500,
+    "workingHours": "9:00 - 17:00",
+    "location": "Sydney, Australia"
+  },
+  {
+    "name": "Translation Service",
+    "provider": "LinguaMundi Translations",
+    "description": "Accurate and reliable translation services for documents, websites, and more.",
+    "contact": "translations@linguamundi.com",
+    "review": {
+      "title": "Excellent Translations!",
+      "description": "LinguaMundi Translations provided top-notch translation services for our company. They were prompt, professional, and delivered high-quality translations. We're extremely satisfied with their work!",
+      "author": "Satisfied Client"
+    },
+    "image": "https://i.pinimg.com/564x/c3/df/0b/c3df0b8d811fa689db938ffbe87cce7a.jpg",
+    "rating": 4.7,
+    "price": 80,
+    "workingHours": "9:00 - 18:00",
+    "location": "Berlin, Germany"
+  },
+  {
+    "name": "Photography Service",
+    "provider": "Capture the Moment Photography",
+    "description": "Professional photography services for weddings, events, and special occasions.",
+    "contact": "info@capturethemoment.com",
+    "review": {
+      "title": "Memorable Photos!",
+      "description": "Capture the Moment Photography captured the essence of our wedding day perfectly. The photos are stunning and truly reflect the emotions and joy of the day. Highly recommended!",
+      "author": "Happy Newlywed"
+    },
+    "image": "https://i.pinimg.com/564x/f3/86/a6/f386a614a9d6cc7aa9620f4dadca3eb3.jpg",
+    "rating": 4.9,
+    "price": 300,
+    "workingHours": "Flexible",
+    "location": "Paris, France"
+  },
+  {
+    "name": "Housekeeping Service",
+    "provider": "Sparkle Clean Services",
+    "description": "Efficient and reliable housekeeping services to keep your home neat and tidy.",
+    "contact": "contact@sparkleclean.com",
+    "review": {
+      "title": "Sparkling Clean!",
+      "description": "Sparkle Clean Services did an outstanding job cleaning my house. They were thorough, detail-oriented, and left everything sparkling clean. Highly recommend!",
+      "author": "Satisfied Homeowner"
+    },
+    "image": "https://i.pinimg.com/564x/03/80/43/0380430bf9a11c60880ef5abbef51fab.jpg",
+    "rating": 4.8,
+    "price": 90,
+    "workingHours": "8:00 - 16:00",
+    "location": "Melbourne, Australia"
+  },
+  {
+    "name": "Car Rental Service",
+    "provider": "Wheels on the Go",
+    "description": "Convenient and reliable car rental services for your transportation needs.",
+    "contact": "info@wheelsonthego.com",
+    "review": {
+      "title": "Smooth Ride!",
+      "description": "Wheels on the Go provided excellent car rental service. The process was seamless, the car was in great condition, and their customer service was exceptional. Highly recommended!",
+      "author": "Satisfied Traveler"
+    },
+    "image": "https://i.pinimg.com/564x/e4/bd/86/e4bd869f25ff2e65901731758b26bfa4.jpg",
+    "rating": 4.7,
+    "price": 50,
+    "workingHours": "24/7",
+    "location": "Miami, USA"
   }
 ]
   
