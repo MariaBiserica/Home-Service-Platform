@@ -41,6 +41,7 @@ export class TableComponent implements OnInit {
     password: '',
     imageUrl: '',
     role: '',
+    bio:''
   };
 
   // Sorting variables for table header
@@ -81,7 +82,6 @@ export class TableComponent implements OnInit {
     this.route.queryParams.subscribe((res: any) => {
       console.log(res);
     });
-
     this.servicesService.servicesListSubject.subscribe((res: any) => {
       this.servicesList = [...res];
       console.log('in subscribe ');
@@ -92,7 +92,6 @@ export class TableComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.userService.getCurrentUser();
-
     this.servicesList = this.servicesService.services;
     console.log(this.servicesList);
     this.form = this.fb.group({
@@ -116,6 +115,7 @@ export class TableComponent implements OnInit {
       this.search();
     });
   }
+
 
   // Services functions
   deleteService(movie: Service) {
