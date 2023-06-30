@@ -21,6 +21,7 @@ import { NzMessageModule } from 'ng-zorro-antd/message';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { DashboardFeatureModule } from './dashboard-feature.module';
+import { ForgotPasswordComponent } from '../components/forgot-password/forgot-password.component';
 
 
 registerLocaleData(en);
@@ -30,6 +31,7 @@ registerLocaleData(en);
     AppComponent,
     LoginComponent,
     SignupComponent,
+    ForgotPasswordComponent
   ],
   imports: [
     BrowserModule,

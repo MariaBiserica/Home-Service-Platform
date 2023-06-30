@@ -1,4 +1,4 @@
-<div class="outer">
+<div class="outer" *ngIf="isVisibleAll">
     <div class="container">
         <div class="row">
            <div class="offset-md-2 col-lg-5 col-md-7 offset-lg-4 offset-md-3">
@@ -37,7 +37,7 @@
                             </nz-form-item>
 
                             <div class="form-inline fr mt-4">
-                                <a id="forget" class="font-weight-bold">Forgot Password?</a>
+                                <a id="forget" class="font-weight-bold" (click)="forgotPushed()">Forgot Password?</a>
                             </div>
 
                             <button nz-button nzType="primary" style="width: 100%; border-radius: 20px; margin-top: 5px;"
@@ -61,4 +61,7 @@
            </div>
         </div>
     </div>
+</div>
+<div *ngIf="isVisibleForgot">
+    <app-forgot-password (passwordEmitter)="setNewPassword($event)"></app-forgot-password>
 </div>

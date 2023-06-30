@@ -61,6 +61,11 @@ export class UserService {
     return this.httpClient.post(this.baseUrl+'providers/login', payload, this.httpOptions);
   }
 
+  changePassword(payload:any)
+  {
+    return this.httpClient.put(this.baseUrl+'account/change-password', payload,this.httpOptions);
+  }
+
   signupUser(data:any):Observable<any> {
     console.log(data.role);
     if(data.role=='CUSTOMER'){
