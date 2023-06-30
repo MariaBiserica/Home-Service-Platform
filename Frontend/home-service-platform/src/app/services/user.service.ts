@@ -53,6 +53,10 @@ export class UserService {
   {
     return this.currentUser.role;
   }
+  setPassword(value:string)
+  {
+    this.currentUser.password = value;
+  }
   loginUser(payload:any):Observable<any> {
     return this.httpClient.post(this.baseUrl+'customers/login', payload, this.httpOptions);
   }
@@ -87,34 +91,5 @@ export class UserService {
     }
     
     return  new Observable<any>;
-  //*TODO 
-  //   var payload = {
-  //     usernameOrEmail: this.usernameOrEmail,
-  //     password: this.password
-  //   };
-
-  //   // Make the API call to https://reqres.in/api/login
-  //   fetch('https://reqres.in/api/login', {
-  //       method: 'POST',
-  //       headers: {
-  //           'Content-Type': 'application/json'
-  //       },
-  //       body: JSON.stringify(payload)
-  //   })
-  //   .then(response => response.json())
-  //   .then(data => {
-  //       // Handle the API response
-  //       if (data.token) {
-  //           // Login successful, redirect to another page or perform further actions
-  //           console.log("Login successful");
-  //       } else {
-  //           // Login failed, display an error message or perform other error handling
-  //           console.error("Login failed");
-  //       }
-  //   })
-  //   .catch(error => {
-  //       // Handle any errors that occurred during the API call
-  //       console.error("API request failed:", error);
-  //   });
   }
 }

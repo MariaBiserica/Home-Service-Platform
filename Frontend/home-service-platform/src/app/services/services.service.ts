@@ -41,7 +41,7 @@ export class ServicesService {
     const httpOptionsAdd = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + localStorage.getItem('token'),
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
       }),
     };
     const payload = 0;
@@ -56,7 +56,7 @@ export class ServicesService {
     const httpOptionsAdd = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + localStorage.getItem('token'),
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
       }),
     };
     const payload = {
@@ -76,7 +76,7 @@ export class ServicesService {
     const httpOptionsUpdate = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + localStorage.getItem('token'),
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
       }),
     };
     const payload = {

@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from '../components/login/login.component';
 import { SignupComponent } from '../components/signup/signup.component';
 import { ForgotPasswordComponent } from '../components/forgot-password/forgot-password.component';
+import { LoginGuard } from '../helpers/login.guard';
 
 const routes: Routes = [
   {
@@ -15,7 +16,8 @@ const routes: Routes = [
   },
   { 
     path: 'dashboard', 
-    loadChildren: () => import('./dashboard-feature.module').then(m => m.DashboardFeatureModule) 
+    loadChildren: () => import('./dashboard-feature.module').then(m => m.DashboardFeatureModule),
+    canActivate:[LoginGuard] 
   },
   {
     path: 'forgot-password',

@@ -99,7 +99,7 @@ export class LoginComponent implements OnInit {
       next: (response) => {
         console.log(response);
         this.userService.setToken(response.token);
-        localStorage.setItem('token', response.token);
+        sessionStorage.setItem('token', response.token);
         if (this.rememberMe) {
           localStorage.setItem('username', this.username);
           localStorage.setItem('email', this.email);
@@ -119,16 +119,18 @@ export class LoginComponent implements OnInit {
           next: (response) => {
             console.log(response);
             this.userService.setToken(response.token);
-            localStorage.setItem('token', response.token);
+            sessionStorage.setItem('token', response.token);
             if (this.rememberMe) {
               localStorage.setItem('username', this.username);
               localStorage.setItem('email', this.email);
               localStorage.setItem('password', this.password);
+              localStorage.setItem('token', response.token);
             } else {
               // Clear the stored login credentials if the "Remember me" checkbox is not checked
               localStorage.removeItem('username');
               localStorage.removeItem('email');
               localStorage.removeItem('password');
+              localStorage.removeItem('token');
             }
             this.userService.setRole('PROVIDER');
             this.loginMessage.create('success', 'Login successful');
@@ -149,9 +151,10 @@ export class LoginComponent implements OnInit {
   setNewPassword(event:any)
   {
     this.newPassword = event;
+    this.userService.setPassword(this.newPassword);
     this.isVisibleAll = true;
     this.isVisibleForgot = false;
-    this.loginMessage.create('success', 'Login error');
+    this.loginMessage.create('success', 'Password changed successfully');
     console.log(this.newPassword);
   }
 }

@@ -39,6 +39,10 @@ export class ForgotPasswordComponent implements OnInit {
     this.passwordEmitter.emit(this.form.controls['password'].value);
   }
 
+  refresh(): void {
+    window.location.reload();
+}
+
   getErrorMessage(controlName: string):string
   {
     const control = this.form.get(controlName);

@@ -86,7 +86,6 @@ export class TableComponent implements OnInit {
       this.servicesList = [...res];
       console.log('in subscribe ');
     });
-
     this.iconService.addIcon(...[SearchOutline]);
   }
 
@@ -142,6 +141,7 @@ export class TableComponent implements OnInit {
   confirmLogout(): void {
     const confirmed = window.confirm('Are you sure you want to disconnect?');
     if (confirmed) {
+      sessionStorage.clear();
       this.router.navigate(['/login']);
     }
   }
