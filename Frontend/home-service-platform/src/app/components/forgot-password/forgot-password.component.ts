@@ -2,7 +2,6 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Form, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CustomValidators } from 'src/app/helpers/validators';
 import { UserService } from 'src/app/services/user.service';
-import { User } from 'src/app/interfaces/user.interface';
 import { Router } from '@angular/router';
 
 @Component({
@@ -24,7 +23,7 @@ export class ForgotPasswordComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      password:['', Validators.required],
+      password:['', CustomValidators.password],
       confirmPassword:['', [Validators.required, CustomValidators.password]],
     },
     {
