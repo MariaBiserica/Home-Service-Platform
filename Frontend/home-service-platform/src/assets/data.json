@@ -9,7 +9,7 @@
       "description": "Review Description",
       "author": "Review Author"
     },
-    "image": "https://i.pinimg.com/564x/84/08/9c/84089c03f2956cfbcf0dcd256f1aa9c3.jpg",
+    "image": "https://i.pinimg.com/564x/56/48/d2/5648d25c6ec3861a8ab5979c7637ab99.jpg",
     "rating": 3.2,
     "price": 100,
     "workingHours": "9:00 - 17:00",
@@ -36,7 +36,134 @@
     "price": 150,
     "workingHours": "9:00 - 23:00",
     "location": "Brasov, Sibiu, Cluj-Napoca, Timisoara, Bucuresti - Romania"
+  },
+  {
+    "name": "Gardening Service",
+    "provider": "Green Thumb Landscaping",
+    "description": "Expert gardening and landscaping services for residential and commercial properties.",
+    "contact": "555-123-456",
+    "review": {
+      "title": "Great Service!",
+      "description": "I hired Green Thumb Landscaping to transform my backyard, and they did an amazing job. Highly recommended!",
+      "author": "Satisfied Customer"
+    },
+    "image": "https://i.pinimg.com/564x/6a/da/11/6ada11d1a775672efcf9045b2ed3c9f1.jpg",
+    "rating": 4.5,
+    "price": 80,
+    "workingHours": "8:00 - 18:00",
+    "location": "Los Angeles, CA"
+  },
+  {
+    "name": "Pet Sitting Service",
+    "provider": "Paws & Whiskers Pet Care",
+    "description": "Professional pet sitting and dog walking services. We'll take care of your furry friends like they're our own!",
+    "contact": "petcare@example.com",
+    "image": "https://i.pinimg.com/564x/ec/ed/a5/eceda56f8b34fbab19beece6259fe2dd.jpg",
+    "rating": 4.9,
+    "price": 25,
+    "workingHours": "24/7",
+    "location": "New York, NY"
+  },
+  {
+    "name": "Fitness Training Service",
+    "provider": "FitZone Gym",
+    "description": "Personalized fitness training programs designed to help you achieve your health and wellness goals.",
+    "contact": "888-555-7890",
+    "image": "https://i.pinimg.com/236x/75/bc/2c/75bc2c181917b30f22e8e8a47efcf155.jpg",
+    "rating": 4.7,
+    "price": 120,
+    "workingHours": "6:00 - 22:00",
+    "location": "Miami, FL"
+  },
+  {
+    "name": "Computer Repair Service",
+    "provider": "TechFix Solutions",
+    "description": "Fast and reliable computer repair services for both hardware and software issues.",
+    "contact": "support@techfix.com",
+    "image": "https://i.pinimg.com/564x/d8/cf/12/d8cf12550cae0620ca5b26d7639574b6.jpg",
+    "rating": 4.2,
+    "price": 60,
+    "workingHours": "9:00 - 18:00",
+    "location": "San Francisco, CA"
+  },
+  {
+    "name": "Tutoring Service",
+    "provider": "Knowledge Boost",
+    "description": "Expert tutors offering one-on-one tutoring in various subjects. Improve your grades and boost your knowledge!",
+    "contact": "tutors@knowledgeboost.com",
+    "image": "https://i.pinimg.com/564x/cb/44/5c/cb445caf9371ca12b301d1b35cffa134.jpg",
+    "rating": 4.6,
+    "price": 50,
+    "workingHours": "15:00 - 20:00",
+    "location": "London, UK"
+  },
+  {
+    "name": "Event Planning Service",
+    "provider": "Dream Events",
+    "description": "Let us plan your dream event, from weddings to corporate parties. We'll take care of every detail!",
+    "contact": "events@dreamevents.com",
+    "image": "https://i.pinimg.com/564x/e3/24/07/e3240757e2b5835fc8322da5c0ff2523.jpg",
+    "rating": 2.4,
+    "price": 500,
+    "workingHours": "9:00 - 17:00",
+    "location": "Paris, France"
+  },
+  {
+    "name": "Plumbing Service",
+    "provider": "FlowMaster Plumbers",
+    "description": "Reliable plumbing services for residential and commercial properties. We fix leaks, unclog drains, and more!",
+    "contact": "plumbing@example.com",
+    "image": "https://i.pinimg.com/564x/22/2f/80/222f80b465cbd80b6a4fe58223f47e16.jpg",
+    "rating": 4.4,
+    "price": 90,
+    "workingHours": "24/7",
+    "location": "Toronto, Canada"
+  },
+  {
+    "name": "Painting Service",
+    "provider": "ColorSplash Painters",
+    "description": "Professional painting services for residential and commercial properties. Transform your space with a fresh coat of paint!",
+    "contact": "555-987-654",
+    "image": "https://i.pinimg.com/564x/52/6b/d6/526bd63dc2791e3c716f3e8a0c371581.jpg",
+    "rating": 4.3,
+    "price": 150,
+    "workingHours": "8:00 - 16:00",
+    "location": "Sydney, Australia"
+  },
+  {
+    "name": "Car Wash Service",
+    "provider": "Shiny Wheels Auto Spa",
+    "description": "Professional car wash and detailing services. We'll make your car shine like new!",
+    "contact": "carwash@shinywheels.com",
+    "image": "https://i.pinimg.com/564x/89/61/a4/8961a487b3f9b60b91f8f12b0a0957b8.jpg",
+    "rating": 4.7,
+    "price": 20,
+    "workingHours": "10:00 - 19:00",
+    "location": "Berlin, Germany"
+  },
+  {
+    "name": "Handyman Service",
+    "provider": "FixIt All",
+    "description": "Experienced handyman offering a wide range of services, from repairs to installations. We've got you covered!",
+    "contact": "handyman@example.com",
+    "image": "https://i.pinimg.com/564x/6e/d4/f8/6ed4f8257f5d4e397ef260bd5e88afdd.jpg",
+    "rating": 4.5,
+    "price": 70,
+    "workingHours": "8:00 - 18:00",
+    "location": "Tokyo, Japan"
+  },
+  {
+    "name": "Dog Walking Service",
+    "provider": "Pawsome Pet Care",
+    "description": "Professional dog walking service for busy pet owners.",
+    "contact": "555-123-4567",
+    "image": "https://i.pinimg.com/564x/a3/e8/cc/a3e8cc46ce51927738da55147128ff4c.jpg",
+    "rating": 4.5,
+    "price": 30,
+    "workingHours": "8:00 - 18:00",
+    "location": "New York City"
   }
 ]
+  
 
   
